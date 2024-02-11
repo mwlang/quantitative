@@ -32,21 +32,13 @@
 #   series = Quant::Series.new
 #
 #   # Add some data to the series
-#   ticks = [25.0, 26.0, 23.5, 24.5, 25.5, 26.5, 27.5, 28.5, 29.5, 30.5
+#   ticks = [25.0, 26.0, 23.5, 24.5, 25.5, 26.5, 27.5, 28.5, 29.5, 30.5]
 #   ticks.each { |tick| series << tick }
 #
 #   # Print the series
 #   pp series
 #
-# This will output:
-#
-#   2021-07-01 00:00:00 +0000, 100
-#   2021-07-01 00:01:00 +0000, 200
-#   2021-07-01 00:02:00 +0000, 300
-#
 module Quant
-  class InvalidInterval < StandardError; end
-  class InvalidResolution < StandardError; end
   # +Quant::Interval+ abstracts away the concept of ticks (candles, bars, etc.) and their duration and offers some basic utilities for
   # working with multiple timeframes.  Intervals are used in +Tick+ and +Series+ classes to define the duration of the ticks.
   #
