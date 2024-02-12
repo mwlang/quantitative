@@ -4,4 +4,5 @@ module Quant
   class Error < StandardError; end
   class InvalidInterval < Error; end
   class InvalidResolution < Error; end
+  class ArrayMaxSizeError < Error; end
 end

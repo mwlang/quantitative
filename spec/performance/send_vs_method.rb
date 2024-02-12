@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 require "bundler/setup"
-require 'benchmark/ips'
+require "benchmark/ips"
 
 class Accumulator
   def initialize
@@ -10,9 +12,7 @@ class Accumulator
     @sum += a.send(source)
   end
 
-  def sum
-    @sum
-  end
+  attr_reader :sum
 end
 
 def direct(array)
@@ -49,13 +49,13 @@ def by_lambda(array)
 end
 
 def perform(name:, array:)
-  puts '-' * 80, name, '-' * 80
+  puts "-" * 80, name, "-" * 80
   Benchmark.ips do |x|
-    x.report('direct') { direct(array) }
-    x.report('by_send') { by_send(array) }
-    x.report('by_method') { by_method(array) }
-    x.report('by_proc') { by_proc(array) }
-    x.report('by_lambda') { by_lambda(array) }
+    x.report("direct") { direct(array) }
+    x.report("by_send") { by_send(array) }
+    x.report("by_method") { by_method(array) }
+    x.report("by_proc") { by_proc(array) }
+    x.report("by_lambda") { by_lambda(array) }
     x.compare!
   end
 end
@@ -66,20 +66,17 @@ array_of_floats = 50_000.times.map(&:to_f)
 array_of_rationals = 50_000.times.map(&:to_r)
 
 unless direct(array_of_strings) == direct(array_of_integers)
-  raise 'Invalid results'
+  raise "Invalid results"
 end
 
 unless direct(array_of_integers) == by_send(array_of_integers) &&
-    by_send(array_of_integers) == by_method(array_of_integers) &&
-    by_method(array_of_integers) == by_proc(array_of_integers) &&
-    by_proc(array_of_integers) == by_lambda(array_of_integers)
-  raise 'Invalid results'
+       by_send(array_of_integers) == by_method(array_of_integers) &&
+       by_method(array_of_integers) == by_proc(array_of_integers) &&
+       by_proc(array_of_integers) == by_lambda(array_of_integers)
+  raise "Invalid results"
 end
 
 perform name: "array of integers", array: array_of_integers
 perform name: "array of strings", array: array_of_strings
 perform name: "array of floats", array: array_of_floats
 perform name: "array of rationals", array: array_of_rationals
-
-=begin
-=end
