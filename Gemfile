@@ -12,3 +12,9 @@ gem "rspec", "~> 3.0"
 gem "rubocop", "~> 1.21"
 gem "rubocop-rspec"
 gem "relaxed-rubocop"
+
+gem "debug"
+gem "guard-rspec", "~> 4.7"
+gem "yard", "~> 0.9"
+gem "benchmark-ips", "~> 2.9"
+

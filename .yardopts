@@ -1,0 +1,7 @@
+--protected
+--no-private
+lib/quant/**/*.rb
+-
+CODE_OF_CONDUCT.md
+DISCLAIMER.md
+LICENSE

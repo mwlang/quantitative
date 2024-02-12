@@ -59,7 +59,7 @@ module Quant
                      green: false,
                      doji: nil)
 
-        super(price: close_price, timestamp: close_timestamp, interval:, trades:)
+        super(price: close_price, timestamp: close_timestamp, interval: interval, trades: trades)
         @open_timestamp = extract_time(open_timestamp)
         @open_price = open_price.to_f
         @high_price = high_price.to_f
