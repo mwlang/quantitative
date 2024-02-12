@@ -1,5 +1,7 @@
 # Quantitative
 
+[![Gem Version](https://badge.fury.io/rb/quantitative.svg)](https://badge.fury.io/rb/quantitative)
+
 STATUS: ALPHA - very early stages!  The framework is very much a work in progress and I am rapidly introducing new things and changing existing things around.
 
 Quantitative is a statistical and quantitative library for Ruby 3.x for trading stocks, cryptocurrency, and forex.  It provides a number of classes and modules for working with time-series data, financial data, and other quantitative data.  It is designed to be fast, efficient, and easy to use.
