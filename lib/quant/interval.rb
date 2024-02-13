@@ -167,7 +167,13 @@ module Quant
     alias seconds duration
 
     def ==(other)
-      interval == other&.interval
+      if other.is_a? String
+        interval.to_s == other
+      elsif other.is_a? Symbol
+        interval == MAPPINGS[other]&.fetch(:interval, nil)
+      else
+        interval == other&.interval
+      end
     end
 
     def ticks_per_minute

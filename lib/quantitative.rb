@@ -3,6 +3,7 @@
 require "time"
 require "date"
 require "oj"
+require "csv"
 
 lib_folder = File.expand_path(File.join(File.dirname(__FILE__)))
 quant_folder = File.join(lib_folder, "quant")

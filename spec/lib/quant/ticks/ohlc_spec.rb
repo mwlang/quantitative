@@ -220,7 +220,7 @@ RSpec.describe Quant::Ticks::OHLC do
     end
 
     describe "#assign_series" do
-      let(:first_series) { double("first_series") }
+      let(:first_series) { double("first_series", interval: "1d") }
       let(:next_series) { double("next_series") }
 
       let(:json) do
@@ -243,19 +243,33 @@ RSpec.describe Quant::Ticks::OHLC do
       context "first time" do
         it { is_expected.to eq tick }
         it { expect(subject.series).to eq first_series }
+        it { expect(subject.interval).to eq "1m" }
         it { expect { subject }.not_to change { tick.to_h } }
+
+        context "when tick.interval is nil before assigning" do
+          let(:json) do
+            { "ot" => open_time,
+              "ct" => close_time,
+              "o" => 6.0,
+              "h" => 6.0,
+              "l" => 6.0,
+              "c" => 6.0,
+              "g" => true }
+          end
+
+          it { expect(subject.interval).to eq "1d" }
+        end
       end
 
-      xcontext "second time" do
+      context "second time" do
         before { tick.assign_series(first_series) }
 
         subject { tick.assign_series(next_series) }
 
         it { expect(subject.series).to eq first_series }
         it { expect(subject).to eq tick }
-        it { expect(subject).not_to eql tick }
-        it { expect(subject).not_to be tick }
         it { expect { subject }.not_to change { tick.to_h } }
+        it { expect(subject.interval).to eq "1m" }
         it { expect(subject.to_h).to eq tick.to_h }
       end
     end

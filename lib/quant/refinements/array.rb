@@ -100,7 +100,7 @@ module Quant
       end
 
       # Computes the mean of the array.  When +n+ is specified, the mean is computed over
-      # the last +n+ elements.
+      # the last +n+ elements, otherwise it is computed over the entire array.
       #
       # @param n [Integer] the number of elements to compute the mean over
       # @return [Float]
@@ -112,7 +112,7 @@ module Quant
       end
 
       # Computes the Exponential Moving Average (EMA) of the array.  When +n+ is specified,
-      # the EMA is computed over the last +n+ elements.
+      # the EMA is computed over the last +n+ elements, otherwise it is computed over the entire array.
       # An Array of EMA's is returned, with the first entry always the first value in the subset.
       #
       # @params n [Integer] the number of elements to compute the EMA over.
@@ -130,7 +130,7 @@ module Quant
       end
 
       # Computes the Simple Moving Average (SMA) of the array.  When +n+ is specified,
-      # the SMA is computed over the last +n+ elements.
+      # the SMA is computed over the last +n+ elements, otherwise it is computed over the entire array.
       # An Array of SMA's is returned, with the first entry always the first value in the subset.
       #
       # @param n [Integer] the number of elements to compute the SMA over
@@ -146,7 +146,7 @@ module Quant
       end
 
       # Computes the Weighted Moving Average (WMA) of the array.  When +n+ is specified,
-      # the WMA is computed over the last +n+ elements.
+      # the WMA is computed over the last +n+ elements, otherwise it is computed over the entire array.
       # An Array of WMA's is returned, with the first entry always the first value in the subset.
       #
       # @param n [Integer] the number of elements to compute the WMA over
@@ -168,7 +168,8 @@ module Quant
       end
 
       # Computes the Standard Deviation of the array.  When +n+ is specified,
-      # the Standard Deviation is computed over the last +n+ elements.
+      # the Standard Deviation is computed over the last +n+ elements,
+      # otherwise it is computed over the entire array.
       #
       # @param n [Integer] the number of elements to compute the Standard Deviation over.
       # @return [Float]

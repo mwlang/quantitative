@@ -1,76 +1,59 @@
-require_relative 'value'
+# frozen_string_literal: true
+
+require_relative "tick"
 
 module Quant
   module Ticks
-    # serialized keys
-    # ot: open timestamp
-    # ct: close timestamp
-    # iv: interval
+    class OHLC < Tick
+      include TimeMethods
 
-    # o: open price
-    # h: high price
-    # l: low price
-    # c: close price
+      attr_reader :interval, :series
+      attr_reader :close_timestamp, :open_timestamp
+      attr_reader :open_price, :high_price, :low_price, :close_price
+      attr_reader :base_volume, :target_volume, :trades
+      attr_reader :green, :doji
 
-    # bv: base volume
-    # tv: target volume
-    # ct: close timestamp
+      def initialize(
+        open_timestamp:,
+        close_timestamp:,
 
-    # t: trades
-    # g: green
-    # j: doji
-    class OHLC < Value
-      def self.from(hash)
-        new \
-          open_timestamp: hash["ot"],
-          close_timestamp: hash["ct"],
-          interval: hash["iv"],
+        open_price:,
+        high_price:,
+        low_price:,
+        close_price:,
 
-          open_price: hash["o"],
-          high_price: hash["h"],
-          low_price: hash["l"],
-          close_price: hash["c"],
+        interval: nil,
 
-          base_volume: hash["bv"],
-          target_volume: hash["tv"],
+        volume: nil,
+        base_volume: nil,
+        target_volume: nil,
 
-          trades: hash["t"],
-          green: hash["g"],
-          doji: hash["j"]
-      end
-
-      def self.from_json(json)
-        from Oj.load(json)
-      end
-
-      def initialize(open_timestamp:,
-                     close_timestamp:,
-                     interval: nil,
-
-                     open_price:,
-                     high_price:,
-                     low_price:,
-                     close_price:,
-
-                     base_volume: 0.0,
-                     target_volume: 0.0,
-
-                     trades: 0,
-                     green: false,
-                     doji: nil)
-
-        super(price: close_price, timestamp: close_timestamp, interval: interval, trades: trades)
+        trades: nil,
+        green: nil,
+        doji: nil
+      )
         @open_timestamp = extract_time(open_timestamp)
+        @close_timestamp = extract_time(close_timestamp)
+
         @open_price = open_price.to_f
         @high_price = high_price.to_f
         @low_price = low_price.to_f
+        @close_price = close_price.to_f
 
-        @base_volume = base_volume.to_i
-        @target_volume = target_volume.to_i
+        @interval = Interval[interval]
+
+        @base_volume = (volume || base_volume).to_i
+        @target_volume = (target_volume || @base_volume).to_i
+        @trades = trades.to_i
 
         @green = green.nil? ? compute_green : green
         @doji = doji.nil? ? compute_doji : doji
+        super()
       end
+
+      alias price close_price
+      alias timestamp close_timestamp
+      alias volume base_volume
 
       def hl2; ((high_price + low_price) / 2.0) end
       def oc2; ((open_price + close_price) / 2.0) end
@@ -82,36 +65,8 @@ module Quant
       end
 
       # percent change from open to close
-      def delta
+      def price_change
         ((open_price / close_price) - 1.0) * 100
-      end
-
-      def to_h
-        { "ot" => open_timestamp,
-          "ct" => close_timestamp,
-          "iv" => interval.to_s,
-
-          "o" => open_price,
-          "h" => high_price,
-          "l" => low_price,
-          "c" => close_price,
-
-          "bv" => base_volume,
-          "tv" => target_volume,
-
-          "t" => trades,
-          "g" => green,
-          "j" => doji }
-      end
-
-      def as_price(value)
-        series.nil? ? value : series.as_price(value)
-      end
-
-      def to_s
-        ots = interval.daily? ? open_timestamp.strftime('%Y-%m-%d') : open_timestamp.strftime('%Y-%m-%d %H:%M:%S')
-        cts = interval.daily? ? close_timestamp.strftime('%Y-%m-%d') : close_timestamp.strftime('%Y-%m-%d %H:%M:%S')
-        "#{ots}: o: #{as_price(open_price)}, h: #{as_price(high_price)}, l: #{as_price(low_price)}, c: #{as_price(close_price)} :#{cts}"
       end
 
       def compute_green
@@ -119,7 +74,7 @@ module Quant
       end
 
       def green?
-        close_price > open_price
+        @green
       end
 
       def red?

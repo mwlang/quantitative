@@ -18,6 +18,19 @@ RSpec.describe Quant::Interval do
     it { expect(described_class.new(:"1m").to_s).to eq "1m" }
   end
 
+  describe "equality" do
+    let(:interval) { described_class.new("1d") }
+    let(:same) { described_class.new("1d") }
+    let(:different) { described_class.new("3m") }
+    let(:as_string) { "1d" }
+    let(:as_symbol) { :daily }
+
+    it { expect(interval).to eq same }
+    it { expect(interval).not_to eq different }
+    it { expect(interval).to eq as_string }
+    it { expect(interval).to eq as_symbol }
+  end
+
   describe "na" do
     subject { described_class.na }
 
