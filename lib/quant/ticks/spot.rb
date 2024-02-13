@@ -4,6 +4,18 @@ require_relative "tick"
 
 module Quant
   module Ticks
+    # A +Spot+ is a single price point in time.  It is the most basic form of a +Tick+ and is usually used to represent
+    # a continuously streaming tick that just has a single price point at a given point in time.
+    # @example
+    #   spot = Quant::Ticks::Spot.new(price: 100.0, timestamp: Time.now)
+    #   spot.price # => 100.0
+    #   spot.timestamp # => 2018-01-01 12:00:00 UTC
+    #
+    # @example
+    #   spot = Quant::Ticks::Spot.from({ "p" => 100.0, "t" => "2018-01-01 12:00:00 UTC", "bv" => 1000 })
+    #   spot.price # => 100.0
+    #   spot.timestamp # => 2018-01-01 12:00:00 UTC
+    #   spot.volume # => 1000
     class Spot < Tick
       include TimeMethods
 
@@ -52,12 +64,11 @@ module Quant
         [close_price, close_timestamp] == [other.close_price, other.close_timestamp]
       end
 
+      # The corresponding? method helps determine that the other tick's timestamp is the same as this tick's timestamp,
+      # which is useful when aligning ticks between two separate series where one starts or ends at a different time,
+      # or when there may be gaps in the data between the two series.
       def corresponding?(other)
         close_timestamp == other.close_timestamp
-      end
-
-      def indicators
-        @indicators ||= IndicatorPoints.new(tick: self)
       end
 
       def inspect

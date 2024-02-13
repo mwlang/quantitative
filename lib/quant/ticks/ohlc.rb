@@ -60,15 +60,33 @@ module Quant
       def hlc3; ((high_price + low_price + close_price) / 3.0) end
       def ohlc4; ((open_price + high_price + low_price + close_price) / 4.0) end
 
+      # The corresponding? method helps determine that the other tick's timestamp is the same as this tick's timestamp,
+      # which is useful when aligning ticks between two separate series where one starts or ends at a different time,
+      # or when there may be gaps in the data between the two series.
       def corresponding?(other)
         [open_timestamp, close_timestamp] == [other.open_timestamp, other.close_timestamp]
       end
 
-      # percent change from open to close
-      def price_change
-        ((open_price / close_price) - 1.0) * 100
+      # Returns the percent daily price change from open_price to close_price, ranging from 0.0 to 1.0.
+      # A positive value means the price increased, and a negative value means the price decreased.
+      # A value of 0.0 means no change.
+      # @return [Float]
+      def daily_price_change
+        ((open_price / close_price) - 1.0)
+      rescue ZeroDivisionError
+        0.0
       end
 
+      # Calculates the absolute change from the open_price to the close_price, divided by the average of the
+      # open_price and close_price. This method will give a value between 0 and 2, where 0 means no change,
+      # 1 means the price doubled, and 2 means the price went to zero.
+      # This method is useful for comparing the volatility of different assets.
+      # @return [Float]
+      def daily_price_change_ratio
+        @price_change ||= ((open_price - close_price) / oc2).abs
+      end
+
+      # Set the #green? property to true when the close_price is greater than or equal to the open_price.
       def compute_green
         close_price >= open_price
       end
@@ -85,10 +103,10 @@ module Quant
         @doji
       end
 
-      def price_change
-        @price_change ||= ((open_price - close_price) / oc2).abs
-      end
-
+      # Computes a doji candlestick pattern.  A doji is a candlestick pattern that occurs when the open and close
+      # are the same or very close to the same.  The high and low are also very close to the same.  The doji pattern
+      # is a sign of indecision in the market. It is a sign that the market is not sure which way to go.
+      # @return [Boolean]
       def compute_doji
         body_bottom, body_top = [open_price, close_price].sort
 
