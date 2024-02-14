@@ -15,3 +15,11 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 end
+
+def fixture_path(sub_folder)
+  File.join(File.expand_path(File.join(File.dirname(__FILE__), "fixtures")), sub_folder.to_s)
+end
+
+def fixture_filename(filename, sub_folder = nil)
+  File.join fixture_path(sub_folder), filename
+end
