@@ -26,6 +26,7 @@ def perform(name:, array:, head:, tail:)
 end
 
 array_of_integers = 50_000.times.map(&:to_i)
+array_of_floats = 50_000.times.map(&:to_f)
 
 head = 10_000
 tail = 25_000
@@ -37,18 +38,40 @@ unless [
 end
 
 perform name: "array of integers", array: array_of_integers, head: head, tail: tail
+perform name: "array of floats", array: array_of_floats, head: head, tail: tail
 
 # --------------------------------------------------------------------------------
 # array of integers
 # --------------------------------------------------------------------------------
-# ruby 3.3.0 (2023-12-25 revision 5124f9ac75) [arm64-darwin22]
+# ruby 3.3.0 (2023-12-25 revision 5124f9ac75) +YJIT [arm64-darwin22]
 # Warming up --------------------------------------
-#                slice     7.040k i/100ms
-#                index   166.000 i/100ms
+#            slice sum     7.038k i/100ms
+#         slice reduce   212.000 i/100ms
+#         index reduce   202.000 i/100ms
 # Calculating -------------------------------------
-#                slice     69.715k (± 3.2%) i/s -    352.000k in   5.055413s
-#                index      1.663k (± 2.2%) i/s -      8.466k in   5.092146s
+#            slice sum     70.662k (± 0.3%) i/s -    358.938k in   5.079706s
+#         slice reduce      2.139k (± 0.6%) i/s -     10.812k in   5.054772s
+#         index reduce      2.018k (± 0.4%) i/s -     10.100k in   5.004402s
 
 # Comparison:
-#                slice:    69715.1 i/s
-#                index:     1663.4 i/s - 41.91x  slower
+#            slice sum:    70661.6 i/s
+#         slice reduce:     2139.0 i/s - 33.03x  slower
+#         index reduce:     2018.3 i/s - 35.01x  slower
+
+# --------------------------------------------------------------------------------
+# array of floats
+# --------------------------------------------------------------------------------
+# ruby 3.3.0 (2023-12-25 revision 5124f9ac75) +YJIT [arm64-darwin22]
+# Warming up --------------------------------------
+#            slice sum     2.962k i/100ms
+#         slice reduce   188.000 i/100ms
+#         index reduce   179.000 i/100ms
+# Calculating -------------------------------------
+#            slice sum     29.527k (± 1.2%) i/s -    148.100k in   5.016487s
+#         slice reduce      1.874k (± 1.5%) i/s -      9.400k in   5.016972s
+#         index reduce      1.801k (± 1.1%) i/s -      9.129k in   5.070219s
+
+# Comparison:
+#            slice sum:    29527.0 i/s
+#         slice reduce:     1874.1 i/s - 15.76x  slower
+#         index reduce:     1800.7 i/s - 16.40x  slower
