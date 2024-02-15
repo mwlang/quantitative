@@ -39,7 +39,7 @@ module Quant
           Oj.dump to_h(tick)
         end
 
-        # Returns a Ruby +Hash+ comprised of the tick's key properties.
+        # Returns a Ruby +Hash+ comprised of the key properties for the tick.
         # @param tick [Quant::Ticks::Tick]
         # @return [Hash]
         # @example

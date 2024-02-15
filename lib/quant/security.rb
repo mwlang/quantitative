@@ -3,6 +3,18 @@
 require_relative "security_class"
 
 module Quant
+  # A +Security+ is a representation of a financial instrument such as a stock, option, future, or currency.
+  # It is used to represent the instrument that is being traded, analyzed, or managed.
+  # @example
+  #   security = Quant::Security.new(symbol: "AAPL", name: "Apple Inc.", security_class: :stock, exchange: "NASDAQ")
+  #   security.symbol # => "AAPL"
+  #   security.name # => "Apple Inc."
+  #   security.stock? # => true
+  #   security.option? # => false
+  #   security.future? # => false
+  #   security.currency? # => false
+  #   security.exchange # => "NASDAQ"
+  #   security.to_h # => { "s" => "AAPL", "n" => "Apple Inc.", "sc" => "stock", "x" => "NASDAQ" }
   class Security
     attr_reader :symbol, :name, :security_class, :id, :exchange, :source, :meta, :created_at, :updated_at
 
