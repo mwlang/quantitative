@@ -60,6 +60,7 @@ module Quant
       alias delta close_price
       alias volume base_volume
 
+      # Two ticks are equal if they have the same close price and close timestamp.
       def ==(other)
         [close_price, close_timestamp] == [other.close_price, other.close_timestamp]
       end
@@ -72,7 +73,7 @@ module Quant
       end
 
       def inspect
-        "#<#{self.class.name} cp=#{close_price.to_f} ct=#{close_timestamp.strftime("%Y-%m-%d")} iv=#{interval.to_s} v=#{volume}>"
+        "#<#{self.class.name} #{interval} ct=#{close_timestamp} c=#{close_price.to_f} v=#{volume}>"
       end
     end
   end

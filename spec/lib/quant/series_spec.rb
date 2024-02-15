@@ -46,11 +46,34 @@ RSpec.describe Quant::Series do
     let(:ema2) { 0.37299306596978826 }
     let(:ema3) { 0.3736671823762353 }
 
-    xcontext "when the same" do
+    context "when the same" do
       let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
       let(:series2) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
 
       it { expect(series1).to eq series2 }
+    end
+
+    context "when the different" do
+      context "when symbol is different" do
+        let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+        let(:series2) { described_class.from_file(filename: apple_fixture_filename, symbol: ibm, interval: "1d") }
+
+        it { expect(series1).not_to eq series2 }
+      end
+
+      context "when interval is different" do
+        let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+        let(:series2) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1m") }
+
+        it { expect(series1).not_to eq series2 }
+      end
+
+      context "when ticks are different" do
+        let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+        let(:series2) { described_class.from_file(filename: ibm_fixture_filename, symbol: ibm, interval: "1d") }
+
+        it { expect(series1).not_to eq series2 }
+      end
     end
 
     context "when duplicated" do

@@ -14,6 +14,54 @@ RSpec.describe Quant::Ticks::OHLC do
 
     subject { described_class.from(json) }
 
+    describe "#inspect" do
+      let(:tick) do
+        described_class.new(
+          open_price: 1.0,
+          high_price: 2.0,
+          low_price: 3.0,
+          close_price: 4.0,
+          open_timestamp: Time.new(2024, 1, 15, 8, 30, 5),
+          close_timestamp: Time.new(2024, 1, 15, 8, 30, 5),
+          interval: :daily,
+          volume: 88
+        )
+      end
+
+      it { expect(tick.inspect).to eq("#<Quant::Ticks::OHLC 1d ct=2024-01-15T13:30:05Z o=1.0 h=2.0 l=3.0 c=4.0 v=88>") }
+    end
+
+    describe "equality" do
+      let(:attributes) do
+        { open_price: 1.0,
+          high_price: 2.0,
+          low_price: 3.0,
+          close_price: 4.0,
+          open_timestamp: open_time,
+          close_timestamp: close_time }
+      end
+      let(:tick1) { described_class.new(**attributes) }
+      let(:tick2) { described_class.new(**attributes) }
+      let(:tick3) { described_class.new(**attributes.merge(close_price: 5.0)) }
+      let(:expected_hash) do
+        { "bv" => 0,
+          "c" => 4.0,
+          "ct" => close_time,
+          "g" => true,
+          "h" => 2.0,
+          "iv" => "na",
+          "j" => false,
+          "l" => 3.0,
+          "o" => 1.0,
+          "ot" => open_time,
+          "t" => 0,
+          "tv" => 0 }
+      end
+      it { expect(tick1).to eq tick2 }
+      it { expect(tick1).not_to eq tick3 }
+      it { expect(tick1.to_h).to eq expected_hash }
+    end
+
     context "valid" do
       it { is_expected.to be_a(described_class) }
 

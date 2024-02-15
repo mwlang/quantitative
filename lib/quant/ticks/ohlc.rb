@@ -4,6 +4,10 @@ require_relative "tick"
 
 module Quant
   module Ticks
+    # An +OHLC+ is a bar or candle for a point in time that has an open, high, low, and close price.
+    # It is the most common form of a +Tick+ and is usually used to representa time period such as a
+    # minute, hour, day, week, or month.  The +OHLC+ is used to represent the price action of an asset
+    # The interval of the +OHLC+ is the time period that the +OHLC+ represents, such has hourly, daily, weekly, etc.
     class OHLC < Tick
       include TimeMethods
 
@@ -67,6 +71,11 @@ module Quant
         [open_timestamp, close_timestamp] == [other.open_timestamp, other.close_timestamp]
       end
 
+      # Two OHLC ticks are equal if their interval, close_timestamp, and close_price are equal.
+      def ==(other)
+        [interval, close_timestamp, close_price] == [other.interval, other.close_timestamp, other.close_price]
+      end
+
       # Returns the percent daily price change from open_price to close_price, ranging from 0.0 to 1.0.
       # A positive value means the price increased, and a negative value means the price decreased.
       # A value of 0.0 means no change.
@@ -119,6 +128,10 @@ module Quant
         tail_ratio = tail_length / body_length
 
         body_ratio < 0.025 && head_ratio > 1.0 && tail_ratio > 1.0
+      end
+
+      def inspect
+        "#<#{self.class.name} #{interval} ct=#{close_timestamp.iso8601} o=#{open_price} h=#{high_price} l=#{low_price} c=#{close_price} v=#{volume}>"
       end
     end
   end
