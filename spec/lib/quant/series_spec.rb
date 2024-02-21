@@ -3,7 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Quant::Series do
-  let(:series_fixture_path) { fixture_path("series") }
   let(:appl) { "AAPL" }
   let(:ibm) { "IBM" }
   let(:apple_fixture_filename) { fixture_filename("AAPL-19990104_19990107.txt", :series) }

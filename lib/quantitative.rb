@@ -12,6 +12,6 @@ quant_folder = File.join(lib_folder, "quant")
 Dir.glob(File.join(quant_folder, "*.rb")).each { |fn| require fn }
 
 # require sub-folders and their sub-folders
-%w(refinements ticks).each do |sub_folder|
+%w(refinements settings ticks indicators).each do |sub_folder|
   Dir.glob(File.join(quant_folder, sub_folder, "**/*.rb")).each { |fn| require fn }
 end
