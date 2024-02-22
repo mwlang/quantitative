@@ -36,18 +36,18 @@ RSpec.describe Array do
       context 'max_size! twice' do
         before { new_array.max_size!(25) }
 
-        it { expect{ new_array.max_size!(50) }.to raise_error(Quant::ArrayMaxSizeError, /only.*once/) }
+        it { expect{ new_array.max_size!(50) }.to raise_error(Quant::Errors::ArrayMaxSizeError, /only.*once/) }
       end
 
       context 'max_size! whiny nil' do
-        it { expect{ new_array.max_size!(nil) }.to raise_error(Quant::ArrayMaxSizeError, /cannot.*nil/) }
+        it { expect{ new_array.max_size!(nil) }.to raise_error(Quant::Errors::ArrayMaxSizeError, /Cannot set.*nil/) }
       end
 
       context 'max_size! with too many items' do
         let(:new_array) { Array.new(25, 0) }
 
         it { expect{ new_array.max_size!(50) }.not_to raise_error }
-        it { expect{ new_array.max_size!(5) }.to raise_error Quant::ArrayMaxSizeError, /size.*exceeds max_size/ }
+        it { expect{ new_array.max_size!(5) }.to raise_error Quant::Errors::ArrayMaxSizeError, /size.*exceeds max_size/ }
       end
     end
 

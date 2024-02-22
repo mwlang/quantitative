@@ -2,12 +2,12 @@
 
 module Quant
   module Ticks
-    # +Tick+ is the abstract ancestor for all Ticks and holds the logic for interacting with series and indicators.
+    # {Quant::Ticks::Tick} is the abstract ancestor for all Ticks and holds the logic for interacting with series and indicators.
     # The public interface is devoid of properties around price, volume, and timestamp, etc.  Descendant classes
     # are responsible for defining the properties and how they are represented.
     #
-    # The +Tick+ class is designed to be immutable and is intended to be used as a value object.  This means that
-    # once a +Tick+ is created, it cannot be changed.  This is important for the integrity of the series and
+    # The {Quant::Ticks::Tick} class is designed to be immutable and is intended to be used as a value object.  This means that
+    # once a {Quant::Ticks::Tick} is created, it cannot be changed.  This is important for the integrity of the series and
     # indicators that depend on the ticks within the series.
     #
     # When a tick is added to a series, it is locked into the series and ownership cannot be changed.  This is important
@@ -17,7 +17,7 @@ module Quant
     #
     # Ticks can be serialized to and from Ruby Hash, JSON strings, and CSV strings.
     class Tick
-      # Returns a +Tick+ from a Ruby +Hash+.  The default serializer is used to generate the +Tick+.
+      # Returns a {Quant::Ticks::Tick} from a Ruby +Hash+.  The default serializer is used to generate the {Quant::Ticks::Tick}.
       # @param hash [Hash]
       # @param serializer_class [Class] The serializer class to use for the conversion.
       # @return [Quant::Ticks::Tick]
@@ -29,7 +29,7 @@ module Quant
         serializer_class.from(hash, tick_class: self)
       end
 
-      # Returns a +Tick+ from a JSON string.  The default serializer is used to generate the +Tick+.
+      # Returns a {Quant::Ticks::Tick} from a JSON string.  The default serializer is used to generate the {Quant::Ticks::Tick}.
       # @param json [String]
       # @param serializer_class [Class] The serializer class to use for the conversion.
       # @return [Quant::Ticks::Tick]

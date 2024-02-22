@@ -39,13 +39,13 @@
 #   pp series
 #
 module Quant
-  # +Quant::Interval+ abstracts away the concept of ticks (candles, bars, etc.) and their duration and offers some basic utilities for
-  # working with multiple timeframes.  Intervals are used in +Tick+ and +Series+ classes to define the duration of the ticks.
+  # {Quant::Interval} abstracts away the concept of ticks (candles, bars, etc.) and their duration and offers some basic utilities for
+  # working with multiple timeframes.  Intervals are used in {Quant::Ticks::Tick} and {Quant::Series} classes to define the duration of the ticks.
   #
-  # When the +Interval+ is unknown, it is set to +'na'+ (not available) and the duration is set to 0.  The shorthand for this is
+  # When the {Quant::Interval} is unknown, it is set to +'na'+ (not available) and the duration is set to 0.  The shorthand for this is
   # +Interval.na+. and +Interval[:na]+. and +Interval[nil]+.
   #
-  # +Interval+ are instantiated in multple ways to support a wide variety of use-cases.  Here's an example:
+  # {Quant::Interval} are instantiated in multple ways to support a wide variety of use-cases.  Here's an example:
   #   Quant::Interval.new("1d")               # => #<Quant::Interval @interval="1d"> (daily interval)
   #   Quant::Interval.new(:daily)             # => #<Quant::Interval @interval="1d">
   #   Quant::Interval[:daily]                 # => #<Quant::Interval @interval="1d">
@@ -122,7 +122,7 @@ module Quant
 
     # Instantiates an Interval from a resolution.  For example, TradingView uses resolutions
     # like "1", "3", "5", "15", "30", "60", "240", "D", "1D" to represent the duration of a
-    # candlestick.  +from_resolution+ translates resolutions to the appropriate +Interval+.
+    # candlestick.  +from_resolution+ translates resolutions to the appropriate {Quant::Interval}.
     def self.from_resolution(resolution)
       ensure_valid_resolution!(resolution)
 
@@ -130,7 +130,7 @@ module Quant
     end
 
     # Instantiates an Interval from a string or symbol.  If the value is already
-    # an +Interval+, it is returned as-is.
+    # an {Quant::Interval}, it is returned as-is.
     def self.[](value)
       return value if value.is_a? Interval
 
@@ -153,19 +153,28 @@ module Quant
       @interval = (interval || "na").to_s
     end
 
+    # Returns true when the duration of the interval is zero, such as for the `na` interval.
     def nil?
-      interval == "na"
+      duration.zero?
     end
 
     def to_s
       interval
     end
 
+    # Returns the total span of seconds or duration for the interval.
+    # @example
+    #   Quant::Interval.new("1d").duration => 86400
+    #   Quant::Interval.new("1h").duration => 3600
+    #   Quant::Interval.new("1m").duration => 60
+    #   Quant::Interval.new("1s").duration => 1
+    #   Quant::Interval.new("na").duration => 0
     def duration
       INTERVAL_DISTANCE[interval]
     end
     alias seconds duration
 
+    # Compares the interval to another interval, string, or symbol and returns true if they are equal.
     def ==(other)
       if other.is_a? String
         interval.to_s == other
@@ -176,13 +185,22 @@ module Quant
       end
     end
 
+    # Returns the number of ticks this interval represents per minute.
+    # @example
+    #   Quant::Interval.new("1d").ticks_per_minute => 0.0006944444444444445
+    #   Quant::Interval.new("1h").ticks_per_minute => 0.016666666666666666
+    #   Quant::Interval.new("1m").ticks_per_minute => 1.0
+    #   Quant::Interval.new("1s").ticks_per_minute => 60.0
     def ticks_per_minute
       60.0 / seconds
     end
 
+    # Returns the half-life of the interval in seconds.
+    # @example
+    #   Quant::Interval.new("1d").half_life => 43200.0
+    #   Quant::Interval.new("1h").half_life => 1800.0
+    #   Quant::Interval.new("1m").half_life => 30.0
     def half_life
-      raise "bad interval #{interval}" if duration.nil?
-
       duration / 2.0
     end
 
@@ -193,11 +211,16 @@ module Quant
       Interval.new intervals[intervals.index(interval) + 1] || intervals[-1]
     end
 
+    # Returns the full list of valid interval Strings that can be used to instantiate an {Quant::Interval}.
     def self.valid_intervals
       INTERVAL_DISTANCE.keys
     end
 
-    # NOTE: if timestamp doesn't cover a full interval, it will be rounded up to 1
+    # Computes the number of ticks from present to given timestamp.
+    # If timestamp doesn't cover a full interval, it will be rounded up to 1
+    # @example
+    #   interval = Quant::Interval.new("1d")
+    #   interval.ticks_to(Time.now + 5.days) # => 5  NOTE: `5.days` is an ActiveSupport method
     def ticks_to(timestamp)
       ((timestamp - Quant.current_time) / duration).round(2).ceil
     end
@@ -209,7 +232,8 @@ module Quant
     def self.ensure_valid_resolution!(resolution)
       return if RESOLUTIONS.keys.include? resolution
 
-      raise InvalidResolution, "resolution (#{resolution}) not a valid resolution. Should be one of: (#{RESOLUTIONS.keys.join(", ")})"
+      should_be_one_of = "Should be one of: (#{RESOLUTIONS.keys.join(", ")})"
+      raise Errors::InvalidResolution, "resolution (#{resolution}) not a valid resolution. #{should_be_one_of}"
     end
 
     private
@@ -221,7 +245,8 @@ module Quant
     def ensure_valid_interval!(interval)
       return if interval.nil? || valid_intervals.include?(interval.to_s)
 
-      raise InvalidInterval, "interval (#{interval.inspect}) not a valid interval. Should be one of: (#{valid_intervals.join(", ")})"
+      should_be_one_of = "Should be one of: (#{valid_intervals.join(", ")})"
+      raise Errors::InvalidInterval, "interval (#{interval.inspect}) not a valid interval. #{should_be_one_of}"
     end
 
     def ensure_valid_resolution!(resolution)

@@ -24,7 +24,7 @@ module Quant
   # real estate. Investors can buy shares in a REIT, which provides them with a share of the
   # income produced by the real estate.
 
-  # Cryptocurrencies: Digital or virtual currencies that use cryptography for security and operate on
+  # Cryptocurrencies: Digital or virtual currencies that use cryptography for asset and operate on
   # decentralized networks, typically based on blockchain technology. Examples include Bitcoin, Ethereum, and Ripple.
 
   # Preferred Stock: A type of stock that has priority over common stock in terms of dividend
@@ -40,7 +40,7 @@ module Quant
 
   # Foreign Exchange (Forex): The market where currencies are traded. Investors can buy and sell currencies to
   # profit from changes in exchange rates.
-  class SecurityClass
+  class AssetClass
     CLASSES = %i(
       bond
       commodity
@@ -57,31 +57,31 @@ module Quant
       treasury_note
     ).freeze
 
-    attr_reader :security_class
+    attr_reader :asset_class
 
     def initialize(name)
-      return if @security_class = from_standard(name)
+      return if @asset_class = from_standard(name)
 
-      @security_class = from_alternate(name.to_s.downcase.to_sym) unless name.nil?
-      raise_unknown_security_class_error(name) unless security_class
+      @asset_class = from_alternate(name.to_s.downcase.to_sym) unless name.nil?
+      raise_unknown_asset_class_error(name) unless asset_class
     end
 
     CLASSES.each do |class_name|
       define_method("#{class_name}?") do
-        security_class == class_name
+        asset_class == class_name
       end
     end
 
-    def raise_unknown_security_class_error(name)
-      raise SecurityClassError, "Unknown security class: #{name.inspect}"
+    def raise_unknown_asset_class_error(name)
+      raise Errors::AssetClassError, "Unknown asset class: #{name.inspect}"
     end
 
     def to_s
-      security_class.to_s
+      asset_class.to_s
     end
 
     def to_h
-      { "sc" => security_class }
+      { "sc" => asset_class }
     end
 
     def to_json(*args)
@@ -90,9 +90,9 @@ module Quant
 
     def ==(other)
       case other
-      when String then from_alternate(other.to_sym) == security_class
-      when Symbol then from_alternate(other) == security_class
-      when SecurityClass then other.security_class == security_class
+      when String then from_alternate(other.to_sym) == asset_class
+      when Symbol then from_alternate(other) == asset_class
+      when AssetClass then other.asset_class == asset_class
       else
         false
       end

@@ -3,7 +3,7 @@
 module Quant
   # Ticks belong to the first series they're associated with always.
   # There are no provisions for series merging their ticks to one series!
-  # Indicators will be computed against the parent series of a list of ticks, so we
+  # {Indicators} will be computed against the parent series of a list of ticks, so we
   # can safely work with subsets of a series and indicators will compute just once.
   class Series
     include Enumerable

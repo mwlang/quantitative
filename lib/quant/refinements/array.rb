@@ -1,6 +1,6 @@
 module Quant
   module Refinements
-    # Refinements for the standard Ruby +Array+ class.
+    # Refinements for the standard Ruby {Quant::Array} class.
     # These refinements add statistical methods to the Array class as well as some optimizations that greatly
     # speed up some of the computations performed by the various indicators.
     #
@@ -67,7 +67,7 @@ module Quant
       end
 
       # Treats the tail of the array as starting at zero and counting up.  Does not overflow the head of the array.
-      # That is, if the +Array+ has 5 elements, prev(10) would return the first element in the array.
+      # That is, if the {Quant::Array} has 5 elements, prev(10) would return the first element in the array.
       #
       # @example
       #   series = [1, 2, 3, 4]
@@ -89,11 +89,12 @@ module Quant
       # +max_size+, the first element is removed from the array.
       # This setting modifies :<< and :push methods.
       def max_size!(max_size)
-        # These guards are maybe not necessary, but they are here until a use-case is found.
-        # My concern lies with indicators that are built specifically against the +max_size+ of a given array.
-        raise Quant::ArrayMaxSizeError, 'cannot set max_size to nil.' unless max_size
-        raise Quant::ArrayMaxSizeError, 'can only max_size! once.' if @max_size
-        raise Quant::ArrayMaxSizeError, "size of Array #{size} exceeds max_size #{max_size}." if size > max_size
+        # These guards are maybe unnecessary, but they are here until a use-case is found.
+        # Some indicators are built specifically against the +max_size+ of a given array.
+        # Adjusting the +max_size+ after the fact could lead to unexpected, unintended behavior.
+        raise Errors::ArrayMaxSizeError, "Cannot set max_size to nil." unless max_size
+        raise Errors::ArrayMaxSizeError, "The max_size can only be set once." if @max_size
+        raise Errors::ArrayMaxSizeError, "The size of Array #{size} exceeds max_size #{max_size}." if size > max_size
 
         @max_size = max_size
         self

@@ -3,10 +3,10 @@
 module Quant
   module Ticks
     module Serializers
-      # The +Tick+ class serializes and deserializes +Tick+ objects to and from various formats.
-      # These classes are wired into the Tick classes and are used to convert +Tick+ objects to and from
+      # The {Quant::Ticks::Tick} class serializes and deserializes {Quant::Ticks::Tick} objects to and from various formats.
+      # These classes are wired into the Tick classes and are used to convert {Quant::Ticks::Tick} objects to and from
       # Ruby hashes, JSON strings, and CSV strings.  They're not typically used directly, but are extracted
-      # to make it easier to provide custom serialization and deserialization for +Tick+ objects not shipped
+      # to make it easier to provide custom serialization and deserialization for {Quant::Ticks::Tick} objects not shipped
       # with the library.
       # @abstract
       class Tick

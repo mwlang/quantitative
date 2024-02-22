@@ -85,7 +85,7 @@ RSpec.describe Quant::Interval do
 
   describe "valid_intervals" do
     it "raises error if interval is invalid" do
-      expect { described_class.new("1x") }.to raise_error(Quant::InvalidInterval)
+      expect { described_class.new("1x") }.to raise_error(Quant::Errors::InvalidInterval)
     end
 
     it "treats all defined intervals as valid" do

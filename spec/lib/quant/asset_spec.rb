@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Quant::Security do
+RSpec.describe Quant::Asset do
   context "from Alpaca Asset" do
     let(:asset) do
       {
@@ -22,7 +22,7 @@ RSpec.describe Quant::Security do
       }
     end
 
-    let(:security_from_asset) do
+    let(:asset_from_asset) do
       described_class.new(
         symbol: asset["symbol"],
         name: asset["name"],
@@ -30,15 +30,15 @@ RSpec.describe Quant::Security do
         tradeable: asset["tradable"],
         active: asset["status"] == "active",
         exchange: asset["exchange"],
-        security_class: asset["class"],
+        asset_class: asset["class"],
         source: :alpaca,
         meta: asset
       )
     end
 
-    subject { security_from_asset }
+    subject { asset_from_asset }
 
-    it { is_expected.to be_a Quant::Security }
+    it { is_expected.to be_a Quant::Asset }
     it { is_expected.to have_attributes(symbol: "IBM") }
     it { is_expected.to have_attributes(name: "International Business Machines Corporation") }
     it { is_expected.to be_active }
@@ -48,7 +48,7 @@ RSpec.describe Quant::Security do
     it { expect(subject.name).to eq "International Business Machines Corporation" }
     it { expect(subject.id).to eq "21d40833-6d13-4031-9af3-02f6a516d791" }
     it { expect(subject.exchange).to eq "NYSE" }
-    it { expect(subject.security_class).to eq :stock }
+    it { expect(subject.asset_class).to eq :stock }
     it { expect(subject.source).to eq :alpaca }
     it { expect(subject.meta).to eq asset }
     it { expect(subject.created_at).to be_a Time }

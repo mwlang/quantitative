@@ -4,7 +4,7 @@ require_relative "tick"
 
 module Quant
   module Ticks
-    # A +Spot+ is a single price point in time.  It is the most basic form of a +Tick+ and is usually used to represent
+    # A +Spot+ is a single price point in time.  It is the most basic form of a {Quant::Ticks::Tick} and is usually used to represent
     # a continuously streaming tick that just has a single price point at a given point in time.
     # @example
     #   spot = Quant::Ticks::Spot.new(price: 100.0, timestamp: Time.now)
