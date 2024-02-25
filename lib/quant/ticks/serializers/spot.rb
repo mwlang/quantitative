@@ -21,7 +21,6 @@ module Quant
         # Serialized Keys:
         #
         # - ct: close timestamp
-        # - iv: interval
         # - cp: close price
         # - bv: base volume
         # - tv: target volume
@@ -31,11 +30,10 @@ module Quant
         # @return [Hash]
         # @example
         #  Quant::Ticks::Serializers::Tick.to_h(tick)
-        #  # => { "ct" => "2024-02-13 03:12:23 UTC", "cp" => 5.0, "iv" => "1d", "bv" => 0.0, "tv" => 0.0, "t" => 0 }
+        #  # => { "ct" => "2024-02-13 03:12:23 UTC", "cp" => 5.0, "bv" => 0.0, "tv" => 0.0, "t" => 0 }
         def self.to_h(tick)
           { "ct" => tick.close_timestamp,
             "cp" => tick.close_price,
-            "iv" => tick.interval.to_s,
             "bv" => tick.base_volume,
             "tv" => tick.target_volume,
             "t" => tick.trades }
@@ -45,7 +43,6 @@ module Quant
           tick_class.new(
             close_timestamp: hash["ct"],
             close_price: hash["cp"],
-            interval: hash["iv"],
             base_volume: hash["bv"],
             target_volume: hash["tv"],
             trades: hash["t"]

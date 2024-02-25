@@ -12,8 +12,13 @@ RSpec.describe Quant::Ticks::Tick do
   subject(:tick) { described_class.new }
 
   describe "#assign_series" do
-    let(:series) { double("series", interval: "1d") }
-    let(:another_series) { double("series") }
+    let(:indicators) { instance_double(Quant::IndicatorsProxy) }
+    let(:series) { instance_double(Quant::Series, interval: "1d", indicators: indicators) }
+    let(:another_series) { instance_double(Quant::Series) }
+
+    before do
+      allow(indicators).to receive(:<<) { |tick| tick }
+    end
 
     it { expect(tick.series).to be_nil }
 
@@ -24,6 +29,22 @@ RSpec.describe Quant::Ticks::Tick do
     it "does not reassign another series" do
       expect { tick.assign_series(series) }.to change(tick, :series).from(nil).to(series)
       expect { tick.assign_series(another_series) }.not_to change(tick, :series).from(series)
+    end
+  end
+
+  describe "#interval" do
+    context "before a series is assigned" do
+      it { expect(tick.interval).to eq Quant::Interval[nil] }
+      it { expect(tick.interval).to be_nil }
+    end
+
+    context "when a series is assigned" do
+      let(:series) { instance_double(Quant::Series, interval: "1d") }
+
+      before { tick.assign_series(series) }
+
+      it { expect(series.interval).to eq "1d" }
+      it { expect(tick.interval).to eq "1d" }
     end
   end
 

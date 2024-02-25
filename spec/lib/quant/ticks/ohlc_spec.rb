@@ -23,12 +23,11 @@ RSpec.describe Quant::Ticks::OHLC do
           close_price: 4.0,
           open_timestamp: Time.new(2024, 1, 15, 8, 30, 5),
           close_timestamp: Time.new(2024, 1, 15, 8, 30, 5),
-          interval: :daily,
           volume: 88
         )
       end
 
-      it { expect(tick.inspect).to eq("#<Quant::Ticks::OHLC 1d ct=2024-01-15T13:30:05Z o=1.0 h=2.0 l=3.0 c=4.0 v=88>") }
+      it { expect(tick.inspect).to eq("#<Quant::Ticks::OHLC ct=2024-01-15T13:30:05Z o=1.0 h=2.0 l=3.0 c=4.0 v=88>") }
     end
 
     describe "equality" do
@@ -49,7 +48,6 @@ RSpec.describe Quant::Ticks::OHLC do
           "ct" => close_time,
           "g" => true,
           "h" => 2.0,
-          "iv" => "na",
           "j" => false,
           "l" => 3.0,
           "o" => 1.0,
@@ -74,12 +72,11 @@ RSpec.describe Quant::Ticks::OHLC do
     end
 
     context "without volume" do
-      let(:json) { { "ot" => open_time.to_i, "ct" => close_time, "iv" => "1m", "o" => 1.0 } }
+      let(:json) { { "ot" => open_time.to_i, "ct" => close_time, "o" => 1.0 } }
 
       it "has the correct attributes" do
         expect(subject.open_timestamp).to be_within(one_second).of(open_time)
         expect(subject.close_timestamp).to eq(close_time)
-        expect(subject.interval).to eq(Quant::Interval["1m"])
         expect(subject.open_price).to eq(1.0)
         expect(subject.base_volume).to eq(0.0)
         expect(subject.target_volume).to eq(0.0)
@@ -90,7 +87,6 @@ RSpec.describe Quant::Ticks::OHLC do
       let(:json) do
         { "ot" => open_time.to_i,
           "ct" => close_time,
-          "iv" => "1m",
           "o" => 1.0,
           "h" => 2.0,
           "l" => 0.5,
@@ -105,7 +101,7 @@ RSpec.describe Quant::Ticks::OHLC do
       it "has the correct attributes" do
         expect(subject.open_timestamp).to be_within(one_second).of(open_time)
         expect(subject.close_timestamp).to eq(close_time)
-        expect(subject.interval).to eq(Quant::Interval["1m"])
+        expect(subject.interval).to be_nil
 
         expect(subject.open_price).to eq(1.0)
         expect(subject.high_price).to eq(2.0)
@@ -128,7 +124,6 @@ RSpec.describe Quant::Ticks::OHLC do
         let(:json) do
           { "ot" => open_time,
             "ct" => close_time,
-            "iv" => "1m",
             "o" => 3.0,
             "h" => 6.0,
             "l" => 1.0,
@@ -222,11 +217,11 @@ RSpec.describe Quant::Ticks::OHLC do
     end
 
     describe "#corresponding?" do
-      let(:time_1) { Quant.current_time }
-      let(:time_2) { time_1 + two_minutes_in_seconds }
-      let(:hash_1) do
-        { "ot" => time_1,
-          "ct" => time_1 + one_minute_in_seconds,
+      let(:opent_time) { Quant.current_time }
+      let(:close_time) { open_time + two_minutes_in_seconds }
+      let(:hash1) do
+        { "ot" => open_time,
+          "ct" => open_time + one_minute_in_seconds,
           "iv" => "1m",
           "o" => 6.0,
           "h" => 6.0,
@@ -234,10 +229,9 @@ RSpec.describe Quant::Ticks::OHLC do
           "c" => 6.0,
           "g" => true }
       end
-
-      let(:hash_2) do
-        { "ot" => time_2,
-          "ct" => time_2 + one_minute_in_seconds,
+      let(:hash2) do
+        { "ot" => close_time,
+          "ct" => close_time + one_minute_in_seconds,
           "iv" => "1m",
           "o" => 3.0,
           "h" => 3.0,
@@ -247,20 +241,20 @@ RSpec.describe Quant::Ticks::OHLC do
       end
 
       context "when same timestamps" do
-        let(:tick1) { described_class.from(hash_1) }
-        let(:tick2) { described_class.from(hash_1.merge(hash_2.except("ot", "ct"))) }
+        let(:tick1) { described_class.from(hash1) }
+        let(:tick2) { described_class.from(hash1.merge(hash2.except("ot", "ct"))) }
 
         it { expect(tick1).to be_corresponding tick2 }
       end
 
       context "when different timestamps" do
-        let(:tick1) { described_class.from(hash_1) }
-        let(:tick2) { described_class.from(hash_2) }
+        let(:tick1) { described_class.from(hash1) }
+        let(:tick2) { described_class.from(hash2) }
 
         it { expect(tick1).not_to be_corresponding tick2 }
 
         context "when same open_timestamp, different close_timestamp" do
-          let(:tick2) { described_class.from(hash_2.merge(hash_2.except("ct"))) }
+          let(:tick2) { described_class.from(hash2.merge(hash2.except("ct"))) }
 
           it { expect(tick1).not_to be_corresponding tick2 }
         end
@@ -268,30 +262,31 @@ RSpec.describe Quant::Ticks::OHLC do
     end
 
     describe "#assign_series" do
-      let(:first_series) { double("first_series", interval: "1d") }
-      let(:next_series) { double("next_series") }
-
+      let(:indicators) { instance_double(Quant::IndicatorsProxy) }
+      let(:first_series) { instance_double(Quant::Series, interval: "1d", indicators: indicators) }
+      let(:next_series) { instance_double(Quant::Series) }
       let(:json) do
         { "ot" => open_time,
           "ct" => close_time,
-          "iv" => "1m",
           "o" => 6.0,
           "h" => 6.0,
           "l" => 6.0,
           "c" => 6.0,
           "g" => true }
       end
-
       let(:tick) { described_class.from(json) }
 
-      before { tick.assign_series(first_series) }
+      before do
+        allow(indicators).to receive(:<<) { |tick| tick }
+        tick.assign_series(first_series)
+      end
 
       subject { tick }
 
       context "first time" do
         it { is_expected.to eq tick }
         it { expect(subject.series).to eq first_series }
-        it { expect(subject.interval).to eq "1m" }
+        it { expect(subject.interval).to eq "1d" }
         it { expect { subject }.not_to change { tick.to_h } }
 
         context "when tick.interval is nil before assigning" do
@@ -317,7 +312,7 @@ RSpec.describe Quant::Ticks::OHLC do
         it { expect(subject.series).to eq first_series }
         it { expect(subject).to eq tick }
         it { expect { subject }.not_to change { tick.to_h } }
-        it { expect(subject.interval).to eq "1m" }
+        it { expect(subject.interval).to eq "1d" }
         it { expect(subject.to_h).to eq tick.to_h }
       end
     end

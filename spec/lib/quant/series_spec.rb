@@ -3,6 +3,8 @@
 require "spec_helper"
 
 RSpec.describe Quant::Series do
+  let(:open_timestamp) { Quant.current_time - 60 }
+  let(:close_timestamp) { Quant.current_time }
   let(:appl) { "AAPL" }
   let(:ibm) { "IBM" }
   let(:apple_fixture_filename) { fixture_filename("AAPL-19990104_19990107.txt", :series) }
@@ -37,6 +39,62 @@ RSpec.describe Quant::Series do
 
     it { is_expected.to be_a(described_class) }
     it { expect(subject.ticks.size).to eq(4) }
+  end
+
+  describe "#<<" do
+    let(:series) { described_class.new(symbol: appl, interval: "1d") }
+
+    subject { series << tick }
+
+    context "when Ticks::Tick::OHLC" do
+      let(:tick) do
+        Quant::Ticks::OHLC.new \
+          close_timestamp: close_timestamp,
+          open_timestamp: open_timestamp,
+          open_price: 10,
+          high_price: 20,
+          low_price: 5,
+          close_price: 15
+      end
+
+      it { expect{ subject }.to change{ series.ticks.size }.from(0).to(1) }
+      it { expect(subject.first.open_price).to eq(10) }
+      it { expect(subject.first.close_price).to eq(15) }
+      it { expect(subject.highest.high_price).to eq(20) }
+    end
+
+    context "when Ticks::Tick::Spot" do
+      let(:tick) { Quant::Ticks::Spot.new(timestamp: close_timestamp, price: 15) }
+
+      it { expect{ subject }.to change{ series.ticks.size }.from(0).to(1) }
+      it { expect(subject.first.price).to eq(15) }
+      it { expect(tick.high_price).to eq(15) }
+      it { expect(subject.highest.high_price).to eq(15) }
+    end
+
+    context "when Integer" do
+      let(:tick) { 15 }
+
+      it { expect{ subject }.to change{ series.ticks.size }.from(0).to(1) }
+      it { expect(subject.first.price).to eq(15) }
+      it { expect(subject.highest.high_price).to eq(15) }
+    end
+
+    context "when Float" do
+      let(:tick) { 15.0 }
+
+      it { expect{ subject }.to change{ series.ticks.size }.from(0).to(1) }
+      it { expect(subject.first.price).to eq(15.0) }
+      it { expect(subject.highest.high_price).to eq(15.0) }
+    end
+
+    context "when Rational" do
+      let(:tick) { 15.0r }
+
+      it { expect{ subject }.to change{ series.ticks.size }.from(0).to(1) }
+      it { expect(subject.first.price).to eq(15.0r) }
+      it { expect(subject.highest.high_price).to eq(15.0r) }
+    end
   end
 
   describe "equality" do
@@ -239,6 +297,17 @@ RSpec.describe Quant::Series do
     end
   end
 
+  describe "#interval" do
+    let(:series) { described_class.new(symbol: appl, interval: "1d") }
+    let(:series2) { described_class.new(symbol: appl, interval: Quant::Interval.new("1m")) }
+
+    it { expect(series.interval).to eq Quant::Interval["1d"] }
+    it { expect(series2.interval).to eq Quant::Interval["1m"] }
+
+    it { expect(series.interval).to eq "1d" }
+    it { expect(series2.interval).to eq "1m" }
+  end
+
   describe "#select!" do
     let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
     let(:series2) { described_class.from_file(filename: ibm_fixture_filename, symbol: ibm, interval: "1d") }
@@ -259,5 +328,46 @@ RSpec.describe Quant::Series do
         it { expect{ subject }.to change{ series1.ticks.size }.from(4).to(2) }
       end
     end
+  end
+
+  describe "#reject!" do
+    let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+    let(:series2) { described_class.from_file(filename: ibm_fixture_filename, symbol: ibm, interval: "1d") }
+    let(:tick) { series1[2] }
+
+    subject { series1.reject! { |t| t == tick } }
+
+    it { expect{ subject }.to change{ series1.ticks.size }.from(4).to(3) }
+  end
+
+  describe "#select" do
+    let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+    let(:series2) { described_class.from_file(filename: ibm_fixture_filename, symbol: ibm, interval: "1d") }
+    let(:tick) { series1.last }
+
+    subject { series1.select { |t| t == tick } }
+
+    it { expect{ subject }.not_to change{ series1.ticks.size } }
+  end
+
+  describe "#reject" do
+    let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+    let(:series2) { described_class.from_file(filename: ibm_fixture_filename, symbol: ibm, interval: "1d") }
+    let(:tick) { series1.first }
+
+    subject { series1.reject { |t| t == tick } }
+
+    it { expect{ subject }.not_to change{ series1.ticks.size } }
+  end
+
+  describe "#indicators" do
+    let(:series) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+
+    subject { series.indicators }
+
+    it { is_expected.to be_a(Quant::IndicatorsSources) }
+    it { expect(subject.oc2).to be_a(Quant::IndicatorsProxy) }
+    xit { expect(subject.oc2.ma).to be_a(Quant::Indicators::Ma) }
+    xit { expect(subject.oc2.ma.first).to be_a(Quant::Indicators::MaPoint) }
   end
 end

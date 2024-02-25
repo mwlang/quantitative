@@ -1,7 +1,7 @@
 module Quant
   class Indicators
     class Indicator
-      # include Enumerable
+      include Enumerable
 
       # # include Mixins::TrendMethods
       # include Mixins::Trig
@@ -14,56 +14,102 @@ module Quant
       # include Mixins::Direction
       # include Mixins::Filters
 
-      # def inspect
-      #   "#<#{self.class.name} #{symbol} #{interval} #{points.size} points>"
-      # end
+      attr_reader :source, :series
 
-      # def compute
-      #   raise NotImplementedError
-      # end
+      def initialize(series:, source:)
+        @series = series
+        @source = source
+        @points = {}
+        series.each { |tick| self << tick }
+      end
 
-      # def [](index)
-      #   points[index]
-      # end
+      def ticks
+        @points.keys
+      end
 
-      # def after_append
-      #   # NoOp
-      # end
+      def values
+        @points.values
+      end
 
-      # def points_class
-      #   "Quant::Indicators::#{indicator_name}Point".constantize
-      # end
+      def size
+        @points.size
+      end
 
-      # def indicator_name
-      #   self.class.name.demodulize
-      # end
+      attr_reader :p0, :p1, :p2, :p3
+      attr_reader :t0, :t1, :t2, :t3
+
+      def <<(tick)
+        @t0 = tick
+        @p0 = points_class.new(tick: tick, source: source)
+        @points[tick] = @p0
+
+        @p1 = values[-2] || @p0
+        @p2 = values[-3] || @p1
+        @p3 = values[-4] || @p2
+
+        @t1 = ticks[-2] || @t0
+        @t2 = ticks[-3] || @t1
+        @t3 = ticks[-4] || @t2
+
+        compute
+      end
+
+      def each(&block)
+        @points.each_value(&block)
+      end
+
+      def inspect
+        "#<#{self.class.name} symbol=#{series.symbol} source=#{source} #{points.size} ticks>"
+      end
+
+      def compute
+        raise NotImplementedError
+      end
+
+      def indicator_name
+        self.class.name.split("::").last
+      end
+
+      def points_class
+        Object.const_get "Quant::Indicators::#{indicator_name}Point"
+      end
+
+      # p(0) => values[-1]
+      # p(1) => values[-2]
+      # p(2) => values[-3]
+      # p(3) => values[-4]
+      def p(offset)
+        raise ArgumentError, "offset must be a positive value" if offset < 0
+
+        index = offset + 1
+        values[[-index, -size].max]
+      end
+
+      # t(0) => ticks[-1]
+      # t(1) => ticks[-2]
+      # t(2) => ticks[-3]
+      # t(3) => ticks[-4]
+      def t(offset)
+        raise ArgumentError, "offset must be a positive value" if offset < 0
+
+        index = offset + 1
+        ticks[[-index, -size].max]
+      end
+
+      # The input is the value derived from the source for the indicator
+      # for the current tick.
+      # For example, if the source is :oc2, then the input is the
+      # value of the current tick's (open + close) / 2
+      # @return [Numeric]
+      def input
+        t0.send(source)
+      end
 
       # def warmed_up?
       #   true
       # end
 
-      # def initial_max_size
-      #   value = [series.size, series.max_size].max
-      #   value.zero? ? settings.initial_max_size : value
-      # end
-
-      attr_reader :series #, :settings, :max_size, :points, :dc_period
-      # delegate :p0, :p1, :p2, :p3, :prev, :iteration, to: :points
-      # delegate :each, :size, :[], :last, :first, to: :points
-      # delegate :oc2, :high_price, :low_price, :open_price, :close_price, :volume, to: :p0
-
-      def initialize(series:) # settings: Settings::Indicators.defaults, cloning: false)
-        @series = series
-        # @settings = settings
-        # @max_size = initial_max_size
-        # @points = Points.new(indicator: self)
-        # return if cloning
-
-        # after_initialization
-        # parent_series.each { |ohlc| append ohlc }
-        # @points_for_cache = {}
-        # @dc_period = nil
-      end
+      # attr_reader :dc_period
 
       # def points_for(series:)
       #   @points_for_cache[series] ||= self.class.new(series:, settings:, cloning: true).tap do |indicator|
@@ -75,10 +121,6 @@ module Quant
       # # NOTE: No provisions for series merging their ticks to one series!
       # def parent_series
       #   series.ticks.empty? ? series : series.ticks.first.series
-      # end
-
-      # def after_initialization
-      #   # NoOp
       # end
 
       # # Returns the last point of the current indicator rather than the entire series
@@ -101,13 +143,6 @@ module Quant
       #   return unless is_a? Quant::Indicators::DominantCycles::DominantCycle
 
       #   raise 'Dominant Cycle Indicators cannot use the thing they compute!'
-      # end
-
-      # # Sets the dominant cycle period for the current indicator's point
-      # # @dc_period gets set before each #compute call.
-      # def update_dc_period
-      #   ensure_not_dominant_cycler_indicator
-      #   @dc_period = current_dominant_cycle.period
       # end
 
       # # Returns the dominant cycle point for the current indicator's point

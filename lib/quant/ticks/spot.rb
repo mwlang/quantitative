@@ -19,9 +19,9 @@ module Quant
     class Spot < Tick
       include TimeMethods
 
-      attr_reader :interval, :series
+      attr_reader :series
       attr_reader :close_timestamp, :open_timestamp
-      attr_reader :open_price, :high_price, :low_price, :close_price
+      attr_reader :close_price
       attr_reader :base_volume, :target_volume, :trades
 
       def initialize(
@@ -30,7 +30,6 @@ module Quant
         close_price: nil,
         close_timestamp: nil,
         volume: nil,
-        interval: nil,
         base_volume: nil,
         target_volume: nil,
         trades: nil
@@ -38,8 +37,6 @@ module Quant
         raise ArgumentError, "Must supply a spot price as either :price or :close_price" unless price || close_price
 
         @close_price = (close_price || price).to_f
-
-        @interval = Interval[interval]
 
         @close_timestamp = extract_time(timestamp || close_timestamp || Quant.current_time)
         @open_timestamp = @close_timestamp
@@ -53,6 +50,9 @@ module Quant
 
       alias timestamp close_timestamp
       alias price close_price
+      alias high_price close_price
+      alias low_price close_price
+      alias open_price close_price
       alias oc2 close_price
       alias hl2 close_price
       alias hlc3 close_price
@@ -73,7 +73,7 @@ module Quant
       end
 
       def inspect
-        "#<#{self.class.name} #{interval} ct=#{close_timestamp} c=#{close_price.to_f} v=#{volume}>"
+        "#<#{self.class.name} ct=#{close_timestamp} c=#{close_price.to_f} v=#{volume}>"
       end
     end
   end

@@ -16,13 +16,44 @@ module Quant
           from(hash, tick_class: tick_class)
         end
 
+        # Instantiates a tick from a +Hash+.  The hash keys are expected to be the same as the serialized keys.
+        #
+        # Serialized Keys:
+        # - ot: open timestamp
+        # - ct: close timestamp
+        # - o: open price
+        # - h: high price
+        # - l: low price
+        # - c: close price
+        # - bv: base volume
+        # - tv: target volume
+        # - t: trades
+        # - g: green
+        # - j: doji
+        def self.from(hash, tick_class:)
+          tick_class.new \
+            open_timestamp: hash["ot"],
+            close_timestamp: hash["ct"],
+
+            open_price: hash["o"],
+            high_price: hash["h"],
+            low_price: hash["l"],
+            close_price: hash["c"],
+
+            base_volume: hash["bv"],
+            target_volume: hash["tv"],
+
+            trades: hash["t"],
+            green: hash["g"],
+            doji: hash["j"]
+        end
+
         # Returns a +Hash+ of the Spot tick's key properties
         #
         # Serialized Keys:
         #
         # - ot: open timestamp
         # - ct: close timestamp
-        # - iv: interval
         # - o: open price
         # - h: high price
         # - l: low price
@@ -37,12 +68,11 @@ module Quant
         # @return [Hash]
         # @example
         #  Quant::Ticks::Serializers::Tick.to_h(tick)
-        #  # => { "ot" => [Time], "ct" => [Time], "iv" => "1m", "o" => 1.0, "h" => 2.0,
+        #  # => { "ot" => [Time], "ct" => [Time], "o" => 1.0, "h" => 2.0,
         #  #      "l" => 0.5, "c" => 1.5, "bv" => 6.0, "tv" => 5.0, "t" => 1, "g" => true, "j" => true }
         def self.to_h(tick)
           { "ot" => tick.open_timestamp,
             "ct" => tick.close_timestamp,
-            "iv" => tick.interval.to_s,
 
             "o" => tick.open_price,
             "h" => tick.high_price,
@@ -55,25 +85,6 @@ module Quant
             "t" => tick.trades,
             "g" => tick.green,
             "j" => tick.doji }
-        end
-
-        def self.from(hash, tick_class:)
-          tick_class.new \
-            open_timestamp: hash["ot"],
-            close_timestamp: hash["ct"],
-            interval: hash["iv"],
-
-            open_price: hash["o"],
-            high_price: hash["h"],
-            low_price: hash["l"],
-            close_price: hash["c"],
-
-            base_volume: hash["bv"],
-            target_volume: hash["tv"],
-
-            trades: hash["t"],
-            green: hash["g"],
-            doji: hash["j"]
         end
       end
     end

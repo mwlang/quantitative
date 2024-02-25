@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "trig"
+
 module Quant
   module Mixins
     # 1.  All the common filters useful for traders have a transfer response that can be written

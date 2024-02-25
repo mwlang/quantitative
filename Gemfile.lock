@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    quantitative (0.1.4)
+    quantitative (0.1.5)
       oj (~> 3.10)
 
 GEM

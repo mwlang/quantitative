@@ -12,7 +12,7 @@ module Quant
     class OHLC < Tick
       include TimeMethods
 
-      attr_reader :interval, :series
+      attr_reader :series
       attr_reader :close_timestamp, :open_timestamp
       attr_reader :open_price, :high_price, :low_price, :close_price
       attr_reader :base_volume, :target_volume, :trades
@@ -26,8 +26,6 @@ module Quant
         high_price:,
         low_price:,
         close_price:,
-
-        interval: nil,
 
         volume: nil,
         base_volume: nil,
@@ -44,8 +42,6 @@ module Quant
         @high_price = high_price.to_f
         @low_price = low_price.to_f
         @close_price = close_price.to_f
-
-        @interval = Interval[interval]
 
         @base_volume = (volume || base_volume).to_i
         @target_volume = (target_volume || @base_volume).to_i
@@ -132,7 +128,7 @@ module Quant
       end
 
       def inspect
-        "#<#{self.class.name} #{interval} ct=#{close_timestamp.iso8601} o=#{open_price} h=#{high_price} l=#{low_price} c=#{close_price} v=#{volume}>"
+        "#<#{self.class.name} ct=#{close_timestamp.iso8601} o=#{open_price} h=#{high_price} l=#{low_price} c=#{close_price} v=#{volume}>"
       end
     end
   end

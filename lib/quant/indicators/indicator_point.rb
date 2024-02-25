@@ -3,33 +3,21 @@
 module Quant
   class Indicators
     class IndicatorPoint
-      extend Forwardable
+      include Quant::Attributes
 
-      attr_reader :tick, :source
+      attribute :tick
+      attribute :source, key: "src"
+      attribute :input, key: "in"
 
       def initialize(tick:, source:)
         @tick = tick
-        @source = @tick.send(source)
+        @source = source
+        @input = @tick.send(source)
+        initialize_data_points
       end
 
-      def volume
-        @tick.base_volume
-      end
-
-      def timestamp
-        @tick.close_timestamp
-      end
-
-      def initialize_data_points(indicator:)
-        # NoOp
-      end
-
-      def to_h
-        raise NotImplementedError
-      end
-
-      def to_json(*args)
-        Oj.dump(to_h, *args)
+      def initialize_data_points
+        # No-Op - Override in subclass if needed.
       end
     end
   end

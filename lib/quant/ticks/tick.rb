@@ -25,7 +25,8 @@ module Quant
       #   hash = { "timestamp" => "2018-01-01 12:00:00 UTC", "price" => 100.0, "volume" => 1000 }
       #   Quant::Ticks::Tick.from(hash)
       #   # => #<Quant::Ticks::Spot:0x00007f9e3b8b3e08 @timestamp=2018-01-01 12:00:00 UTC, @price=100.0, @volume=1000>
-      def self.from(hash, serializer_class: default_serializer_class)
+      def self.from(hash, serializer_class: nil)
+        serializer_class ||= default_serializer_class
         serializer_class.from(hash, tick_class: self)
       end
 
@@ -41,19 +42,31 @@ module Quant
         serializer_class.from_json(json, tick_class: self)
       end
 
-      attr_reader :series
+      attr_reader :series, :indicators
 
       def initialize
         # Set the series by appending to the series or calling #assign_series method
         @series = nil
+        @interval = nil
+        @indicators = {}
+      end
+
+      def interval
+        @series&.interval || Interval[nil]
       end
 
       # Ticks always belong to the first series they're assigned so we can easily spin off
       # sub-sets or new series with the same ticks while allowing each series to have
       # its own state and full control over the ticks within its series
       def assign_series(new_series)
-        assign_series!(new_series) if @series.nil?
+        assign_series!(new_series) unless series?
         self
+      end
+
+      # Returns true if the tick is assigned to a series.  The first series a tick is assigned
+      # to is the series against which the indicators compute.
+      def series?
+        !!@series
       end
 
       # Ticks always belong to the first series they're assigned so we can easily spin off
@@ -63,7 +76,7 @@ module Quant
       # The series interval is also assigned to the tick if it is not already set.
       def assign_series!(new_series)
         @series = new_series
-        @interval = new_series.interval if @interval.nil?
+        @interval ||= new_series.interval
         self
       end
 

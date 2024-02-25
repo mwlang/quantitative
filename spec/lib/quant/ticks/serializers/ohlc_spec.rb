@@ -14,7 +14,6 @@ RSpec.describe Quant::Ticks::Serializers::OHLC do
       {
         "ot" => open_time.to_i,
         "ct" => close_time,
-        "iv" => "1m",
         "o" => 1.0,
         "h" => 2.0,
         "l" => 3.0,
@@ -38,7 +37,6 @@ RSpec.describe Quant::Ticks::Serializers::OHLC do
         expect(tick.low_price).to eq(3.0)
         expect(tick.close_price).to eq(4.0)
 
-        expect(tick.interval).to eq("1m")
         expect(tick.base_volume).to eq(2.0)
         expect(tick.target_volume).to eq(3.0)
       end
