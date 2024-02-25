@@ -19,5 +19,6 @@ module Quant
     end
 
     def ma; indicator(Indicators::Ma) end
+    def ping; indicator(Indicators::Ping) end
   end
 end

@@ -27,6 +27,10 @@ module Quant
         @points.keys
       end
 
+      def [](index)
+        values[index]
+      end
+
       def values
         @points.values
       end

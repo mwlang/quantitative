@@ -98,11 +98,6 @@ RSpec.describe Quant::Series do
   end
 
   describe "equality" do
-    let(:ema0) { 0.372209817171097 }
-    let(:ema1) { 0.3725514716031602 }
-    let(:ema2) { 0.37299306596978826 }
-    let(:ema3) { 0.3736671823762353 }
-
     context "when the same" do
       let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
       let(:series2) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
@@ -134,7 +129,8 @@ RSpec.describe Quant::Series do
     end
 
     context "when duplicated" do
-      let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+      let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
+      let(:series1) { described_class.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
       let(:series2) { series1.dup }
 
       it "is equal but not the same" do
@@ -149,19 +145,15 @@ RSpec.describe Quant::Series do
         expect(series2.ticks.first.series).to be series1.ticks.first.series
       end
 
-      xit "shares indicators across two series" do
-        expect(series2.indicators).to eq series1.indicators
-      end
-
-      xit "indicators computed against the parent series" do
+      it "indicators computed against the parent series" do
         expect(series1.ticks.count).to eq 4
-        expect(series1.indicators.ma.count).to eq 4
-        expect(series2.indicators.ma.count).to eq 4
+        expect(series1.indicators.oc2.ping.count).to eq 4
+        expect(series2.indicators.oc2.ping.count).to eq 4
       end
 
-      xit "indicators computed against the parent series" do
-        expect(series2.indicators.ma.count).to eq 4
-        expect(series1.indicators.ma.count).to eq 4
+      it "indicators computed against the parent series" do
+        expect(series2.indicators.oc2.ping.count).to eq 4
+        expect(series1.indicators.oc2.ping.count).to eq 4
       end
 
       it "has full date range for series1" do
@@ -170,10 +162,10 @@ RSpec.describe Quant::Series do
         expect(series1.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16)
       end
 
-      xit "has full indicators for series1" do
-        expect(series1.indicators.ma.count).to eq 4
-        expect(series1.indicators.ma.first.ema).to eq ema0
-        expect(series1.indicators.ma.last.ema).to eq ema3
+      it "has full indicators for series1" do
+        expect(series1.indicators.oc2.ping.count).to eq 4
+        expect(series1.indicators.oc2.ping.first.pong).to eq 3.0
+        expect(series1.indicators.oc2.ping[-1].pong).to eq 24.0
       end
 
       it "has full date range for series2" do
@@ -182,17 +174,16 @@ RSpec.describe Quant::Series do
         expect(series2.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16)
       end
 
-      xit "has full indicator for series2" do
-        expect(series2.indicators.ma.count).to eq 4
-        expect(series2.indicators.ma[0].ema).to eq ema0
-        expect(series2.indicators.ma[1].ema).to eq ema1
-        expect(series2.indicators.ma[2].ema).to eq ema2
-        expect(series2.indicators.ma[3].ema).to eq ema3
+      it "has full indicator for series2" do
+        expect(series2.indicators.oc2.ping.count).to eq 4
+        expect(series1.indicators.oc2.ping.map(&:pong)).to eq [3.0, 6.0, 12.0, 24.0]
       end
     end
 
     context "when limited" do
-      let(:series1) { described_class.from_file(filename: apple_fixture_filename, symbol: appl, interval: "1d") }
+      let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
+      let(:series1) { described_class.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+
       let(:period) { (series1.ticks[1].open_timestamp..series1.ticks[2].close_timestamp) }
       let(:series2) { series1.limit(period) }
 
@@ -202,12 +193,9 @@ RSpec.describe Quant::Series do
         expect(series1.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16)
       end
 
-      xit "it limits the indicators to the subset of ticks" do
-        expect(series1.indicators.ma.count).to eq 4
-        expect(series1.indicators.ma[0].ema).to eq ema0
-        expect(series1.indicators.ma[1].ema).to eq ema1
-        expect(series1.indicators.ma[2].ema).to eq ema2
-        expect(series1.indicators.ma[3].ema).to eq ema3
+      it "it limits the indicators to the subset of ticks" do
+        expect(series1.indicators.oc2.ping.map(&:pong)).to eq [3.0, 6.0, 12.0, 24.0]
+        expect(series2.indicators.oc2.ping.map(&:pong)).to eq [6.0, 12.0]
       end
 
       it "has shorter date range for series2" do
@@ -218,11 +206,8 @@ RSpec.describe Quant::Series do
         expect(series2.ticks[1]).to eq series1.ticks[2]
       end
 
-      xit "has fewer indicators for series2" do
-        expect(series2.indicators.ma.count).to eq 2
-        expect(series2.indicators.ma.count).to eq 2
-        expect(series2.indicators.ma[0].ema).to eq ema1
-        expect(series2.indicators.ma[1].ema).to eq ema2
+      it "has fewer indicators for series2" do
+        expect(series2.indicators.oc2.ping.size).to eq 2
       end
     end
   end
@@ -367,7 +352,7 @@ RSpec.describe Quant::Series do
 
     it { is_expected.to be_a(Quant::IndicatorsSources) }
     it { expect(subject.oc2).to be_a(Quant::IndicatorsProxy) }
-    xit { expect(subject.oc2.ma).to be_a(Quant::Indicators::Ma) }
-    xit { expect(subject.oc2.ma.first).to be_a(Quant::Indicators::MaPoint) }
+    it { expect(subject.oc2.ping).to be_a(Quant::Indicators::Ping) }
+    it { expect(subject.oc2.ping.first).to be_a(Quant::Indicators::PingPoint) }
   end
 end
