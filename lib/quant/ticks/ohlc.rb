@@ -89,7 +89,7 @@ module Quant
       # This method is useful for comparing the volatility of different assets.
       # @return [Float]
       def daily_price_change_ratio
-        @price_change ||= ((open_price - close_price) / oc2).abs
+        @daily_price_change_ratio ||= ((open_price - close_price) / oc2).abs
       end
 
       # Set the #green? property to true when the close_price is greater than or equal to the open_price.

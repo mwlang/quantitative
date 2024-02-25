@@ -66,9 +66,8 @@ module Quant
         p3 = points[-4] || p2
 
         v0 = source.is_a?(Symbol) ? p0.send(source) : source
-        return v0 if [p0 == p3]
+        return v0 if p0 == p3
 
-        debugger if points.size > 4
         a1 = Math.exp(-Math::PI / ssperiod)
         b1 = 2 * a1 * Math.cos(Math::PI * Math.sqrt(3) / ssperiod)
         c1 = a1**2

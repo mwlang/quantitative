@@ -69,8 +69,7 @@ RSpec.describe Quant::Asset do
             "a" => true,
             "x" => "NYSE",
             "sc" => "stock",
-            "src" => "alpaca"
-          }
+            "src" => "alpaca" }
         end
         let(:expected_json) do
           Oj.dump(expected_hash)

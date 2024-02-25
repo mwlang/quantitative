@@ -62,6 +62,33 @@ RSpec.describe Quant::Attributes do
     end
   end
 
+  context "defaults as symbols" do
+    let(:class_with_defaults) do
+      Class.new.tap do |klass|
+        klass.include Quant::Attributes
+        klass.attribute :foo, default: :high_price
+        klass.attribute :ticky, default: :oc2
+        klass.attribute :bar, default: 99
+        klass.attribute :baz, default: -> { high_price + 5.0 }
+        klass.define_method(:high_price) { 100 }
+        klass.define_method(:tick) { Quant::Ticks::Spot.new(price: 25) }
+      end
+    end
+
+    after do
+      deregister_class(class_with_defaults)
+    end
+
+    subject { class_with_defaults.new }
+
+    it "sets defaults" do
+      expect(subject.foo).to eq(100)
+      expect(subject.baz).to eq(105)
+      expect(subject.bar).to eq(99)
+      expect(subject.ticky).to eq(25)
+    end
+  end
+
   context "inheritance" do
     let(:parent_class) do
       Class.new.tap do |klass|

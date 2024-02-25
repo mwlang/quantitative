@@ -5,7 +5,7 @@ module Quant
     class IndicatorPoint
       include Quant::Attributes
 
-      attribute :tick
+      attr_reader :tick
       attribute :source, key: "src"
       attribute :input, key: "in"
 

@@ -39,8 +39,8 @@ module Experiment
     end
 
     def to_h
-      Hash.new.tap do |key_values|
-        each_attribute do |name, default|
+      {}.tap do |key_values|
+        each_attribute do |name, _default|
           ivar_name = "@#{name}"
           value = instance_variable_get(ivar_name)
           key_values[name] = value if value
@@ -76,10 +76,10 @@ class Pepper < Salt
 end
 
 RSpec.describe "experiment" do
-  it { expect(Reaction.new.to_h).to eq({foo: "f"}) }
-  it { expect(Salt.new.to_h).to eq({baz: "z", foo: "f"}) }
-  it { expect(Salt.new.tap{|s| s.foo = "F"}.to_h).to eq({baz: "z", foo: "F"}) }
-  it { expect(Pepper.new.to_h).to eq({baz: "z", foo: "f", foobar: "foobar"}) }
+  it { expect(Reaction.new.to_h).to eq({ foo: "f" }) }
+  it { expect(Salt.new.to_h).to eq({ baz: "z", foo: "f" }) }
+  it { expect(Salt.new.tap{ |s| s.foo = "F" }.to_h).to eq({ baz: "z", foo: "F" }) }
+  it { expect(Pepper.new.to_h).to eq({ baz: "z", foo: "f", foobar: "foobar" }) }
 
   # it { expect(Reaction.new.hello).to eq("hello") }
   # it { expect(Reaction.world).to eq("world") }

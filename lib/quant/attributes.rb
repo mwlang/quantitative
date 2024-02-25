@@ -1,10 +1,60 @@
 # frozen_string_literal: true
 
 module Quant
+  # {Quant::Attributes} is similar to an +attr_accessor+ definition.  It provides a simple DSL
+  # for defining attributes or properies on an {Quant::Indicators::IndicatorPoint} class.
+  #
+  # {Quant::Attributes} tracks all defined attributes from child to parent classes,
+  # allowing child classes to inherit their parent's attributes as well as redefine them.
+  #
+  # The exception on redefining is that a serialized key cannot be redefined.  Experience
+  # has proven that this leads to serialization surprises where what was written to a specific
+  # key is not what was expected!
+  #
+  # NOTE: The above design constraint could be improved with a force or overwrite option.
+  #
+  # If :default is an immediate value (Integer, Float, Boolean, etc.), it will be used as the
+  # initial value for the attribute.  If :default is a Symbol, it will send a message on
+  # current instance of the class get the default value.
+  #
+  # @example
+  #   class FooPoint < IndicatorPoint
+  #     # will not serialize to a key
+  #     attribute :bar
+  #     # serializes to "bzz" key
+  #     attribute :baz, key: "bzz"
+  #     # calls the random method on the instance for the default value
+  #     attribute :foobar, default: :random
+  #     # delegated to the tick's high_price method
+  #     attribute :high, default: :high_price
+  #     # calls the lambda bound to instance for default
+  #     attribute :low, default: -> { high_price - 5 }
+  #
+  #     def random
+  #       rand(100)
+  #     end
+  #   end
+  #
+  #   class BarPoint < FooPoint
+  #     attribute :bar, key: "brr"                 # redefines and sets the key for bar
+  #     attribute :qux, key: "qxx", default: 5.0   # serializes to "qxx" and defaults to 5.0
+  #   end
+  #
+  #   FooPoint.attributes
+  #   # => { bar: { key: nil, default: nil },
+  #          baz: { key: "bzz", default: nil } }
+  #
+  #   BarPoint.attributes
+  #   # => { bar: { key: "brr", default: nil },
+  #   #      baz: { key: "bzz", default: nil },
+  #   #      qux: { key: "qxx", default: nil } }
+  #
+  #   BarPoint.new.bar # => nil
+  #   BarPoint.new.qux # => 5.0
+  #   BarPoint.new.bar = 2.0 => 2.0
   module Attributes
-    # Tracks all defined attributes, allowing child classes to inherit their parent's attributes.
-    # The registry key is the class registering an attrbritute and is itself a hash of the attribute name
-    # and the attribute's key and default value.
+    # The +registry+ key is the class registering an attrbritute and is itself
+    # a hash of the attribute name and the attribute's key and default value.
     # Internal use only.
     #
     # @example
@@ -47,9 +97,18 @@ module Quant
     end
 
     module InstanceMethods
-      def initialize(...)
-        initialize_attributes
-        super(...)
+      # Makes some assumptions about the class's initialization having a +tick+ keyword argument.
+      #
+      # The challenge here is that we prepend this module to the class, and we are
+      # initializing attributes before the owning class gets the opportunity to initialize
+      # variables that we wanted to depend on with being able to define a default
+      # value that could set default values from a +tick+ method.
+      #
+      # Ok for now.  May need to be more flexible in the future.  Alternative strategy could be
+      # to lazy eval the default value the first time it is accessed.
+      def initialize(*args, **kwargs)
+        initialize_attributes(tick: kwargs[:tick])
+        super(*args, **kwargs)
       end
 
       # Iterates over all defined attributes in a child => parent hierarchy,
@@ -65,17 +124,42 @@ module Quant
         end
       end
 
+      # The default value can be one of the following:
+      # - A symbol that is a method on the instance responds to
+      # - A symbol that is a method that the instance's tick responds to
+      # - A Proc that is bound to the instance
+      # - An immediate value (Integer, Float, Boolean, etc.)
+      def default_value_for(entry, new_tick)
+        # let's not assume tick is always available/implemented
+        # can get from instance or from initializer passed here as `new_tick`
+        current_tick = new_tick
+        current_tick ||= tick if respond_to?(:tick)
+
+        if entry[:default].is_a?(Symbol) && respond_to?(entry[:default])
+          send(entry[:default])
+
+        elsif entry[:default].is_a?(Symbol) && current_tick&.respond_to?(entry[:default])
+          current_tick.send(entry[:default])
+
+        elsif entry[:default].is_a?(Proc)
+          instance_exec(&entry[:default])
+
+        else
+          entry[:default]
+        end
+      end
+
       # Initializes the defined attributes with default values and
       # defines accessor methods for each attribute.
       # If a child class redefines a parent's attribute, the child's
       # definition will be used.
-      def initialize_attributes
+      def initialize_attributes(tick:)
         each_attribute do |name, entry|
           # use the child's definition, skipping the parent's
           next if respond_to?(name)
 
           ivar_name = "@#{name}"
-          instance_variable_set(ivar_name, entry[:default])
+          instance_variable_set(ivar_name, default_value_for(entry, tick))
           define_singleton_method(name) { instance_variable_get(ivar_name) }
           define_singleton_method("#{name}=") { |value| instance_variable_set(ivar_name, value) }
         end

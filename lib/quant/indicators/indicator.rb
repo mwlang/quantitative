@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Quant
   class Indicators
     class Indicator
@@ -63,7 +65,7 @@ module Quant
       end
 
       def inspect
-        "#<#{self.class.name} symbol=#{series.symbol} source=#{source} #{points.size} ticks>"
+        "#<#{self.class.name} symbol=#{series.symbol} source=#{source} #{ticks.size} ticks>"
       end
 
       def compute

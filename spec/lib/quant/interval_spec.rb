@@ -89,7 +89,7 @@ RSpec.describe Quant::Interval do
     end
 
     it "treats all defined intervals as valid" do
-      Quant::Interval::MAPPINGS.each_pair do |name, values|
+      Quant::Interval::MAPPINGS.each_value do |values|
         expect(described_class.valid_intervals).to include values[:interval]
       end
     end

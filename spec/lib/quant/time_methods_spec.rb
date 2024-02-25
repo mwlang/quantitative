@@ -3,11 +3,13 @@
 require "spec_helper"
 
 RSpec.describe Quant::TimeMethods do
-  class TimeMethodsTest
-    include Quant::TimeMethods
+  let(:time_test_class) do
+    Class.new do
+      include Quant::TimeMethods
+    end
   end
 
-  let(:instance) { TimeMethodsTest.new }
+  let(:instance) { time_test_class.new }
 
   describe "#extract_time" do
     let(:expected_time) { Time.new(2023, 11, 12, 8, 31, 25).utc }

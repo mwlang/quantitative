@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Quant
   module Refinements
     # Refinements for the standard Ruby {Quant::Array} class.
@@ -32,7 +34,6 @@ module Quant
     #   The refined behavior generally only exists within the library's scope, but if you call `using Quant` in your
     #   own code, you may encounter the changed behavior unexpectedly.
     module Array
-
       # Overrides the standard +<<+ method to track the +maximum+ and +minimum+ values
       # while also respecting the +max_size+ setting.
       def <<(value)
@@ -109,7 +110,7 @@ module Quant
         subset = last(n)
         return 0.0 if subset.empty?
 
-        sum = subset.sum / subset.size.to_f
+        subset.sum / subset.size.to_f
       end
 
       # Computes the Exponential Moving Average (EMA) of the array.  When +n+ is specified,
@@ -175,7 +176,7 @@ module Quant
       # @param n [Integer] the number of elements to compute the Standard Deviation over.
       # @return [Float]
       def stddev(reference_value, n: size)
-        variance(reference_value, n: n) ** 0.5
+        variance(reference_value, n: n)**0.5
       end
 
       def variance(reference_value, n: size)

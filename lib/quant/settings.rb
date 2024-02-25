@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Quant
   module Settings
     MAX_PERIOD = 48

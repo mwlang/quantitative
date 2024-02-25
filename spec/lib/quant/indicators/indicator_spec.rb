@@ -48,7 +48,6 @@ RSpec.describe Quant::Indicators::Indicator do
   it { expect(subject.t2).to eq subject.t(2) }
   it { expect(subject.t3).to eq subject.t(3) }
 
-
   describe "values :input" do
     subject { described_class.new(series: series, source: source).values.map(&:input) }
 
