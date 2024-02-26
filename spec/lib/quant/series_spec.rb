@@ -158,8 +158,8 @@ RSpec.describe Quant::Series do
 
       it "has full date range for series1" do
         expect(series1.ticks.count).to eq 4
-        expect(series1.ticks.first.close_timestamp).to eq Time.local(1999, 1, 4, 16)
-        expect(series1.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16)
+        expect(series1.ticks.first.close_timestamp).to eq Time.local(1999, 1, 4, 16).utc
+        expect(series1.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16).utc
       end
 
       it "has full indicators for series1" do
@@ -170,8 +170,8 @@ RSpec.describe Quant::Series do
 
       it "has full date range for series2" do
         expect(series2.ticks.count).to eq 4
-        expect(series2.ticks.first.close_timestamp).to eq Time.local(1999, 1, 4, 16)
-        expect(series2.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16)
+        expect(series2.ticks.first.close_timestamp).to eq Time.local(1999, 1, 4, 16).utc
+        expect(series2.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16).utc
       end
 
       it "has full indicator for series2" do
