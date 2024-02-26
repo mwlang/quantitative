@@ -4,10 +4,8 @@ module Quant
   class Indicators
     class Indicator
       include Enumerable
-
-      # # include Mixins::TrendMethods
-      # include Mixins::Trig
-      # include Mixins::WeightedAverage
+      include Mixins::Functions
+      include Mixins::MovingAverages
       # include Mixins::HilbertTransform
       # include Mixins::SuperSmoother
       # include Mixins::Stochastic

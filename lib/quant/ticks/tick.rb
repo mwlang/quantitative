@@ -2,22 +2,29 @@
 
 module Quant
   module Ticks
-    # {Quant::Ticks::Tick} is the abstract ancestor for all Ticks and holds the logic for interacting with series and indicators.
-    # The public interface is devoid of properties around price, volume, and timestamp, etc.  Descendant classes
-    # are responsible for defining the properties and how they are represented.
-    #
-    # The {Quant::Ticks::Tick} class is designed to be immutable and is intended to be used as a value object.  This means that
-    # once a {Quant::Ticks::Tick} is created, it cannot be changed.  This is important for the integrity of the series and
-    # indicators that depend on the ticks within the series.
-    #
-    # When a tick is added to a series, it is locked into the series and ownership cannot be changed.  This is important
-    # for the integrity of the series and indicators that depend on the ticks within the series.  This is a key design
-    # to being able to being able to not only compute indicators on the ticks just once, but also avoid recomputing
-    # indicators when series are limited/sliced/filtered into subsets of the original series.
-    #
+    # {Quant::Ticks::Tick} is the abstract ancestor for all Ticks and holds
+    # the logic for interacting with series and indicators. The public
+    # interface is devoid of properties around price, volume, and timestamp, etc.
+    # Descendant classes are responsible for defining the properties and
+    # how they are represented.
+
+    # The {Quant::Ticks::Tick} class is designed to be immutable and is
+    # intended to be used as a value object.  This means that once a
+    # {Quant::Ticks::Tick} is created, it cannot be changed.  This is important
+    # for the integrity of the series and indicators that depend on the
+    # ticks within the series.
+
+    # When a tick is added to a series, it is locked into the series and
+    # ownership cannot be changed.  This is important for the integrity
+    # of the series and indicators that depend on the ticks within the series.
+    # This is a key design to being able to being able to not only compute
+    # indicators on the ticks just once, but also avoid recomputing indicators
+    # when series are limited/sliced/filtered into subsets of the original series.
+
     # Ticks can be serialized to and from Ruby Hash, JSON strings, and CSV strings.
     class Tick
-      # Returns a {Quant::Ticks::Tick} from a Ruby +Hash+.  The default serializer is used to generate the {Quant::Ticks::Tick}.
+      # Returns a {Quant::Ticks::Tick} from a Ruby +Hash+.  The default
+      # serializer is used to generate the {Quant::Ticks::Tick}.
       # @param hash [Hash]
       # @param serializer_class [Class] The serializer class to use for the conversion.
       # @return [Quant::Ticks::Tick]
@@ -30,7 +37,8 @@ module Quant
         serializer_class.from(hash, tick_class: self)
       end
 
-      # Returns a {Quant::Ticks::Tick} from a JSON string.  The default serializer is used to generate the {Quant::Ticks::Tick}.
+      # Returns a {Quant::Ticks::Tick} from a JSON string.  The default
+      # serializer is used to generate the {Quant::Ticks::Tick}.
       # @param json [String]
       # @param serializer_class [Class] The serializer class to use for the conversion.
       # @return [Quant::Ticks::Tick]
@@ -80,7 +88,8 @@ module Quant
         self
       end
 
-      # Returns a Ruby hash for the Tick.  The default serializer is used to generate the hash.
+      # Returns a Ruby hash for the Tick.  The default serializer is used
+      # to generate the hash.
       #
       # @param serializer_class [Class] the serializer class to use for the conversion.
       # @example
@@ -90,7 +99,8 @@ module Quant
         serializer_class.to_h(self)
       end
 
-      # Returns a JSON string for the Tick.  The default serializer is used to generate the JSON string.
+      # Returns a JSON string for the Tick.  The default serializer is used
+      # to generate the JSON string.
       #
       # @param serializer_class [Class] the serializer class to use for the conversion.
       # @example
@@ -100,8 +110,9 @@ module Quant
         serializer_class.to_json(self)
       end
 
-      # Returns a CSV row as a String for the Tick.  The default serializer is used to generate the CSV string.
-      # If headers is true, two lines returned separated by newline.
+      # Returns a CSV row as a String for the Tick.  The default serializer
+      # is used to generate the CSV string.  If headers is true, two lines
+      # returned separated by newline.
       # The first line is the header row and the second line is the data row.
       #
       # @param serializer_class [Class] the serializer class to use for the conversion.

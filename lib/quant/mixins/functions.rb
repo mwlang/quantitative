@@ -2,7 +2,30 @@
 
 module Quant
   module Mixins
-    module Trig
+    module Functions
+      # α = Cos(K*360/Period)+Sin(K*360/Period)−1 / Cos(K*360/Period)
+      # k = 1.0 for single-pole filters
+      # k = 0.707 for two-pole high-pass filters
+      # k = 1.414 for two-pole low-pass filters
+      def period_to_alpha(period, k: 1.0)
+        radians = deg2rad(k * 360 / period)
+        cos = Math.cos(radians)
+        sin = Math.sin(radians)
+        (cos + sin - 1) / cos
+      end
+
+      # 3 bars = 0.5
+      # 4 bars = 0.4
+      # 5 bars = 0.333
+      # 6 bars = 0.285
+      # 10 bars = 0.182
+      # 20 bars = 0.0952
+      # 40 bars = 0.0488
+      # 50 bars = 0.0392
+      def bars_to_alpha(bars)
+        2.0 / (bars + 1)
+      end
+
       def deg2rad(degrees)
         degrees * Math::PI / 180.0
       end

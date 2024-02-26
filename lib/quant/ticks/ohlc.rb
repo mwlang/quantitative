@@ -4,11 +4,15 @@ require_relative "tick"
 
 module Quant
   module Ticks
-    # An {Quant::Ticks::OHLC} is a bar or candle for a point in time that has an open, high, low, and close price.
-    # It is the most common form of a {Quant::Ticks::Tick} and is usually used to representa time period such as a
-    # minute, hour, day, week, or month.  The {Quant::Ticks::OHLC} is used to represent the price action of an asset
-    # The interval of the {Quant::Ticks::OHLC} is the time period that the {Quant::Ticks::OHLC} represents,
-    # such has hourly, daily, weekly, etc.
+    # A {Quant::Ticks::OHLC} is a bar or candle for a point in time that
+    # has an open, high, low, and close price. It is the most common form
+    # of a {Quant::Ticks::Tick} and is usually used to representa time
+    # period such as a minute, hour, day, week, or month.
+    #
+    # The {Quant::Ticks::OHLC} is used to represent the price action of
+    # an asset The interval of the {Quant::Ticks::OHLC} is the time period
+    # that the {Quant::Ticks::OHLC} represents, such has hourly, daily,
+    # weekly, etc.
     class OHLC < Tick
       include TimeMethods
 
