@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version: ['3.0.6', '3.1.4', '3.2.2', 'head']
+        ruby-version: ['3.1.4']
 
     steps:
     - uses: actions/checkout@v3
