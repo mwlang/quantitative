@@ -27,7 +27,7 @@ module Quant
         raise ArgumentError, "previous must be a Symbol" unless previous.is_a?(Symbol)
 
         alpha = bars_to_alpha(period)
-        p0.send(source) * alpha + p1.send(previous) * (1.0 - alpha)
+        (p0.send(source) * alpha) + (p1.send(previous) * (1.0 - alpha))
       end
       alias ema exponential_moving_average
     end

@@ -158,8 +158,8 @@ RSpec.describe Quant::Series do
 
       it "has full date range for series1" do
         expect(series1.ticks.count).to eq 4
-        expect(series1.ticks.first.close_timestamp).to eq Time.local(1999, 1, 4, 16).utc
-        expect(series1.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16).utc
+        expect(series1.ticks.first.close_timestamp).to eq Time.utc(1999, 1, 4, 21)
+        expect(series1.ticks.last.close_timestamp).to eq Time.utc(1999, 1, 7, 21)
       end
 
       it "has full indicators for series1" do
@@ -170,8 +170,8 @@ RSpec.describe Quant::Series do
 
       it "has full date range for series2" do
         expect(series2.ticks.count).to eq 4
-        expect(series2.ticks.first.close_timestamp).to eq Time.local(1999, 1, 4, 16).utc
-        expect(series2.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16).utc
+        expect(series2.ticks.first.close_timestamp).to eq Time.utc(1999, 1, 4, 21)
+        expect(series2.ticks.last.close_timestamp).to eq Time.utc(1999, 1, 7, 21)
       end
 
       it "has full indicator for series2" do
@@ -189,8 +189,8 @@ RSpec.describe Quant::Series do
 
       it "has full date range for series1" do
         expect(series1.ticks.count).to eq 4
-        expect(series1.ticks.first.close_timestamp).to eq Time.local(1999, 1, 4, 16)
-        expect(series1.ticks.last.close_timestamp).to eq Time.local(1999, 1, 7, 16)
+        expect(series1.ticks.first.close_timestamp).to eq Time.utc(1999, 1, 4, 21)
+        expect(series1.ticks.last.close_timestamp).to eq Time.utc(1999, 1, 7, 21)
       end
 
       it "it limits the indicators to the subset of ticks" do
@@ -200,8 +200,8 @@ RSpec.describe Quant::Series do
 
       it "has shorter date range for series2" do
         expect(series2.ticks.count).to eq 2
-        expect(series2.ticks.first.close_timestamp).to eq Time.local(1999, 1, 5, 16)
-        expect(series2.ticks.last.close_timestamp).to eq Time.local(1999, 1, 6, 16)
+        expect(series2.ticks.first.close_timestamp).to eq Time.utc(1999, 1, 5, 21)
+        expect(series2.ticks.last.close_timestamp).to eq Time.utc(1999, 1, 6, 21)
         expect(series2.ticks[0]).to eq series1.ticks[1]
         expect(series2.ticks[1]).to eq series1.ticks[2]
       end

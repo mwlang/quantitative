@@ -5,6 +5,7 @@ module Quant
     class Indicator
       include Enumerable
       include Mixins::Functions
+      include Mixins::Filters
       include Mixins::MovingAverages
       # include Mixins::HilbertTransform
       # include Mixins::SuperSmoother

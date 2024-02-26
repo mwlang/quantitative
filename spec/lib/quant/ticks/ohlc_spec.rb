@@ -21,13 +21,13 @@ RSpec.describe Quant::Ticks::OHLC do
           high_price: 2.0,
           low_price: 3.0,
           close_price: 4.0,
-          open_timestamp: Time.new(2024, 1, 15, 8, 30, 5),
-          close_timestamp: Time.new(2024, 1, 15, 8, 30, 5),
+          open_timestamp: Time.utc(2024, 1, 15, 8, 30, 5),
+          close_timestamp: Time.utc(2024, 1, 15, 8, 30, 5),
           volume: 88
         )
       end
 
-      it { expect(tick.inspect).to eq("#<Quant::Ticks::OHLC ct=2024-01-15T13:30:05Z o=1.0 h=2.0 l=3.0 c=4.0 v=88>") }
+      it { expect(tick.inspect).to eq("#<Quant::Ticks::OHLC ct=2024-01-15T08:30:05Z o=1.0 h=2.0 l=3.0 c=4.0 v=88>") }
     end
 
     describe "equality" do

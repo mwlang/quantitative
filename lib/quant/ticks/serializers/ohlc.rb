@@ -3,7 +3,7 @@
 module Quant
   module Ticks
     module Serializers
-      module OHLC
+      class OHLC < Tick
         # Returns a +Quant::Ticks::Tick+ from a valid JSON +String+.
         # @param json [String]
         # @param tick_class [Quant::Ticks::Tick]
