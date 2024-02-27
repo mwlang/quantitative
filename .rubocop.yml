@@ -2,7 +2,7 @@ inherit_gem:
   relaxed-rubocop: .rubocop.yml
 
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.2
   Exclude:
     - 'spec/performance/*.rb'
 

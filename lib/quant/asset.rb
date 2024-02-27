@@ -82,7 +82,7 @@ module Quant
     end
 
     def to_json(*args, full: false)
-      Oj.dump(to_h(full: full), *args)
+      Oj.dump(to_h(full:), *args)
     end
   end
 end

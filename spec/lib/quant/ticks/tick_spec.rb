@@ -13,7 +13,7 @@ RSpec.describe Quant::Ticks::Tick do
 
   describe "#assign_series" do
     let(:indicators) { instance_double(Quant::IndicatorsProxy) }
-    let(:series) { instance_double(Quant::Series, interval: "1d", indicators: indicators) }
+    let(:series) { instance_double(Quant::Series, interval: "1d", indicators:) }
     let(:another_series) { instance_double(Quant::Series) }
 
     before do

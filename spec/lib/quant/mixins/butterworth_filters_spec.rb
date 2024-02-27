@@ -23,9 +23,9 @@ module ButterworthMixinTest
 
   RSpec.describe Quant::Mixins::ButterworthFilters do
     let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
-    let(:series) { Quant::Series.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+    let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
 
-    subject { TestIndicator.new(series: series, source: :oc2) }
+    subject { TestIndicator.new(series:, source: :oc2) }
 
     before { series.indicators.oc2.attach(indicator_class: TestIndicator, name: :sma) }
 
@@ -40,13 +40,12 @@ module ButterworthMixinTest
     context "growing price" do
       let(:series) { Quant::Series.new(symbol: "SMA", interval: "1d") }
 
-      [ [1, 1.011, 1.076],
-        [2, 1.505, 2.07],
-        [3, 2.536, 3.094],
-        [4, 3.564, 4.092],
-        [5, 4.563, 5.092],
-        [6, 5.562, 6.092]
-      ].each do |n, bw2p_expected, bw3p_expected|
+      [[1, 1.011, 1.076],
+       [2, 1.505, 2.07],
+       [3, 2.536, 3.094],
+       [4, 3.564, 4.092],
+       [5, 4.563, 5.092],
+       [6, 5.562, 6.092]].each do |n, bw2p_expected, bw3p_expected|
         dataset = (1..n).to_a
 
         it "is #{bw2p_expected.inspect} for 2 pole when series: is #{dataset.inspect}" do

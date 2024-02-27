@@ -10,7 +10,7 @@ RSpec.describe Quant::Ticks::Serializers::Spot do
   describe ".from" do
     let(:hash) { { "ct" => current_time.to_i, "cp" => 1.0, "bv" => 2.0, "tv" => 3.0 } }
 
-    subject(:tick) { described_class.from(hash, tick_class: tick_class) }
+    subject(:tick) { described_class.from(hash, tick_class:) }
 
     context "valid" do
       it { is_expected.to be_a(tick_class) }
@@ -38,7 +38,7 @@ RSpec.describe Quant::Ticks::Serializers::Spot do
   describe ".from_json" do
     let(:json) { Oj.dump({ "ct" => current_time, "cp" => 1.0, "bv" => 2.0, "tv" => 3.0 }) }
 
-    subject(:tick) { described_class.from_json(json, tick_class: tick_class) }
+    subject(:tick) { described_class.from_json(json, tick_class:) }
 
     context "valid" do
       it { is_expected.to be_a(tick_class) }

@@ -17,7 +17,7 @@ module Quant
         [4.0 * p0.send(source),
          3.0 * p1.send(source),
          2.0 * p2.send(source),
-               p3.send(source)].sum / 10.0
+         p3.send(source)].sum / 10.0
       end
       alias wma weighted_moving_average
 
@@ -37,7 +37,7 @@ module Quant
          4.0 * p3.send(source),
          3.0 * p(4).send(source),
          2.0 * p(5).send(source),
-               p(6).send(source)].sum / 28.0
+         p(6).send(source)].sum / 28.0
       end
       alias ewma extended_weighted_moving_average
     end

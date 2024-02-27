@@ -23,9 +23,9 @@ module WmaMixinTest
 
   RSpec.describe Quant::Mixins::WeightedMovingAverage do
     let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
-    let(:series) { Quant::Series.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+    let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
 
-    subject { TestIndicator.new(series: series, source: :oc2) }
+    subject { TestIndicator.new(series:, source: :oc2) }
 
     before { series.indicators.oc2.attach(indicator_class: TestIndicator, name: :wma) }
 
@@ -40,13 +40,12 @@ module WmaMixinTest
     context "growing price" do
       let(:series) { Quant::Series.new(symbol: "WMA", interval: "1d") }
 
-      [ [1, 1.0, 1.0],
-        [2, 1.4, 1.25],
-        [3, 2.1, 1.7142857142857142],
-        [4, 3.0, 2.357142857142857],
-        [5, 4.0, 3.142857142857143],
-        [6, 5.0, 4.035714285714286]
-      ].each do |n, expected_wma, expected_ewma|
+      [[1, 1.0, 1.0],
+       [2, 1.4, 1.25],
+       [3, 2.1, 1.7142857142857142],
+       [4, 3.0, 2.357142857142857],
+       [5, 4.0, 3.142857142857143],
+       [6, 5.0, 4.035714285714286]].each do |n, expected_wma, expected_ewma|
         dataset = (1..n).to_a
 
         it "is #{expected_wma.inspect} when series: is #{dataset.inspect}" do

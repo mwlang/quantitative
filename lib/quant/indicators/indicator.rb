@@ -45,7 +45,7 @@ module Quant
 
       def <<(tick)
         @t0 = tick
-        @p0 = points_class.new(tick: tick, source: source)
+        @p0 = points_class.new(tick:, source:)
         @points[tick] = @p0
 
         @p1 = values[-2] || @p0

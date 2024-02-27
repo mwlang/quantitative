@@ -19,7 +19,7 @@ module Quant
       raise "File #{filename} does not exist" unless File.exist?(filename)
 
       ticks = File.read(filename).split("\n").map{ |line| Oj.load(line) }
-      from_hash symbol: symbol, interval: interval, hash: ticks, serializer_class: serializer_class
+      from_hash symbol:, interval:, hash: ticks, serializer_class:
     end
 
     # Loads a series of ticks when the JSON string represents an array of ticks.
@@ -29,8 +29,8 @@ module Quant
     # @param json [String] The JSON string to parse into ticks.
     # @param serializer_class [Class] {Quant::Ticks::TickSerializer} class to use for the conversion.
     def self.from_json(symbol:, interval:, json:, serializer_class: nil)
-      ticks = Oj.load(json)
-      from_hash symbol: symbol, interval: interval, hash: ticks, serializer_class: serializer_class
+      hash = Oj.load(json)
+      from_hash symbol:, interval:, hash:, serializer_class:
     end
 
     # Loads a series of ticks where the hash must be cast to an array of {Quant::Ticks::Tick} objects.
@@ -39,15 +39,15 @@ module Quant
     # @param hash [Array<Hash>] The array of hashes to convert to {Quant::Ticks::Tick} objects.
     # @param serializer_class [Class] {Quant::Ticks::TickSerializer} class to use for the conversion.
     def self.from_hash(symbol:, interval:, hash:, serializer_class: nil)
-      ticks = hash.map { |tick_hash| Quant::Ticks::OHLC.from(tick_hash, serializer_class: serializer_class) }
-      from_ticks symbol: symbol, interval: interval, ticks: ticks
+      ticks = hash.map { |tick_hash| Quant::Ticks::OHLC.from(tick_hash, serializer_class:) }
+      from_ticks symbol:, interval:, ticks:
     end
 
     # Loads a series of ticks where the array represents an array of {Quant::Ticks::Tick} objects.
     def self.from_ticks(symbol:, interval:, ticks:)
       ticks = ticks.sort_by(&:close_timestamp)
 
-      new(symbol: symbol, interval: interval).tap do |series|
+      new(symbol:, interval:).tap do |series|
         ticks.each { |tick| series << tick }
       end
     end
@@ -64,14 +64,14 @@ module Quant
       selected_ticks = ticks[start_iteration..stop_iteration]
       return self if selected_ticks.size == ticks.size
 
-      self.class.from_ticks(symbol: symbol, interval: interval, ticks: selected_ticks)
+      self.class.from_ticks(symbol:, interval:, ticks: selected_ticks)
     end
 
     def limit(period)
       selected_ticks = ticks.select{ |tick| period.cover?(tick.close_timestamp) }
       return self if selected_ticks.size == ticks.size
 
-      self.class.from_ticks(symbol: symbol, interval: interval, ticks: selected_ticks)
+      self.class.from_ticks(symbol:, interval:, ticks: selected_ticks)
     end
 
     def_delegator :@ticks, :[]
@@ -94,7 +94,7 @@ module Quant
     end
 
     def dup
-      self.class.from_ticks(symbol: symbol, interval: interval, ticks: ticks)
+      self.class.from_ticks(symbol:, interval:, ticks:)
     end
 
     def inspect

@@ -72,7 +72,7 @@ module Quant
     end
 
     def to_h
-      { start_at: start_at, end_at: end_at }
+      { start_at:, end_at: }
     end
   end
 end

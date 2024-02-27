@@ -4,7 +4,7 @@
 
 STATUS: ALPHA - very early stages!  The framework is very much a work in progress and I am rapidly introducing new things and changing existing things around.
 
-Quantitative is a statistical and quantitative library for Ruby 3.x for trading stocks, cryptocurrency, and forex.  It provides a number of classes and modules for working with time-series data, financial data, and other quantitative data.  It is designed to be fast, efficient, and easy to use.
+Quantitative is a statistical and quantitative library for Ruby 3.2+ for trading stocks, cryptocurrency, and forex.  It provides a number of classes and modules for working with time-series data, financial data, and other quantitative data.  It is designed to be fast, efficient, and easy to use.
 
 It has been highly optimized for fairly high-frequency trading purely in Ruby (no external numerical/statistical native extensions).  The one exception is that I opted to depend on `Oj` which is a high-performant JSON parser that greatly speeds up serializing data between disk and memory.  In practice, Quantitative is performant enough to trade one minute tickers on down to 30 second ticks for around 100 or so ticker symbols.  Trading anything lower depends on the amount of analysis you're doing and your mileage may vary.  It is possible, but you will find yourself with tradeoffs between the amount of data you can crunch and how fast you can react to live trading situations.
 

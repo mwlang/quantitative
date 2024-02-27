@@ -25,7 +25,7 @@ module Quant
     # prepared, the indicator becomes active and all ticks pushed into the series
     # are sent to the indicator for processing.
     def indicator(indicator_class)
-      indicators[indicator_class] ||= indicator_class.new(series: series, source: source)
+      indicators[indicator_class] ||= indicator_class.new(series:, source:)
     end
 
     # Adds the tick to all active indicators, triggering them to compute

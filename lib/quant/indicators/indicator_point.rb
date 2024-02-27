@@ -6,6 +6,7 @@ module Quant
       include Quant::Attributes
 
       attr_reader :tick
+
       attribute :source, key: "src"
       attribute :input, key: "in"
 

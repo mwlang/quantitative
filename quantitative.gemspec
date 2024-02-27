@@ -8,11 +8,11 @@ Gem::Specification.new do |spec|
   spec.authors = ["Michael Lang"]
   spec.email = ["mwlang@cybrains.net"]
 
-  spec.summary = "Quantitative and statistical tools written for Ruby 3.x for trading and finance."
+  spec.summary = "Quantitative and statistical tools written for Ruby 3.2+ for trading and finance."
   spec.description = spec.summary
   spec.homepage = "https://github.com/mwlang/quantitative"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.0.0"
+  spec.required_ruby_version = ">= 3.2"
 
   spec.metadata["allowed_push_host"] = "https://rubygems.org"
 

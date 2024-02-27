@@ -4,10 +4,10 @@ require "spec_helper"
 
 RSpec.describe Quant::Indicators::Ping do
   let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
-  let(:series) { Quant::Series.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+  let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
   let(:source) { :oc2 }
 
-  subject { described_class.new(series: series, source: source) }
+  subject { described_class.new(series:, source:) }
 
   it { is_expected.to be_a(described_class) }
   it { expect(subject.series.size).to eq(4) }

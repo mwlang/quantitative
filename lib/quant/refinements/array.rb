@@ -176,7 +176,7 @@ module Quant
       # @param n [Integer] the number of elements to compute the Standard Deviation over.
       # @return [Float]
       def stddev(reference_value, n: size)
-        variance(reference_value, n: n)**0.5
+        variance(reference_value, n:)**0.5
       end
 
       def variance(reference_value, n: size)

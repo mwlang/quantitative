@@ -69,7 +69,7 @@ module Quant
         #  Quant::Ticks::Serializers::Tick.from_json(json, tick_class: Quant::Ticks::Spot)
         def self.from_json(json, tick_class:)
           hash = Oj.load(json)
-          from(hash, tick_class: tick_class)
+          from(hash, tick_class:)
         end
       end
     end

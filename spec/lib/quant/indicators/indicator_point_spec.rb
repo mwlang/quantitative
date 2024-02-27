@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Quant::Indicators::IndicatorPoint do
-  subject { described_class.new(tick: tick, source: source) }
+  subject { described_class.new(tick:, source:) }
 
   describe "attributes" do
     let(:tick) { instance_double(Quant::Ticks::OHLC, oc2: 3.0, open_price: 2.0, volume: 100) }

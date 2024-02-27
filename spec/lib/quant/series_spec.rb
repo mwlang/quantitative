@@ -11,7 +11,7 @@ RSpec.describe Quant::Series do
   let(:ibm_fixture_filename) { fixture_filename("IBM-19990104_19990107.txt", :series) }
 
   describe ".from_file" do
-    subject { described_class.from_file(filename: filename, symbol: symbol, interval: "1d") }
+    subject { described_class.from_file(filename:, symbol:, interval: "1d") }
 
     context "valid" do
       let(:filename) { apple_fixture_filename }
@@ -35,7 +35,7 @@ RSpec.describe Quant::Series do
     let(:apple_json_fixture_filename) { fixture_filename("AAPL-19990104_19990107.json", :series) }
     let(:json) { File.read(apple_json_fixture_filename) }
 
-    subject { described_class.from_json(symbol: symbol, interval: "1d", json: json) }
+    subject { described_class.from_json(symbol:, interval: "1d", json:) }
 
     it { is_expected.to be_a(described_class) }
     it { expect(subject.ticks.size).to eq(4) }
@@ -49,8 +49,8 @@ RSpec.describe Quant::Series do
     context "when Ticks::Tick::OHLC" do
       let(:tick) do
         Quant::Ticks::OHLC.new \
-          close_timestamp: close_timestamp,
-          open_timestamp: open_timestamp,
+          close_timestamp:,
+          open_timestamp:,
           open_price: 10,
           high_price: 20,
           low_price: 5,
@@ -130,7 +130,7 @@ RSpec.describe Quant::Series do
 
     context "when duplicated" do
       let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
-      let(:series1) { described_class.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+      let(:series1) { described_class.from_file(filename:, symbol: "DEUCES", interval: "1d") }
       let(:series2) { series1.dup }
 
       it "is equal but not the same" do
@@ -182,7 +182,7 @@ RSpec.describe Quant::Series do
 
     context "when limited" do
       let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
-      let(:series1) { described_class.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+      let(:series1) { described_class.from_file(filename:, symbol: "DEUCES", interval: "1d") }
 
       let(:period) { (series1.ticks[1].open_timestamp..series1.ticks[2].close_timestamp) }
       let(:series2) { series1.limit(period) }

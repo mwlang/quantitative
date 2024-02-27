@@ -24,10 +24,10 @@ module SuperSmootherMixinTest
 
   RSpec.describe Quant::Mixins::SuperSmoother do
     let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
-    let(:series) { Quant::Series.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+    let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
 
     describe "#super_smoother" do
-      subject { TestIndicator.new(series: series, source: :oc2) }
+      subject { TestIndicator.new(series:, source: :oc2) }
 
       before { series.indicators.oc2.attach(indicator_class: TestIndicator, name: :ss) }
 
@@ -42,13 +42,12 @@ module SuperSmootherMixinTest
       context "growing price" do
         let(:series) { Quant::Series.new(symbol: "SS", interval: "1d") }
 
-        [ [1, 1.0, 1.0],
-          [2, 1.505, 2.133],
-          [3, 2.516, 3.214],
-          [4, 3.548, 4.182],
-          [5, 4.574, 5.177],
-          [6, 5.575, 6.181]
-        ].each do |n, expected_ss2p, expected_ss3p|
+        [[1, 1.0, 1.0],
+         [2, 1.505, 2.133],
+         [3, 2.516, 3.214],
+         [4, 3.548, 4.182],
+         [5, 4.574, 5.177],
+         [6, 5.575, 6.181]].each do |n, expected_ss2p, expected_ss3p|
           dataset = (1..n).to_a
 
           it "is #{expected_ss2p.inspect} when series: is #{dataset.inspect}" do

@@ -4,7 +4,7 @@ require "spec_helper"
 
 RSpec.describe Quant::Indicators::Indicator do
   let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
-  let(:series) { Quant::Series.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+  let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
   let(:source) { :oc2 }
 
   described_class.class_eval do
@@ -13,7 +13,7 @@ RSpec.describe Quant::Indicators::Indicator do
     end
   end
 
-  subject { described_class.new(series: series, source: source) }
+  subject { described_class.new(series:, source:) }
 
   it { is_expected.to be_a(described_class) }
   it { expect(subject.series.size).to eq(4) }
@@ -49,7 +49,7 @@ RSpec.describe Quant::Indicators::Indicator do
   it { expect(subject.t3).to eq subject.t(3) }
 
   describe "values :input" do
-    subject { described_class.new(series: series, source: source).values.map(&:input) }
+    subject { described_class.new(series:, source:).values.map(&:input) }
 
     context "when :oc2" do
       let(:source) { :oc2 }

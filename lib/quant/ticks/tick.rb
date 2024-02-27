@@ -120,7 +120,7 @@ module Quant
       #   tick.to_csv(headers: true)
       #   # => "timestamp,price,volume\n2018-01-01 12:00:00 UTC,100.0,1000\n"
       def to_csv(serializer_class: default_serializer_class, headers: false)
-        serializer_class.to_csv(self, headers: headers)
+        serializer_class.to_csv(self, headers:)
       end
 
       # Reflects the serializer class from the tick's class name.

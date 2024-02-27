@@ -263,7 +263,7 @@ RSpec.describe Quant::Ticks::OHLC do
 
     describe "#assign_series" do
       let(:indicators) { instance_double(Quant::IndicatorsProxy) }
-      let(:first_series) { instance_double(Quant::Series, interval: "1d", indicators: indicators) }
+      let(:first_series) { instance_double(Quant::Series, interval: "1d", indicators:) }
       let(:next_series) { instance_double(Quant::Series) }
       let(:json) do
         { "ot" => open_time,

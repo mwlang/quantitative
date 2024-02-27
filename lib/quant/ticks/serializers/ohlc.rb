@@ -13,7 +13,7 @@ module Quant
         #  Quant::Ticks::Serializers::Tick.from_json(json, tick_class: Quant::Ticks::Spot)
         def self.from_json(json, tick_class:)
           hash = Oj.load(json)
-          from(hash, tick_class: tick_class)
+          from(hash, tick_class:)
         end
 
         # Instantiates a tick from a +Hash+.  The hash keys are expected to be the same as the serialized keys.

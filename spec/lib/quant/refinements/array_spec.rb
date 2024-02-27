@@ -124,7 +124,7 @@ RSpec.describe Array do
        [5, [1.0, 1.3333333333333335, 1.888888888888889, 2.5925925925925926, 3.3950617283950617]],
        [6, [1.0, 1.3333333333333335, 1.888888888888889, 2.5925925925925926, 3.3950617283950617]]].each do |n, expected|
         it "is #{expected.inspect} when n: is #{n}" do
-          expect(quant_array.ema(n: n)).to eq expected
+          expect(quant_array.ema(n:)).to eq expected
         end
       end
     end
@@ -138,7 +138,7 @@ RSpec.describe Array do
        [5, [1.0, 1.5, 2.25, 3.125, 4.0625]],
        [6, [1.0, 1.5, 2.25, 3.125, 4.0625]]].each do |n, expected|
         it "is #{expected.inspect} when n: is #{n}" do
-          expect(quant_array.sma(n: n)).to eq expected
+          expect(quant_array.sma(n:)).to eq expected
         end
       end
     end
@@ -152,7 +152,7 @@ RSpec.describe Array do
        [5, [1.0, 1.4, 2.1, 3.0, 4.0]],
        [6, [1.0, 1.4, 2.1, 3.0, 4.0]]].each do |n, expected|
         it "is #{expected.inspect} when n: is #{n}" do
-          expect(quant_array.wma(n: n)).to eq expected
+          expect(quant_array.wma(n:)).to eq expected
         end
       end
     end
@@ -187,8 +187,8 @@ RSpec.describe Array do
          [5, 1.5, 2.25],
          [6, 1.5, 2.25]].each do |n, expected_stdev, expected_variance|
           it "stdev=#{expected_stdev}, var=#{expected_variance} when n: is #{n}" do
-            expect(quant_array.stddev(3.5, n: n)).to eq expected_stdev
-            expect(quant_array.var(3.5, n: n)).to eq expected_variance
+            expect(quant_array.stddev(3.5, n:)).to eq expected_stdev
+            expect(quant_array.var(3.5, n:)).to eq expected_variance
           end
         end
       end

@@ -21,9 +21,9 @@ module SmaMixinTest
 
   RSpec.describe Quant::Mixins::SimpleMovingAverage do
     let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
-    let(:series) { Quant::Series.from_file(filename: filename, symbol: "DEUCES", interval: "1d") }
+    let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
 
-    subject { TestIndicator.new(series: series, source: :oc2) }
+    subject { TestIndicator.new(series:, source: :oc2) }
 
     before { series.indicators.oc2.attach(indicator_class: TestIndicator, name: :sma) }
 
@@ -37,13 +37,12 @@ module SmaMixinTest
     context "growing price" do
       let(:series) { Quant::Series.new(symbol: "SMA", interval: "1d") }
 
-      [ [1, 1.0],
-        [2, 1.5],
-        [3, 2.0],
-        [4, 3.0],
-        [5, 4.0],
-        [6, 5.0]
-      ].each do |n, expected|
+      [[1, 1.0],
+       [2, 1.5],
+       [3, 2.0],
+       [4, 3.0],
+       [5, 4.0],
+       [6, 5.0]].each do |n, expected|
         dataset = (1..n).to_a
 
         it "is #{expected.inspect} when series: is #{dataset.inspect}" do

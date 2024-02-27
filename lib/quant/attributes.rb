@@ -93,7 +93,7 @@ module Quant
       end
 
       registry[klass] ||= {}
-      registry[klass][name] = { key: key, default: default }
+      registry[klass][name] = { key:, default: }
     end
 
     module InstanceMethods
@@ -138,7 +138,7 @@ module Quant
         if entry[:default].is_a?(Symbol) && respond_to?(entry[:default])
           send(entry[:default])
 
-        elsif entry[:default].is_a?(Symbol) && current_tick&.respond_to?(entry[:default])
+        elsif entry[:default].is_a?(Symbol) && current_tick.respond_to?(entry[:default])
           current_tick.send(entry[:default])
 
         elsif entry[:default].is_a?(Proc)

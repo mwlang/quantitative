@@ -13,7 +13,7 @@ module Quant
         coef3 = -a1 * a1
         coef1 = 1.0 - coef2 - coef3
 
-        v0 = (p0.send(source) + p1.send(source))/2.0
+        v0 = (p0.send(source) + p1.send(source)) / 2.0
         v1 = p2.send(previous)
         v2 = p3.send(previous)
         ((coef1 * v0) + (coef2 * v1) + (coef3 * v2)).to_f
