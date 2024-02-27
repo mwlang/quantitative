@@ -1,10 +1,6 @@
 # Quantitative
 
-[![Gem Version](https://badge.fury.io/rb/quantitative.svg)](https://badge.fury.io/rb/quantitative)
-
-[![codecov](https://codecov.io/gh/mwlang/quantitative/graph/badge.svg?token=ZXMSKQZKD5)](https://codecov.io/gh/mwlang/quantitative)
-
-[![Coverage Map](https://codecov.io/gh/mwlang/quantitative/graphs/sunburst.svg?token=ZXMSKQZKD5)]
+[![Gem Version](https://badge.fury.io/rb/quantitative.svg)](https://badge.fury.io/rb/quantitative) [![codecov](https://codecov.io/gh/mwlang/quantitative/graph/badge.svg?token=ZXMSKQZKD5)](https://codecov.io/gh/mwlang/quantitative)
 
 STATUS: ALPHA - very early stages!  The framework is very much a work in progress and I am rapidly introducing new things and changing existing things around.
 
@@ -62,7 +58,7 @@ RSpec is the test framework. SimpleCov is used for coverage reports.
 
 ### Test Driven / Behavior Driven development Coverage Map:
 
-[![Coverage Map](https://codecov.io/gh/mwlang/quantitative/graphs/sunburst.svg?token=ZXMSKQZKD5)]
+![Coverage Map](https://codecov.io/gh/mwlang/quantitative/graphs/sunburst.svg?token=ZXMSKQZKD5)
 
 ## License
 
