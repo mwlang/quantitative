@@ -50,6 +50,20 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/mwlang/quantitative. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/mwlang/quantitative/blob/main/CODE_OF_CONDUCT.md).
 
+The Relaxed Ruby Style Guide is adopted for RuboCop.
+
+### Keeping Test Coverage High
+
+TDD/BDD is fully embraced for this project.  If you opt to contribute, please include tests to coverage new features and behavior tests.
+
+RSpec is the test framework. SimpleCov is used for coverage reports.
+
+[![codecov](https://codecov.io/gh/mwlang/quantitative/graph/badge.svg?token=ZXMSKQZKD5)](https://codecov.io/gh/mwlang/quantitative)
+
+### Test Driven / Behavior Driven development Coverage Map:
+
+[![Coverage Map](https://codecov.io/gh/mwlang/quantitative/graphs/sunburst.svg?token=ZXMSKQZKD5)]
+
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
