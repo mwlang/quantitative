@@ -2,7 +2,9 @@
 
 [![Gem Version](https://badge.fury.io/rb/quantitative.svg)](https://badge.fury.io/rb/quantitative)
 
-https://codecov.io/gh/mwlang/quantitative/graphs/sunburst.svg?token=ZXMSKQZKD5
+[![codecov](https://codecov.io/gh/mwlang/quantitative/graph/badge.svg?token=ZXMSKQZKD5)](https://codecov.io/gh/mwlang/quantitative)
+
+[![Coverage Map](https://codecov.io/gh/mwlang/quantitative/graphs/sunburst.svg?token=ZXMSKQZKD5)]
 
 STATUS: ALPHA - very early stages!  The framework is very much a work in progress and I am rapidly introducing new things and changing existing things around.
 
