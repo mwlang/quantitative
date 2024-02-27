@@ -54,8 +54,6 @@ TDD/BDD is fully embraced for this project.  If you opt to contribute, please in
 
 RSpec is the test framework. SimpleCov is used for coverage reports.
 
-[![codecov](https://codecov.io/gh/mwlang/quantitative/graph/badge.svg?token=ZXMSKQZKD5)](https://codecov.io/gh/mwlang/quantitative)
-
 ### Test Driven / Behavior Driven development Coverage Map:
 
 ![Coverage Map](https://codecov.io/gh/mwlang/quantitative/graphs/sunburst.svg?token=ZXMSKQZKD5)

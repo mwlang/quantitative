@@ -38,7 +38,7 @@ module ButterworthMixinTest
     end
 
     context "growing price" do
-      let(:series) { Quant::Series.new(symbol: "SMA", interval: "1d") }
+      let(:series) { Quant::Series.new(symbol: "BW", interval: "1d") }
 
       [[1, 1.011, 1.076],
        [2, 1.505, 2.07],
@@ -63,7 +63,7 @@ module ButterworthMixinTest
     context "static price" do
       using Quant
 
-      let(:series) { Quant::Series.new(symbol: "SMA", interval: "1d") }
+      let(:series) { Quant::Series.new(symbol: "BW", interval: "1d") }
 
       before { 25.times { series << 5.0 } }
 
