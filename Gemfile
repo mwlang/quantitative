@@ -19,3 +19,6 @@ gem "yard", "~> 0.9"
 gem "benchmark-ips", "~> 2.9"
 
 gem 'rspec-github'
+gem 'simplecov'
+gem 'simplecov-cobertura'
+
