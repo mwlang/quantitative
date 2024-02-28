@@ -3,28 +3,24 @@
 module Quant
   module Mixins
     module Stochastic
-      def stochastic(source, period = max_period)
-        stoch_period = [points.size, period.to_i].min
-        return 0.0 if stoch_period < 1
+      using Quant
 
-        subset = points[-stoch_period, stoch_period].map{ |p| p.send(source) }
-        ll = subset.min
-        hh = subset.max
+      # The Stochastic Oscillator is a momentum indicator that compares a particular
+      # closing price of a security to a range of its prices over a certain
+      # period of time. It was developed by George C. Lane in the 1950s.
 
-        v0 = points[-1].send(source)
-        (hh - ll).zero? ? 0.0 : 100.0 * (v0 - ll) / (hh - ll)
+      # The main idea behind the Stochastic Oscillator is that closing
+      # prices should close near the same direction as the current trend.
+      # In a market trending up, prices will likely close near their
+      # high, and in a market trending down, prices close near their low.
+      def stochastic(source, period:)
+        subset = values.last(period).map{ |p| p.send(source) }
+
+        lowest, highest = subset.minimum, subset.maximum
+        return 0.0 if (highest - lowest).zero?
+
+        100.0 * (subset[-1] - lowest) / (highest - lowest)
       end
-
-      # module Fields
-      #   @[JSON::Field(key: "ish")]
-      #   property inst_stoch : Float64 = 0.0
-      #   @[JSON::Field(key: "sh")]
-      #   property stoch : Float64 = 0.0
-      #   @[JSON::Field(key: "su")]
-      #   property stoch_up : Bool = false
-      #   @[JSON::Field(key: "st")]
-      #   property stoch_turned : Bool = false
-      # end
     end
   end
 end
