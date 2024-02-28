@@ -16,13 +16,21 @@ module Quant
     def as_start_time(value)
       return value if value.nil? || value.is_a?(Time)
 
-      value.is_a?(Date) ? value.to_time.beginning_of_day : value.to_time
+      value.is_a?(Date) ? beginning_of_day(value) : value.to_time
     end
 
     def as_end_time(value)
       return value if value.nil? || value.is_a?(Time)
 
-      value.is_a?(Date) ? value.to_time.end_of_day : value.to_time
+      value.is_a?(Date) ? end_of_day(value) : value.to_time
+    end
+
+    def end_of_day(date)
+      Time.utc(date.year, date.month, date.day, 23, 59, 59)
+    end
+
+    def beginning_of_day(date)
+      Time.utc(date.year, date.month, date.day)
     end
 
     def validate_bounds!
