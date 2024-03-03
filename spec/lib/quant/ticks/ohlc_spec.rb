@@ -58,6 +58,8 @@ RSpec.describe Quant::Ticks::OHLC do
       it { expect(tick1).to eq tick2 }
       it { expect(tick1).not_to eq tick3 }
       it { expect(tick1.to_h).to eq expected_hash }
+      it { expect(tick1.daily_price_change).to eq(-0.75) }
+      it { expect(subject.daily_price_change_ratio).to eq(2.0) }
     end
 
     context "valid" do
@@ -80,6 +82,7 @@ RSpec.describe Quant::Ticks::OHLC do
         expect(subject.open_price).to eq(1.0)
         expect(subject.base_volume).to eq(0.0)
         expect(subject.target_volume).to eq(0.0)
+        expect(subject.daily_price_change).to eq(-1.0)
       end
     end
 
@@ -107,13 +110,16 @@ RSpec.describe Quant::Ticks::OHLC do
         expect(subject.high_price).to eq(2.0)
         expect(subject.low_price).to eq(0.5)
         expect(subject.close_price).to eq(1.5)
+        expect(subject.daily_price_change).to eq(-0.33333333333333337)
+        expect(subject.daily_price_change_ratio).to eq(0.4)
 
         expect(subject.base_volume).to eq(6.0)
         expect(subject.target_volume).to eq(5.0)
 
         expect(subject.trades).to eq(1)
-        expect(subject.green).to eq(true)
-        expect(subject.doji).to eq(true)
+        expect(subject).to be_green
+        expect(subject).not_to be_red
+        expect(subject).to be_doji
       end
     end
 
@@ -164,8 +170,8 @@ RSpec.describe Quant::Ticks::OHLC do
       end
     end
 
-    context "#green?" do
-      subject { described_class.from(json).green? }
+    context "#green? and #red?" do
+      subject { described_class.from(json) }
 
       context "is true because of computation" do
         let(:json) do
@@ -178,7 +184,8 @@ RSpec.describe Quant::Ticks::OHLC do
             "c" => 4.0,
             "g" => nil }
         end
-        it { is_expected.to eq(true) }
+        it { is_expected.to be_green }
+        it { is_expected.not_to be_red }
       end
 
       context "passed false for doji and skips computation" do
@@ -193,7 +200,8 @@ RSpec.describe Quant::Ticks::OHLC do
             "g" => false }
         end
 
-        it { is_expected.to eq(false) }
+        it { is_expected.not_to be_green }
+        it { is_expected.to be_red }
       end
     end
 

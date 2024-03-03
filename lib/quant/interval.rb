@@ -116,10 +116,6 @@ module Quant
       "1D"  => :daily,
     }.freeze
 
-    def self.all_resolutions
-      RESOLUTIONS.keys
-    end
-
     # Instantiates an Interval from a resolution.  For example, TradingView uses resolutions
     # like "1", "3", "5", "15", "30", "60", "240", "D", "1D" to represent the duration of a
     # candlestick.  +from_resolution+ translates resolutions to the appropriate {Quant::Interval}.
@@ -216,6 +212,11 @@ module Quant
       INTERVAL_DISTANCE.keys
     end
 
+    # Returns the full list of valid resolution Strings that can be used to instantiate an {Quant::Interval}.
+    def self.all_resolutions
+      RESOLUTIONS.keys
+    end
+
     # Computes the number of ticks from present to given timestamp.
     # If timestamp doesn't cover a full interval, it will be rounded up to 1
     # @example
@@ -230,7 +231,7 @@ module Quant
     end
 
     def self.ensure_valid_resolution!(resolution)
-      return if RESOLUTIONS.keys.include? resolution
+      return if all_resolutions.include? resolution
 
       should_be_one_of = "Should be one of: (#{RESOLUTIONS.keys.join(", ")})"
       raise Errors::InvalidResolution, "resolution (#{resolution}) not a valid resolution. #{should_be_one_of}"
@@ -247,10 +248,6 @@ module Quant
 
       should_be_one_of = "Should be one of: (#{valid_intervals.join(", ")})"
       raise Errors::InvalidInterval, "interval (#{interval.inspect}) not a valid interval. #{should_be_one_of}"
-    end
-
-    def ensure_valid_resolution!(resolution)
-      self.class.ensure_valid_resolution!(resolution)
     end
   end
 end

@@ -19,7 +19,7 @@ module HilbertMixinTest
     end
   end
 
-  RSpec.describe Quant::Mixins::ButterworthFilters do
+  RSpec.describe Quant::Mixins::HilbertTransform do
     let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
     let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
 

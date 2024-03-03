@@ -8,7 +8,7 @@ module Quant
       # k = 0.707 for two-pole high-pass filters
       # k = 1.414 for two-pole low-pass filters
       def period_to_alpha(period, k: 1.0)
-        radians = deg2rad(k * 360 / period)
+        radians = deg2rad(k * 360 / period.to_f)
         cos = Math.cos(radians)
         sin = Math.sin(radians)
         (cos + sin - 1) / cos
@@ -48,8 +48,12 @@ module Quant
         dy2 = line2[1][1] - line1[1][1]
 
         d = dx1 * dx2 + dy1 * dy2
-        l2 = (dx1**2 + dy1**2) * (dx2**2 + dy2**2)
-        rad2deg Math.acos(d / Math.sqrt(l2))
+        l2 = ((dx1**2 + dy1**2) * (dx2**2 + dy2**2))
+
+        radians = d.to_f / Math.sqrt(l2)
+        value = rad2deg Math.acos(radians)
+
+        value.nan? ? 0.0 : value
       end
 
       # angle = acos(d/sqrt(l2))

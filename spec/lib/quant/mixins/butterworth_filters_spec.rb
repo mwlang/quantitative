@@ -27,7 +27,7 @@ module ButterworthMixinTest
 
     subject { TestIndicator.new(series:, source: :oc2) }
 
-    before { series.indicators.oc2.attach(indicator_class: TestIndicator, name: :sma) }
+    before { series.indicators.oc2.attach(indicator_class: TestIndicator, name: :bw) }
 
     context "deuces sample prices" do
       it { is_expected.to be_a(TestIndicator) }

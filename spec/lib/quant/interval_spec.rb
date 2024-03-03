@@ -8,7 +8,7 @@ RSpec.describe Quant::Interval do
   let(:one_hour_in_seconds) { 3600 }
   let(:four_hours_in_seconds) { 14_400 }
 
-  describe "new" do
+  describe ".new" do
     it { expect(described_class.new("1s").interval).to eq "1s" }
     it { expect(described_class.new(:"1m").interval).to eq "1m" }
     it { expect(described_class.new(:na).interval).to eq "na" }
@@ -16,6 +16,15 @@ RSpec.describe Quant::Interval do
 
     it { expect(described_class.new("na").to_s).to eq "na" }
     it { expect(described_class.new(:"1m").to_s).to eq "1m" }
+  end
+
+  describe ".from_resolution" do
+    it { expect(described_class.from_resolution("1")).to eq described_class.new("1m") }
+    it { expect(described_class.from_resolution("60")).to eq described_class.new("1h") }
+    it { expect(described_class.from_resolution("240")).to eq described_class.new("4h") }
+    it { expect(described_class.from_resolution("D")).to eq described_class.new("1d") }
+    it { expect(described_class.from_resolution("1D")).to eq described_class.new("1d") }
+    it { expect { described_class.from_resolution("FOO") }.to raise_error(Quant::Errors::InvalidResolution) }
   end
 
   describe "equality" do
@@ -81,6 +90,12 @@ RSpec.describe Quant::Interval do
     it { expect(described_class.second.duration).to eq 1 }
     it { expect(described_class.minute.duration).to eq one_minute_in_seconds }
     it { expect(described_class.five_minutes.duration).to eq 300 }
+  end
+
+  describe "ticks_per_minute" do
+    it { expect(described_class.second.ticks_per_minute).to eq 60 }
+    it { expect(described_class.minute.ticks_per_minute).to eq 1 }
+    it { expect(described_class.five_minutes.ticks_per_minute).to eq 1.0 / 5 }
   end
 
   describe "valid_intervals" do

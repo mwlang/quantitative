@@ -41,6 +41,10 @@ module Quant
       case value
       when Time
         value.utc
+      when DateTime
+        Time.new(value.year, value.month, value.day, value.hour, value.minute, value.second).utc
+      when Date
+        Time.utc(value.year, value.month, value.day, 0, 0, 0)
       when Integer
         Time.at(value).utc
       when String

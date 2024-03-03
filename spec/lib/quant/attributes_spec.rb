@@ -113,10 +113,12 @@ RSpec.describe Quant::Attributes do
     it { expect(parent_class.new.foo).to eq("foo") }
     it { expect(parent_class.new.bar).to eq("not serialized") }
     it { expect(parent_class.new.to_h).to eq({ "foo" => "foo" }) }
+    it { expect(parent_class.new.to_json).to eq("{\"foo\":\"foo\"}") }
 
     it { expect(child_class.new.foo).to eq("foo") }
     it { expect(child_class.new.bar).to eq("bar") }
     it { expect(child_class.new.to_h).to eq({ "bar" => "bar", "foo" => "foo" }) }
+    it { expect(child_class.new.to_json).to eq("{\"bar\":\"bar\",\"foo\":\"foo\"}") }
 
     it "child does not collide with parent" do
       parent = parent_class.new

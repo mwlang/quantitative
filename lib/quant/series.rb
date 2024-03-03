@@ -114,7 +114,7 @@ module Quant
 
     def to_h
       { "symbol" => symbol,
-        "interval" => interval,
+        "interval" => interval.to_s,
         "ticks" => ticks.map(&:to_h) }
     end
 

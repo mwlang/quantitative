@@ -21,6 +21,15 @@ RSpec.describe Quant::Ticks::Serializers::Spot do
         expect(tick.base_volume).to eq(2.0)
         expect(tick.target_volume).to eq(3.0)
       end
+
+      describe "#to_h" do
+        subject { tick.to_h }
+
+        it { expect(subject["ct"]).to eq(current_time) }
+        it { expect(subject["cp"]).to eq(1.0) }
+        it { expect(subject["bv"]).to eq(2.0) }
+        it { expect(subject["tv"]).to eq(3.0) }
+      end
     end
 
     context "without volume" do

@@ -9,7 +9,7 @@ module Quant
         radians = Math::PI * Math.sqrt(2) / period
         a1 = Math.exp(-radians)
 
-        coef2 = 2.0r * a1 * Math.cos(radians)
+        coef2 = 2.0 * a1 * Math.cos(radians)
         coef3 = -a1 * a1
         coef1 = 1.0 - coef2 - coef3
 

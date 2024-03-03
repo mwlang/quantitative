@@ -36,7 +36,7 @@ module Quant
     def validate_bounds!
       return if lower_bound? || upper_bound?
 
-      raise "TimePeriod cannot be unbounded at start_at and end_at"
+      raise "TimePeriod cannot be unbound at start_at and end_at"
     end
 
     def cover?(value)
@@ -48,11 +48,19 @@ module Quant
     end
 
     def lower_bound?
-      !!@start_at
+      !lower_unbound?
+    end
+
+    def lower_unbound?
+      @start_at.nil?
+    end
+
+    def upper_unbound?
+      @end_at.nil?
     end
 
     def upper_bound?
-      !!@end_at
+      !upper_unbound?
     end
 
     def end_at
@@ -66,17 +74,8 @@ module Quant
     def ==(other)
       return false unless other.is_a?(TimePeriod)
 
-      if lower_bound?
-        other.lower_bound? && start_at == other.start_at
-      elsif upper_bound?
-        oher.upper_bound? && end_at == other.end_at
-      else
-        [start_at, end_at] == [other.start_at, other.end_at]
-      end
-    end
-
-    def eql?(other)
-      self == other
+      [lower_bound?, upper_bound?, start_at, end_at] ==
+        [other.lower_bound?, other.upper_bound?, other.start_at, other.end_at]
     end
 
     def to_h

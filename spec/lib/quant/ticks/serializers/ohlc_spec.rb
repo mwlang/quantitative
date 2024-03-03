@@ -12,8 +12,8 @@ RSpec.describe Quant::Ticks::Serializers::OHLC do
   describe ".from" do
     let(:hash) do
       {
-        "ot" => open_time.to_i,
-        "ct" => close_time,
+        "ot" => open_time.to_i,     # deserializes with Time.at
+        "ct" => close_time.iso8601, # deserializes with Time.parse
         "o" => 1.0,
         "h" => 2.0,
         "l" => 3.0,
@@ -40,10 +40,32 @@ RSpec.describe Quant::Ticks::Serializers::OHLC do
         expect(tick.base_volume).to eq(2.0)
         expect(tick.target_volume).to eq(3.0)
       end
+
+      describe "#to_h" do
+        subject { tick.to_h }
+
+        it { expect(subject["ot"]).to eq(open_time) }
+        it { expect(subject["ct"]).to eq(close_time) }
+        it { expect(subject["o"]).to eq(1.0) }
+        it { expect(subject["h"]).to eq(2.0) }
+        it { expect(subject["l"]).to eq(3.0) }
+        it { expect(subject["c"]).to eq(4.0) }
+        it { expect(subject["bv"]).to eq(2.0) }
+        it { expect(subject["tv"]).to eq(3.0) }
+      end
     end
 
     context "without volume" do
-      let(:hash) { { "ot" => open_time, "ct" => current_time.to_i, "o" => 1.0, "c" => 1.0, "l" => 1.0, "h" => 1.0 } }
+      let(:hash) do
+        {
+          "ot" => open_time,
+          "ct" => current_time.to_i,
+          "o" => 1.0,
+          "c" => 1.0,
+          "l" => 1.0,
+          "h" => 1.0
+        }
+      end
 
       it "has the correct attributes" do
         expect(tick.close_timestamp).to eq(current_time)

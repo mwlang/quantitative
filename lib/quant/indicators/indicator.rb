@@ -64,7 +64,7 @@ module Quant
       end
 
       def inspect
-        "#<#{self.class.name} symbol=#{series.symbol} source=#{source} #{ticks.size} ticks>"
+        "#<#{self.class.name} symbol=#{series.symbol} source=#{source} ticks=#{ticks.size}>"
       end
 
       def compute

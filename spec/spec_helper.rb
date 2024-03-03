@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 require "simplecov"
-SimpleCov.start
-
 require 'simplecov-cobertura'
-SimpleCov.formatter = SimpleCov::Formatter::CoberturaFormatter
+
+SimpleCov.start do
+  add_filter "/spec/"
+  formatter SimpleCov::Formatter::MultiFormatter.new([
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::CoberturaFormatter
+  ])
+end
 
 require "quantitative"
 require "debug"

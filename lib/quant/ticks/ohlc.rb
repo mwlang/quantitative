@@ -82,9 +82,10 @@ module Quant
       # A value of 0.0 means no change.
       # @return [Float]
       def daily_price_change
-        ((open_price / close_price) - 1.0)
-      rescue ZeroDivisionError
-        0.0
+        return open_price.zero? ? 0.0 : -1.0 if close_price.zero?
+        return 0.0 if open_price == close_price
+
+        (open_price / close_price) - 1.0
       end
 
       # Calculates the absolute change from the open_price to the close_price, divided by the average of the
@@ -93,7 +94,7 @@ module Quant
       # This method is useful for comparing the volatility of different assets.
       # @return [Float]
       def daily_price_change_ratio
-        @daily_price_change_ratio ||= ((open_price - close_price) / oc2).abs
+        (open_price - close_price).abs / oc2
       end
 
       # Set the #green? property to true when the close_price is greater than or equal to the open_price.

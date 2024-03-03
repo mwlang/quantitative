@@ -2,6 +2,37 @@
 
 require "spec_helper"
 
+RSpec::Matchers.define :match_hash do |expected|
+  match do |actual|
+    @mismatch = match_hash_recursive(expected, actual)
+    @mismatch.nil?
+  end
+
+  failure_message do |actual|
+    "expected that #{actual} would match #{expected}, but #{@mismatch}"
+  end
+
+  def match_hash_recursive(expected, actual, path = [])
+    return "expected a Hash, got #{actual.class}" unless actual.is_a?(Hash)
+    return "missing keys: #{(expected.keys - actual.keys).join(', ')} at #{path.join('.')}" unless (expected.keys - actual.keys).empty?
+    return "extra keys: #{(actual.keys - expected.keys).join(', ')} at #{path.join('.')}" unless (actual.keys - expected.keys).empty?
+
+    expected.each do |key, value|
+      new_path = path + [key]
+      if value.is_a?(Hash)
+        mismatch = match_hash_recursive(value, actual[key], new_path)
+        return mismatch unless mismatch.nil?
+      elsif !actual[key].is_a?(value)
+        return "expected a #{value}, got #{actual[key].class} at #{new_path.join('.')}"
+      end
+    rescue StandardError
+      return "expected a #{value}, got #{actual[key].class} at #{new_path.join('.')}"
+    end
+
+    nil
+  end
+end
+
 RSpec.describe Quant::Series do
   let(:open_timestamp) { Quant.current_time - 60 }
   let(:close_timestamp) { Quant.current_time }
@@ -34,11 +65,15 @@ RSpec.describe Quant::Series do
     let(:symbol) { appl }
     let(:apple_json_fixture_filename) { fixture_filename("AAPL-19990104_19990107.json", :series) }
     let(:json) { File.read(apple_json_fixture_filename) }
-
+    let(:expected_hash) do
+      { "interval" => String, "symbol" => String, "ticks" => Array }
+    end
     subject { described_class.from_json(symbol:, interval: "1d", json:) }
 
     it { is_expected.to be_a(described_class) }
     it { expect(subject.ticks.size).to eq(4) }
+    it { expect(subject.to_h).to match_hash(expected_hash) }
+    it { expect(Oj.load(subject.to_json)).to match_hash(expected_hash) }
   end
 
   describe "#<<" do

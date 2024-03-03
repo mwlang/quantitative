@@ -2,7 +2,7 @@
 
 module Quant
   module Mixins
-    module HighPassFilter
+    module HighPassFilters
       # HighPass Filters are “detrenders” because they attenuate low frequency components
       # One pole HighPass and SuperSmoother does not produce a zero mean because low
       # frequency spectral dilation components are “leaking” through The one pole
@@ -32,8 +32,10 @@ module Quant
       # is the same as the following:
       # radians = Math.sqrt(2) * Math::PI / period
       # alpha = (Math.cos(radians) + Math.sin(radians) - 1) / Math.cos(radians)
-      def high_pass_filter(source, period)
-        v0 = source.is_a?(Symbol) ? p0.send(source) : source
+      def high_pass_filter(source, period:, previous: :hp)
+        raise ArgumentError, "source must be a Symbol" unless source.is_a?(Symbol)
+
+        v0 = p0.send(source)
         return v0 if p3 == p0
 
         v1 = p1.send(source)

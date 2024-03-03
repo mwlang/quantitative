@@ -24,7 +24,7 @@ module FishertMixinTest
     end
   end
 
-  RSpec.describe Quant::Mixins::ButterworthFilters do
+  RSpec.describe Quant::Mixins::FisherTransform do
     let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
     let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
 
@@ -42,7 +42,13 @@ module FishertMixinTest
     end
 
     context "growing price" do
-      let(:series) { Quant::Series.new(symbol: "HT", interval: "1d") }
+      let(:series) { Quant::Series.new(symbol: "FISHER", interval: "1d") }
+
+      it "raises domain errors" do
+        allow(Math).to receive(:log).and_raise(Math::DomainError)
+        series << 1
+        expect{ subject.p0.ft }.to raise_error(Math::DomainError)
+      end
 
       [[1, 0.040, 0.020, 0.040],
        [2, 0.080, 0.040, 0.080],
@@ -72,7 +78,7 @@ module FishertMixinTest
     context "static price" do
       using Quant
 
-      let(:series) { Quant::Series.new(symbol: "HT", interval: "1d") }
+      let(:series) { Quant::Series.new(symbol: "FISHER", interval: "1d") }
 
       before { 5.times {|i| series << i + 15 } }
 

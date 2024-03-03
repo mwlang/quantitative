@@ -13,12 +13,14 @@ RSpec.describe Quant::AssetClass do
     it { expect(subject.asset_class).to eq :stock }
     it { expect(subject.to_h).to eq({ "sc" => :stock }) }
     it { expect(subject.to_json).to eq(json) }
+    it { expect(subject.to_s).to eq("stock") }
 
     context "comparable" do
       it { expect(subject == "stock").to be true }
       it { expect(subject == :stock).to be true }
       it { expect(subject == "us_equity").to be true }
       it { expect(subject == described_class.new("stock")).to be true }
+      it { expect(subject == 99).to be false }
     end
   end
 

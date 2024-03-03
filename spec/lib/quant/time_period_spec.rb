@@ -10,10 +10,10 @@ RSpec.describe Quant::TimePeriod do
   let(:five_days_in_seconds) { 5 * one_day_in_seconds }
   let(:one_second) { 1 }
 
-  context "when unbounded" do
+  context "when unbound" do
     subject { described_class.new(start_at: nil, end_at: nil) }
 
-    it { expect{ subject }.to raise_error("TimePeriod cannot be unbounded at start_at and end_at") }
+    it { expect{ subject }.to raise_error("TimePeriod cannot be unbound at start_at and end_at") }
   end
 
   context "when upper-bound" do
@@ -81,6 +81,40 @@ RSpec.describe Quant::TimePeriod do
       it { expect(subject.start_at).to be_within(one_second).of(current_time) }
       it { expect(subject.end_at).to be_within(one_second).of(current_time + five_days_in_seconds) }
       it { is_expected.to be_upper_bound }
+    end
+  end
+
+  context "equality" do
+    unbound_time = nil
+    current_time = Quant.current_time
+    later_time = current_time + 1
+    earlier_time = current_time - 1
+
+    [
+      [unbound_time, current_time, unbound_time, current_time, true],
+      [unbound_time, current_time, unbound_time, later_time, false],
+      [unbound_time, current_time, current_time, later_time, false],
+
+      [current_time, unbound_time, current_time, unbound_time, true],
+      [current_time, unbound_time, later_time, unbound_time, false],
+      [current_time, unbound_time, current_time, later_time, false],
+
+      [current_time, later_time, current_time, later_time, true],
+      [current_time, later_time, earlier_time, later_time, false],
+      [current_time, later_time, earlier_time, current_time, false],
+      [current_time, later_time, current_time, unbound_time, false],
+      [current_time, later_time, unbound_time, later_time, false],
+
+    ].each do |start_at, end_at, other_start_at, other_end_at, expected|
+      it "when (#{start_at}..#{end_at}) #{expected ? "==" : "!="} (#{other_start_at}..#{other_end_at})" do
+        interval = described_class.new(start_at:, end_at:)
+        other = described_class.new(start_at: other_start_at, end_at: other_end_at)
+        if expected
+          expect(interval).to eq other
+        else
+          expect(interval).not_to eq other
+        end
+      end
     end
   end
 end
