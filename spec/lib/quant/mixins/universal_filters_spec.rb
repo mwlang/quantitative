@@ -6,6 +6,7 @@ module UniversalMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :ema, default: :oc2
     attribute :uema, default: :oc2
+    attribute :u1plp, default: :oc2
     attribute :u2plp, default: :oc2
     attribute :u1php, default: :oc2
     attribute :u2php, default: :oc2
@@ -22,6 +23,7 @@ module UniversalMixinTest
     def compute
       p0.ema = exponential_moving_average(:input, period: 3, previous: :ema).round(3)
       p0.uema = universal_ema(:input, period: 3, previous: :uema).round(3)
+      p0.u1plp = universal_one_pole_low_pass(:input, period: 3, previous: :u1plp).round(3)
       p0.u2plp = universal_two_pole_low_pass(:input, period: 3, previous: :u2plp).round(3)
       p0.u1php = universal_one_pole_high_pass(:input, period: 3, previous: :u1php).round(3)
       p0.u2php = universal_two_pole_high_pass(:input, period: 3, previous: :u2php).round(3)
@@ -55,6 +57,23 @@ module UniversalMixinTest
 
         it { expect(subject.values.map(&:ema).uniq).to eq([5.0]) }
         it { expect(subject.values.map(&:uema).uniq).to eq([5.0]) }
+      end
+    end
+
+    context "#universal_one_pole_low_pass" do
+      context "deuces series" do
+        let(:series) { deuces_series }
+        let(:expected) { [3.0, 6.804, 13.392, 26.842] }
+
+        it { expect(subject.values.map(&:input)).to eq([3.0, 6.0, 12.0, 24.0]) }
+        it { expect(subject.values.map(&:u1plp)).to eq(expected) }
+      end
+
+      context "constant series" do
+        let(:series) { constant_series }
+
+        it { expect(subject.values.map(&:input)).to be_all(5.0) }
+        it { expect(subject.values.map(&:u1plp).uniq).to eq([5.0]) }
       end
     end
 

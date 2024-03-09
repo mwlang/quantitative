@@ -38,4 +38,9 @@ namespace :gem do
   task release: [:build, :tag] do
     sh "gem push quantitative-#{Quant::VERSION}.gem"
   end
+
+  desc "push #{Quant::VERSION} to rubygems.org"
+  task push: [:build] do
+    sh "gem push quantitative-#{Quant::VERSION}.gem"
+  end
 end

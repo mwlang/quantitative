@@ -16,6 +16,20 @@ module Quant
     # the others are still unproven and Ehlers' many papers over the year
     # tend to change implementation details, too.
     #
+    # == Experimental!
+    # The main goal with the universal filters is to provide a means to
+    # compare the optimized filters with the generalized filters and
+    # generally show correctness of the solutions.  However, that also
+    # means validating the outputs of those computations, which is not my forté.
+    # My idea of validating is if I have two or more implementations that produce
+    # identical (or nearly identical) results, then I consider the implementation
+    # sound and doing what it is supposed to do.
+    #
+    # Several are marked "experimental" because I have not been able to
+    # prove their correctness.  Those that are proven correct are not
+    # marked as experimental and you'll find their outputs show up in other
+    # specs where they're used alongside the optimized versions of those filters.
+    #
     # == Ehlers' Notes on Generalized Filters
     # 1.  All the common filters useful for traders have a transfer response
     #     that can be written as a ratio of two polynomials.
@@ -272,7 +286,6 @@ module Quant
       # not be suitable for all trading or analysis purposes, and its effects
       # should be evaluated in the context of specific goals and strategies.
       def universal_two_pole_high_pass(source, previous:, period:)
-        Quant.experimental("This method is unproven and may be incorrect.")
         raise ArgumentError, "source must be a Symbol" unless source.is_a?(Symbol)
         raise ArgumentError, ":previous must be a Symbol" unless previous.is_a?(Symbol)
 

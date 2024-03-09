@@ -7,23 +7,18 @@ module Quant
       # One pole HighPass and SuperSmoother does not produce a zero mean because low
       # frequency spectral dilation components are “leaking” through The one pole
       # HighPass Filter response
-      def two_pole_high_pass_filter(source, prev_source, min_period, max_period = nil)
-        raise "source must be a symbol" unless source.is_a?(Symbol)
-        return p0.send(source) if p0 == p2
+      def two_pole_high_pass_filter(source, period:, previous:)
+        raise ArgumentError, "source must be a Symbol" unless source.is_a?(Symbol)
 
-        max_period ||= min_period * 2
-        (min_period * Math.sqrt(2))
-        max_radians = 2.0 * Math::PI / (max_period * Math.sqrt(2))
+        alpha = period_to_alpha(period, k: 0.707)
 
         v1 = p0.send(source) - (2.0 * p1.send(source)) + p2.send(source)
-        v2 = p1.send(prev_source)
-        v3 = p2.send(prev_source)
+        v2 = p1.send(previous)
+        v3 = p2.send(previous)
 
-        alpha = period_to_alpha(max_radians)
-
-        a = (1 - (alpha * 0.5))**2 * v1
-        b = 2 * (1 - alpha) * v2
-        c = (1 - alpha)**2 * v3
+        a = v1 * (1 - (alpha * 0.5))**2
+        b = v2 * 2 * (1 - alpha)
+        c = v3 * (1 - alpha)**2
 
         a + b - c
       end
@@ -33,13 +28,12 @@ module Quant
       # radians = Math.sqrt(2) * Math::PI / period
       # alpha = (Math.cos(radians) + Math.sin(radians) - 1) / Math.cos(radians)
       def high_pass_filter(source, period:, previous: :hp)
+        Quant.experimental("This method is unproven and may be incorrect.")
         raise ArgumentError, "source must be a Symbol" unless source.is_a?(Symbol)
 
         v0 = p0.send(source)
-        return v0 if p3 == p0
-
-        v1 = p1.send(source)
-        v2 = p2.send(source)
+        v1 = p1.send(previous)
+        v2 = p2.send(previous)
 
         radians = Math.sqrt(2) * Math::PI / period
         a = Math.exp(-radians)
@@ -49,7 +43,7 @@ module Quant
         c3 = -a**2
         c1 = (1 + c2 - c3) / 4
 
-        (c1 * (v0 - (2 * v1) + v2)) + (c2 * p1.hp) + (c3 * p2.hp)
+        (c1 * (v0 - (2 * v1) + v2)) + (c2 * v1) + (c3 * v2)
       end
     end
   end
