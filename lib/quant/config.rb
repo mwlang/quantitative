@@ -14,6 +14,10 @@ module Quant
       end
     end
 
+    def self.default!
+      @config = Config.new
+    end
+
     def self.config
       @config ||= Config.new
     end
@@ -23,6 +27,10 @@ module Quant
 
   def config
     Config.config
+  end
+
+  def default_configuration!
+    Config.default!
   end
 
   def configure_indicators(**settings)

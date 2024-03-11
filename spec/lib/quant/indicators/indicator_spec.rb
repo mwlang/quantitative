@@ -37,6 +37,9 @@ module IndicatorSpec
     it { expect(subject.ticks.last).to eq(series.ticks.last) }
     it { expect(subject.values.size).to eq(4) }
 
+    it { expect(subject.min_period).to eq(10) }
+    it { expect(subject.max_period).to eq(48) }
+
     it { expect(subject.p0).to eq subject.values[-1] }
     it { expect(subject.p1).to eq subject.values[-2] }
     it { expect(subject.p2).to eq subject.values[-3] }

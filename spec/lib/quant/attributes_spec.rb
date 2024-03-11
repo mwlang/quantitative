@@ -68,6 +68,8 @@ RSpec.describe Quant::Attributes do
         klass.include Quant::Attributes
         klass.attribute :foo, default: :high_price
         klass.attribute :ticky, default: :oc2
+        klass.attribute :symbolical, default: :a_symbol
+        klass.attribute :diabolical
         klass.attribute :bar, default: 99
         klass.attribute :baz, default: -> { high_price + 5.0 }
         klass.define_method(:high_price) { 100 }
@@ -86,6 +88,20 @@ RSpec.describe Quant::Attributes do
       expect(subject.baz).to eq(105)
       expect(subject.bar).to eq(99)
       expect(subject.ticky).to eq(25)
+      expect(subject.symbolical).to eq(:a_symbol)
+      expect(subject.diabolical).to be_nil
+    end
+
+    it "can replace defaults" do
+      subject.foo = :foo
+      subject.baz = 10_000
+      subject.symbolical = :another_symbol
+      subject.diabolical = "666"
+
+      expect(subject.foo).to eq(:foo)
+      expect(subject.baz).to eq(10_000)
+      expect(subject.symbolical).to eq(:another_symbol)
+      expect(subject.diabolical).to eq("666")
     end
   end
 

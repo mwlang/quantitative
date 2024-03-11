@@ -98,85 +98,73 @@ module Quant
 
     module InstanceMethods
       # Makes some assumptions about the class's initialization having a +tick+ keyword argument.
-      #
-      # The challenge here is that we prepend this module to the class, and we are
-      # initializing attributes before the owning class gets the opportunity to initialize
-      # variables that we wanted to depend on with being able to define a default
-      # value that could set default values from a +tick+ method.
-      #
-      # Ok for now.  May need to be more flexible in the future.  Alternative strategy could be
-      # to lazy eval the default value the first time it is accessed.
-      def initialize(*args, **kwargs)
-        initialize_attributes(tick: kwargs[:tick])
-        super(*args, **kwargs)
+      # If one does exist, the +tick+ is considered as a potential source for the declared defaults
+      def initialize(...)
+        super(...)
+        initialize_attributes
+      end
+
+      # Returns an array of all classes in the hierarchy, starting with the current class
+      def self_and_ancestors
+        [this_class = self.class].tap do |classes|
+          classes << this_class = this_class.superclass while !this_class.nil?
+        end
       end
 
       # Iterates over all defined attributes in a child => parent hierarchy,
       # and yields the name and entry for each.
       def each_attribute(&block)
-        klass = self.class
-        loop do
-          attributes = Attributes.registry[klass]
-          break if attributes.nil?
-
-          attributes.each{ |name, entry| block.call(name, entry) }
-          klass = klass.superclass
+        self_and_ancestors.select{ |klass| Attributes.registry[klass] }.each do |klass|
+          Attributes.registry[klass].each{ |name, entry| block.call(name, entry) }
         end
       end
 
       # The default value can be one of the following:
-      # - A symbol that is a method on the instance responds to
+      # - A symbol that is a method the instance responds to
       # - A symbol that is a method that the instance's tick responds to
       # - A Proc that is bound to the instance
       # - An immediate value (Integer, Float, Boolean, etc.)
-      def default_value_for(entry, new_tick)
-        # let's not assume tick is always available/implemented
-        # can get from instance or from initializer passed here as `new_tick`
-        current_tick = new_tick
-        current_tick ||= tick if respond_to?(:tick)
+      def default_value_for(entry)
+        return instance_exec(&entry[:default]) if entry[:default].is_a?(Proc)
+        return entry[:default] unless entry[:default].is_a?(Symbol)
+        return send(entry[:default]) if respond_to?(entry[:default])
+        return tick.send(entry[:default]) if tick.respond_to?(entry[:default])
 
-        if entry[:default].is_a?(Symbol) && respond_to?(entry[:default])
-          send(entry[:default])
-
-        elsif entry[:default].is_a?(Symbol) && current_tick.respond_to?(entry[:default])
-          current_tick.send(entry[:default])
-
-        elsif entry[:default].is_a?(Proc)
-          instance_exec(&entry[:default])
-
-        else
-          entry[:default]
-        end
+        entry[:default]
       end
 
       # Initializes the defined attributes with default values and
       # defines accessor methods for each attribute.
       # If a child class redefines a parent's attribute, the child's
       # definition will be used.
-      def initialize_attributes(tick:)
+      def initialize_attributes
         each_attribute do |name, entry|
           # use the child's definition, skipping the parent's
           next if respond_to?(name)
 
           ivar_name = "@#{name}"
-          instance_variable_set(ivar_name, default_value_for(entry, tick))
-          define_singleton_method(name) { instance_variable_get(ivar_name) }
+          define_singleton_method(name) do
+            return instance_variable_get(ivar_name) if instance_variable_defined?(ivar_name)
+
+            # Sets the default value when accessed and ivar is not already set
+            default_value_for(entry).tap { |value| instance_variable_set(ivar_name, value) }
+          end
           define_singleton_method("#{name}=") { |value| instance_variable_set(ivar_name, value) }
         end
       end
 
       # Serializes keys that have been defined as serializeable attributes
-      # Key values that are nil are removed from the hash
+      # Key values that are nil are omitted from the hash
       # @return [Hash] The serialized attributes as a Ruby Hash.
       def to_h
         {}.tap do |key_values|
           each_attribute do |name, entry|
             next unless entry[:key]
 
-            ivar_name = "@#{name}"
-            value = instance_variable_get(ivar_name)
+            value = send(name)
+            next unless value
 
-            key_values[entry[:key]] = value if value
+            key_values[entry[:key]] = value
           end
         end
       end

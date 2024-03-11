@@ -4,7 +4,6 @@ require "spec_helper"
 
 module SuperSmootherMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
-    # attribute :ss, default: :oc2
     attribute :ss3p, default: :oc2
     attribute :ss2p, default: :oc2
   end
@@ -17,8 +16,8 @@ module SuperSmootherMixinTest
     end
 
     def compute
-      p0.ss3p = three_pole_super_smooth(:input, period: 3, previous: :ss3p).round(3)
       p0.ss2p = two_pole_super_smooth(:input, period: 3, previous: :ss2p).round(3)
+      p0.ss3p = three_pole_super_smooth(:input, period: 3, previous: :ss3p).round(3)
     end
   end
 
@@ -69,6 +68,7 @@ module SuperSmootherMixinTest
 
         it { expect(subject.ticks.size).to eq(subject.series.size) }
         it { expect(subject.values.map(&:input)).to be_all(5.0) }
+        it { expect(subject.values.map(&:ss2p)).to be_all(5.0) }
         it { expect(subject.values.map(&:ss3p)).to be_all(5.0) }
       end
     end

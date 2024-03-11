@@ -3,6 +3,8 @@
 require "spec_helper"
 
 RSpec.describe Quant::Config do
+  after(:all) { Quant.default_configuration! }
+
   describe "configuring indicators" do
     subject { Quant.config.indicators }
 

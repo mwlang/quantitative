@@ -7,13 +7,11 @@ module Quant
       include Mixins::Functions
       include Mixins::Filters
       include Mixins::MovingAverages
-      # include Mixins::HilbertTransform
-      # include Mixins::SuperSmoother
-      # include Mixins::Stochastic
-      # include Mixins::FisherTransform
-      # include Mixins::HighPassFilter
+      include Mixins::HilbertTransform
+      include Mixins::SuperSmoother
+      include Mixins::Stochastic
+      include Mixins::FisherTransform
       # include Mixins::Direction
-      # include Mixins::Filters
 
       attr_reader :source, :series
 
@@ -22,6 +20,30 @@ module Quant
         @source = source
         @points = {}
         series.each { |tick| self << tick }
+      end
+
+      def min_period
+        Quant.config.indicators.min_period
+      end
+
+      def max_period
+        Quant.config.indicators.max_period
+      end
+
+      def half_period
+        Quant.config.indicators.half_period
+      end
+
+      def micro_period
+        Quant.config.indicators.micro_period
+      end
+
+      def dominant_cycle_kind
+        Quant.config.indicators.dominant_cycle_kind
+      end
+
+      def pivot_kind
+        Quant.config.indicators.pivot_kind
       end
 
       def ticks
@@ -45,7 +67,7 @@ module Quant
 
       def <<(tick)
         @t0 = tick
-        @p0 = points_class.new(tick:, source:)
+        @p0 = points_class.new(indicator: self, tick:, source:)
         @points[tick] = @p0
 
         @p1 = values[-2] || @p0

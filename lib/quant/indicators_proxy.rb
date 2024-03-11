@@ -54,8 +54,5 @@ module Quant
     def attach(name:, indicator_class:)
       define_singleton_method(name) { indicator(indicator_class) }
     end
-
-    def ma; indicator(Indicators::Ma) end
-    def ping; indicator(Indicators::Ping) end
   end
 end

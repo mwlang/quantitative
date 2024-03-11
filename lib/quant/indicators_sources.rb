@@ -12,7 +12,7 @@ module Quant
     end
 
     def oc2
-      @indicator_sources[:oc2] ||= IndicatorsProxy.new(series: @series, source: :oc2)
+      @indicator_sources[:oc2] ||= Indicators.new(series: @series, source: :oc2)
     end
   end
 end
