@@ -10,18 +10,14 @@ module Quant
       attribute :lama, default: :input
       attribute :faga, default: :input
       attribute :osc, default: 0.0
-      attribute :osc_up, default: false
-      attribute :inst_stoch, default: 0.0
-      attribute :stoch, default: 0.0
-      attribute :stoch_up, default: false
-      attribute :stoch_turned, default: false
+      attribute :crossed, default: :unchanged
 
-      def fama_up?
-        mama > fama
+      def crossed_up?
+        @crossed == :up
       end
 
-      def dama_up?
-        mama > dama
+      def crossed_down?
+        @crossed == :down
       end
     end
 
@@ -36,20 +32,16 @@ module Quant
     # indicators for the dominant cycle, then this version is useful
     # as it avoids extra computational steps.
     class Mesa < Indicator
-      def period_to_alpha(period)
-        dc_period / (period + 1)
-      end
-
-      def alpha_to_period(alpha)
-        (dc_period - alpha) / alpha
+      def period
+        dc_period
       end
 
       def fast_limit
-        period_to_alpha alpha_to_period(0.5)
+        @fast_limit ||= bars_to_alpha(min_period / 2)
       end
 
       def slow_limit
-        period_to_alpha alpha_to_period(0.05)
+        @slow_limit ||= bars_to_alpha(max_period)
       end
 
       def homodyne_dominant_cycle
@@ -80,11 +72,13 @@ module Quant
         p0.lama = (LAMA * alpha * p0.mama) + ((1.0 - (LAMA * alpha)) * p1.lama)
         p0.faga = (FAGA * alpha * p0.fama) + ((1.0 - (FAGA * alpha)) * p1.faga)
 
-        p0.osc = p0.mama - p0.fama
-        p0.osc_up = p0.osc >= wma(:osc)
+        compute_oscillator
+      end
 
-        p0.inst_stoch = stochastic :osc, period: dc_period
-        p0.stoch = three_pole_super_smooth(:inst_stoch, previous: :stoch, period: dc_period).clamp(0, 100)
+      def compute_oscillator
+        p0.osc = p0.mama - p0.fama
+        p0.crossed = :up if p0.osc >= 0 && p1.osc < 0
+        p0.crossed = :down if p0.osc <= 0 && p1.osc > 0
       end
     end
   end

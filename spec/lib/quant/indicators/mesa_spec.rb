@@ -9,21 +9,25 @@ RSpec.describe Quant::Indicators::Mesa do
 
   it { is_expected.to be_a(described_class) }
   it { expect(subject.series.size).to eq(4) }
-  it { expect(subject.values.map{ |v| v.mama.round(3) }).to eq([0.372, 0.376, 0.379, 0.384]) }
-  it { expect(subject.values.map{ |v| v.lama.round(3) }).to eq([0.372, 0.372, 0.373, 0.373]) }
-  it { expect(subject.values.map{ |v| v.osc.round(3) }).to eq([0.0, 0.003, 0.005, 0.007]) }
-  it { expect(subject.values.map{ |v| v.stoch.round(3) }).to eq([0.0, 0.819, 2.922, 6.502]) }
-  it { expect(subject.values.map(&:osc_up)).to all be(true) }
+  it { expect(subject.values.map{ |v| v.mama.round(3) }).to eq([0.372, 0.375, 0.377, 0.381]) }
+  it { expect(subject.values.map{ |v| v.lama.round(3) }).to eq([0.372, 0.372, 0.372, 0.373]) }
+  it { expect(subject.values.map{ |v| v.gama.round(3) }).to eq([0.372, 0.373, 0.374, 0.376]) }
+  it { expect(subject.values.map{ |v| v.dama.round(3) }).to eq([0.372, 0.372, 0.372, 0.373]) }
+  it { expect(subject.values.map{ |v| v.lama.round(3) }).to eq([0.372, 0.372, 0.372, 0.373]) }
+  it { expect(subject.values.map{ |v| v.faga.round(3) }).to eq([0.372, 0.372, 0.372, 0.372]) }
+  it { expect(subject.values.map{ |v| v.osc.round(3) }).to eq([0.0, 0.002, 0.004, 0.007]) }
+  it { expect(subject.values.map(&:crossed)).to all be(:unchanged) }
 
   context "sine series" do
+    let(:period) { 40 }
     let(:cycles) { 4 }
-    let(:uniq_data_points) { cycles * 40 / (cycles - 1) } # sine is cyclical, so we expect a few unique data points
+    let(:uniq_data_points) { cycles * period / (cycles - 1) } # sine is cyclical, so we expect a few unique data points
     let(:series) do
-      # 40 bar sine wave
+      # period bar sine wave
       Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
         cycles.times do
-          (0..39).each do |degree|
-            radians = degree * 2 * Math::PI / 40
+          (0...period).each do |degree|
+            radians = degree * 2 * Math::PI / period
             series << 5.0 * Math.sin(radians) + 10.0
           end
         end
@@ -31,6 +35,12 @@ RSpec.describe Quant::Indicators::Mesa do
     end
 
     it { expect(subject.series.size).to eq(160) }
-    it { expect(subject.values.map{ |m| m.mama.round(1) }.uniq.size).to be_within(5).of(uniq_data_points) }
+    it { expect(subject.values.map{ |m| m.mama.round(1) }.uniq.size).to be_within(10).of(uniq_data_points) }
+
+    it "crosses 2x cycles" do
+      grouped_crossings = subject.values.map(&:crossed).group_by(&:itself).transform_values{|v| v.count}
+      unchanged_count = period * cycles - cycles * 2
+      expect(grouped_crossings).to eq({ down: cycles, unchanged: unchanged_count, up: cycles })
+    end
   end
 end

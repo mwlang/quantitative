@@ -16,7 +16,7 @@ module Quant
       def stochastic(source, period:)
         subset = values.last(period).map{ |p| p.send(source) }
 
-        lowest, highest = subset.minimum, subset.maximum
+        lowest, highest = subset.minimum.to_f, subset.maximum.to_f
         return 0.0 if (highest - lowest).zero?
 
         100.0 * (subset[-1] - lowest) / (highest - lowest)

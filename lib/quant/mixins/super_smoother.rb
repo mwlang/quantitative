@@ -12,7 +12,7 @@ module Quant
     # that the SuperSmoother filter has significantly less lag than the EMA.
     module SuperSmoother
       # https://www.mesasoftware.com/papers/PredictiveIndicators.pdf
-      def two_pole_super_smooth(source, period:, previous: :ss)
+      def two_pole_super_smooth(source, period:, previous:)
         raise ArgumentError, "source must be a Symbol" unless source.is_a?(Symbol)
 
         radians = Math.sqrt(2) * Math::PI / period
@@ -32,7 +32,7 @@ module Quant
       alias super_smoother two_pole_super_smooth
       alias ss2p two_pole_super_smooth
 
-      def three_pole_super_smooth(source, period:, previous: :ss)
+      def three_pole_super_smooth(source, period:, previous:)
         raise ArgumentError, "source must be a Symbol" unless source.is_a?(Symbol)
 
         radians = Math::PI / period

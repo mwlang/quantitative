@@ -19,12 +19,10 @@ module Quant
       attribute :dama, default: :input
       attribute :lama, default: :input
       attribute :faga, default: :input
-      attribute :osc, default: 0.0
-      attribute :trend, default: 0
       attribute :phase, default: 0.0
       attribute :delta_phase, default: 0.0
+      attribute :osc, default: 0.0
       attribute :crossed, default: :unchanged
-      attribute :recently_low, default: false
 
       def crossed_up?
         @crossed == :up
@@ -128,10 +126,8 @@ module Quant
 
       def compute_oscillator
         p0.osc = p0.mama - p0.fama
-        p0.trend = p0.faga > p2.faga ? 1 : 0
         p0.crossed = :up if p0.osc >= 0 && p1.osc < 0
         p0.crossed = :down if p0.osc <= 0 && p1.osc > 0
-        p0.recently_low = period_points(10).map(&:crossed).any?{|p| p == :down} && p0.crossed == :up
       end
 
       def compute

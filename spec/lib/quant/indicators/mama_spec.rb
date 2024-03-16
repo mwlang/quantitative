@@ -21,7 +21,7 @@ RSpec.describe Quant::Indicators::Mama do
   context "sine series" do
     let(:period) { 40 }
     let(:cycles) { 4 }
-    let(:uniq_data_points) { cycles * 40 / cycles } # sine is cyclical, so we expect a few unique data points
+    let(:uniq_data_points) { cycles * period / cycles } # sine is cyclical, so we expect a few unique data points
     let(:series) do
       # period bar sine wave
       Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
