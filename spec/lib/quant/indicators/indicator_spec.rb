@@ -14,8 +14,12 @@ module IndicatorSpec
 
     let(:noop_indicator_class) do
       NoOpIndicator ||= Class.new(described_class) do
+        def periods
+          @periods ||= []
+        end
+
         def compute
-          # NoOp
+          periods << dc_period
         end
 
         def points_class
@@ -69,6 +73,29 @@ module IndicatorSpec
     it { expect(subject[0].input).to eq(3.0) }
     it { expect(subject[0]).to eq(subject.values.first) }
     it { expect(subject[-1]).to eq(subject.values.last) }
+    it { expect(subject.periods.uniq).to eq [29] }
+
+    describe "dominant_cycle" do
+      let(:series) do
+        # 40 bar sine wave
+        Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
+          3.times do
+            (0..39).each do |degree|
+              radians = degree * 2 * Math::PI / 40
+              series << 5.0 * Math.sin(radians) + 10.0
+            end
+          end
+        end
+      end
+
+      before do
+        Quant.configure_indicators(dominant_cycle_kind: :band_pass)
+      end
+
+      after(:all) { Quant.default_configuration! }
+
+      it { expect(subject.periods.uniq).to eq([29, 36, 42, 40]) }
+    end
 
     describe "values :input" do
       subject { noop_indicator_class.new(series:, source:).values.map(&:input) }

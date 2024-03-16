@@ -2,6 +2,20 @@ require_relative "../indicator"
 
 module Quant
   class Indicators
+    # Dominant Cycles measure the primary cycle within a given range.  By default, the library
+    # is wired to look for cycles between 10 and 48 bars.  These values can be adjusted by setting
+    # the `min_period` and `max_period` configuration values in {Quant::Config}.
+    #
+    #    Quant.configure_indicators(min_period: 8, max_period: 32)
+    #
+    # The default dominant cycle kind is the `half_period` filter.  This can be adjusted by setting
+    # the `dominant_cycle_kind` configuration value in {Quant::Config}.
+    #
+    #    Quant.configure_indicators(dominant_cycle_kind: :band_pass)
+    #
+    # The purpose of these indicators is to compute the dominant cycle and underpin the various
+    # indicators that would otherwise be setting an arbitrary lookback period.  This makes the
+    # indicators adaptive and auto-tuning to the market dynamics.  Or so the theory goes!
     class DominantCycles
       class DominantCyclePoint < Quant::Indicators::IndicatorPoint
         attribute :smooth, default: 0.0
@@ -38,6 +52,8 @@ module Quant
         def constrain_period_bars
           p0.inst_period = p0.inst_period.clamp(min_period, max_period)
         end
+
+        attr_reader :points
 
         # constrain magnitude of change in phase
         def constrain_period_magnitude_change

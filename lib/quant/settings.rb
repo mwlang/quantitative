@@ -23,7 +23,7 @@ module Quant
     ).freeze
 
     DOMINANT_CYCLE_KINDS = %i(
-      settings
+      half_period
       band_pass
       auto_correlation_reversal
       homodyne

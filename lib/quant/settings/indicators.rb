@@ -8,14 +8,16 @@ module Quant
     # papers and books on the subject of technical analysis by John Ehlers where he variously suggests
     # a minimum period of 8 or 10 and a max period of 48.
     #
-    # The half period is the average of the max_period and min_period.
+    # The half period is the average of the max_period and min_period.  It is read-only and always computed
+    # relative to `min_period` and `max_period`.
+    #
     # The micro period comes from Ehler's writings on Swami charts and auto-correlation computations, which
     # is a period of 3 bars.  It is useful enough in various indicators to be its own setting.
     #
     # The dominant cycle kind is the kind of dominant cycle to use in the indicator.  The default is +:settings+
     # which means the dominant cycle is whatever the +max_period+ is set to.  It is not adaptive when configured
     # this way.  The other kinds are adaptive and are computed from the series data.  The choices are:
-    # * +:settings+  - the max_period is the dominant cycle and is not adaptive
+    # * +:half_period+  - the half_period is the dominant cycle and is not adaptive
     # * +:band_pass+ - The zero crossings of the band pass filter are used to compute the dominant cycle
     # * +:auto_correlation_reversal+ - The dominant cycle is computed from the auto-correlation of the series.
     # * +:homodyne+ - The dominant cycle is computed from the homodyne discriminator.
@@ -48,8 +50,8 @@ module Quant
         new
       end
 
-      attr_accessor :max_period, :min_period, :half_period, :micro_period
-      attr_accessor :dominant_cycle_kind, :pivot_kind
+      attr_reader :max_period, :min_period, :half_period
+      attr_accessor :micro_period, :dominant_cycle_kind, :pivot_kind
 
       def initialize(**settings)
         @max_period = settings[:max_period] || Settings::MAX_PERIOD
@@ -64,14 +66,22 @@ module Quant
       def apply_settings(**settings)
         @max_period = settings.fetch(:max_period, @max_period)
         @min_period = settings.fetch(:min_period, @min_period)
-        @half_period = settings.fetch(:half_period, @half_period || compute_half_period)
+        compute_half_period
         @micro_period = settings.fetch(:micro_period, @micro_period)
         @dominant_cycle_kind = settings.fetch(:dominant_cycle_kind, @dominant_cycle_kind)
         @pivot_kind = settings.fetch(:pivot_kind, @pivot_kind)
       end
 
+      def max_period=(value)
+        (@max_period = value).tap { compute_half_period }
+      end
+
+      def min_period=(value)
+        (@min_period = value).tap { compute_half_period }
+      end
+
       def compute_half_period
-        (max_period + min_period) / 2
+        @half_period = (max_period + min_period) / 2
       end
     end
   end

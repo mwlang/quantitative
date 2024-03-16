@@ -10,6 +10,10 @@ module Quant
     # {Quant::Interval} with an invalid value.
     class InvalidInterval < Error; end
 
+    # {InvalidIndicatorSource} is raised when attempting to reference
+    # an indicator through a source that has not been prepared, yet.
+    class InvalidIndicatorSource < Error; end
+
     # {InvalidResolution} is raised when attempting to instantiate
     # an {Quant::Resolution} with a resolution value that has not been defined.
     class InvalidResolution < Error; end

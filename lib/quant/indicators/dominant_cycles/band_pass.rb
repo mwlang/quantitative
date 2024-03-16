@@ -14,6 +14,11 @@ module Quant
         attribute :direction, default: :flat
       end
 
+      # The band-pass dominant cycle passes signals within a certain frequency
+      # range, and attenuates signals outside that range.
+      # The trend component of the signal is revoved, leaving only the cyclical
+      # component.  Then we count number of iterations between zero crossings
+      # and this is the `period` of the dominant cycle.
       class BandPass < DominantCycle
         def bandwidth
           0.75

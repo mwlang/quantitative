@@ -22,20 +22,20 @@ module Quant
         attribute :reversal, default: false
       end
 
-      # Auto-Correlation Reversals
+      # Auto-Correlation Reversals is a method of computing the dominant cycle
+      # by correlating the data stream with itself delayed by a lag.
+      # Construction of the autocorrelation periodogram starts with the
+      # autocorrelation function using the minimum three bars of averaging.
+      # The cyclic information is extracted using a discrete Fourier transform
+      # (DFT) of the autocorrelation results.
       class Acr < DominantCycle
-        def average_length
-          3 # AvgLength
-        end
-
-        def bandwidth
-          deg2rad(370)
-        end
+        BANDWIDTH_DEGREES = 370
+        BANDWIDTH_RADIANS = BANDWIDTH_DEGREES * Math::PI / 180.0
 
         def compute_auto_correlations
           (min_period..max_period).each do |period|
             corr = Statistics::Correlation.new
-            average_length.times do |lookback_period|
+            micro_period.times do |lookback_period|
               corr.add(p(lookback_period).filter, p(period + lookback_period).filter)
             end
             p0.corr[period] = corr.coefficient
@@ -46,8 +46,8 @@ module Quant
           p0.maxpwr = 0.995 * p1.maxpwr
 
           (min_period..max_period).each do |period|
-            (average_length..max_period).each do |n|
-              radians = bandwidth * n / period
+            (micro_period..max_period).each do |n|
+              radians = BANDWIDTH_RADIANS * n / period
               p0.cospart[period] += p0.corr[n] * Math.cos(radians)
               p0.sinpart[period] += p0.corr[n] * Math.sin(radians)
             end

@@ -19,6 +19,7 @@ module Quant
         @series = series
         @source = source
         @points = {}
+        series.new_indicator(self)
         series.each { |tick| self << tick }
       end
 
@@ -44,6 +45,14 @@ module Quant
 
       def pivot_kind
         Quant.config.indicators.pivot_kind
+      end
+
+      def dominant_cycle
+        series.indicators[source].dominant_cycle
+      end
+
+      def dc_period
+        dominant_cycle.points[t0].period
       end
 
       def ticks

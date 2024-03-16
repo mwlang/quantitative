@@ -7,6 +7,16 @@ module Quant
       @indicator_sources = {}
     end
 
+    def new_indicator(indicator)
+      @indicator_sources[indicator.source] ||= Indicators.new(series: @series, source: indicator.source)
+    end
+
+    def [](source)
+      return @indicator_sources[source] if @indicator_sources.key?(source)
+
+      raise Quant::Errors::InvalidIndicatorSource, "Invalid source, #{source.inspect}."
+    end
+
     def <<(tick)
       @indicator_sources.each_value { |indicator| indicator << tick }
     end

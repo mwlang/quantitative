@@ -1,9 +1,11 @@
 module Quant
   class Indicators
     class DominantCycles
-      # The Dual Differentiator algorithm computes the phase angle from the analytic signal as the arctangent of
-      # the ratio of the imaginary component to the real compo- nent. Further, the angular frequency is defined
-      # as the rate change of phase. We can use these facts to derive the cycle period.
+      # The Dual Differentiator algorithm computes the phase angle from the
+      # analytic signal as the arctangent of the ratio of the imaginary
+      # component to the real component. Further, the angular frequency
+      # is defined as the rate change of phase. We can use these facts to
+      # derive the cycle period.
       class Differential < DominantCycle
         def compute_period
           p0.ddd = (p0.q2 * (p0.i2 - p1.i2)) - (p0.i2 * (p0.q2 - p1.q2))
