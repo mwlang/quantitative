@@ -2,7 +2,16 @@
 
 module Quant
   module Mixins
+    # Super Smoother Filters provide a way to smooth out the noise in a series
+    # without out introducing undesirable lag that you would other get with
+    # traditional moving averages.
+    #
+    # The EMA only reduces the amplitude at the Nyquist frequency by 13 dB.
+    # On the other hand, the SuperSmoother filter theoretically completely
+    # eliminates components at the Nyquist Frequency. The added benefit is
+    # that the SuperSmoother filter has significantly less lag than the EMA.
     module SuperSmoother
+      # https://www.mesasoftware.com/papers/PredictiveIndicators.pdf
       def two_pole_super_smooth(source, period:, previous: :ss)
         raise ArgumentError, "source must be a Symbol" unless source.is_a?(Symbol)
 

@@ -1,7 +1,8 @@
 module Quant
   class Indicators
+
+    # The MESA inidicator
     class MesaPoint < IndicatorPoint
-      attribute :ss, default: 0.0
       attribute :mama, default: :input
       attribute :fama, default: :input
       attribute :dama, default: :input
@@ -24,7 +25,16 @@ module Quant
       end
     end
 
-    # https://www.mesasoftware.com/papers/PredictiveIndicators.pdf
+    # https://www.mesasoftware.com/papers/MAMA.pdf
+    # MESA Adaptive Moving Average (MAMA) adapts to price movement in an
+    # entirely new and unique way. The adapation is based on the rate change
+    # of phase as measured by the Hilbert Transform Discriminator.
+    #
+    # This version of Ehler's MAMA indicator ties into the homodyne
+    # dominant cycle indicator to provide a more efficient computation
+    # for this indicator.  If you're using the homodyne in all your
+    # indicators for the dominant cycle, then this version is useful
+    # as it avoids extra computational steps.
     class Mesa < Indicator
       def period_to_alpha(period)
         dc_period / (period + 1)
@@ -54,16 +64,21 @@ module Quant
         current_dominant_cycle.delta_phase
       end
 
+      FAMA = 0.500
+      GAMA = 0.950
+      DAMA = 0.125
+      LAMA = 0.100
+      FAGA = 0.050
+
       def compute
-        p0.ss = three_pole_super_smooth :input, previous: :ss, period: dc_period
         alpha = [fast_limit / delta_phase, slow_limit].max
 
-        p0.mama = (alpha * p0.input) + ((1 - alpha) * p1.mama)
-        p0.fama = (0.5 * alpha * p0.mama) + ((1 - (0.5 * alpha)) * p1.fama)
-        p0.gama = (0.95 * alpha * p0.mama) + ((1 - (0.95 * alpha)) * p1.gama)
-        p0.dama = (0.125 * alpha * p0.mama) + ((1 - (0.125 * alpha)) * p1.dama)
-        p0.lama = (0.1 * alpha * p0.mama) + ((1 - (0.1 * alpha)) * p1.lama)
-        p0.faga = (0.05 * alpha * p0.fama) + ((1 - (0.05 * alpha)) * p1.faga)
+        p0.mama = (alpha * p0.input) + ((1.0 - alpha) * p1.mama)
+        p0.fama = (FAMA * alpha * p0.mama) + ((1.0 - (FAMA * alpha)) * p1.fama)
+        p0.gama = (GAMA * alpha * p0.mama) + ((1.0 - (GAMA * alpha)) * p1.gama)
+        p0.dama = (DAMA * alpha * p0.mama) + ((1.0 - (DAMA * alpha)) * p1.dama)
+        p0.lama = (LAMA * alpha * p0.mama) + ((1.0 - (LAMA * alpha)) * p1.lama)
+        p0.faga = (FAGA * alpha * p0.fama) + ((1.0 - (FAGA * alpha)) * p1.faga)
 
         p0.osc = p0.mama - p0.fama
         p0.osc_up = p0.osc >= wma(:osc)

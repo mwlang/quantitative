@@ -71,6 +71,11 @@ module Quant
         @points.size
       end
 
+      def period_points(max_period)
+        extent = [values.size, max_period].min
+        values[-extent, extent]
+      end
+
       attr_reader :p0, :p1, :p2, :p3
       attr_reader :t0, :t1, :t2, :t3
 

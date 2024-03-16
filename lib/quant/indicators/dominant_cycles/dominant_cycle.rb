@@ -76,11 +76,6 @@ module Quant
           [p0.period.to_i, min_period].max
         end
 
-        def period_points(max_period)
-          extent = [values.size, max_period].min
-          values[-extent, extent]
-        end
-
         def compute
           compute_input_data_points
           compute_quadrature_components
