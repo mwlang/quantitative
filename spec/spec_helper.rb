@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "debug"
 require "test-prof"
 
 TestProf.configure do |config|
@@ -28,7 +29,6 @@ SimpleCov.start do
 end
 
 require "quantitative"
-require "debug"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

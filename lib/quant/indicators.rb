@@ -8,7 +8,7 @@ module Quant
     def ping; indicator(Indicators::Ping) end
 
     def dominant_cycles
-      @dominant_cycles ||= Indicators::DominantCycleIndicators.new(series:, source:)
+      @dominant_cycles ||= Quant::DominantCycleIndicators.new(series:, source:)
     end
   end
 end

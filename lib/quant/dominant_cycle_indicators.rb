@@ -1,3 +1,6 @@
+
+require_relative 'indicators_proxy'
+
 module Quant
   # Dominant Cycles measure the primary cycle within a given range.  By default, the library
   # is wired to look for cycles between 10 and 48 bars.  These values can be adjusted by setting
