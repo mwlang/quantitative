@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "../indicator_point"
 require_relative "dominant_cycle"
 
@@ -15,7 +17,7 @@ module Quant
           p0.re = (0.2 * p0.re) + (0.8 * p1.re)
           p0.im = (0.2 * p0.im) + (0.8 * p1.im)
 
-          p0.inst_period = 360.0 / rad2deg(Math.atan(p0.im/p0.re)) if (p0.im != 0) && (p0.re != 0)
+          p0.inst_period = 360.0 / rad2deg(Math.atan(p0.im / p0.re)) if (p0.im != 0) && (p0.re != 0)
 
           constrain_period_magnitude_change
           constrain_period_bars

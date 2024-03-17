@@ -28,9 +28,7 @@ module Quant
     end
 
     class Atr < Indicator
-      def points
-        @points
-      end
+      attr_reader :points
 
       def period
         dc_period / 2

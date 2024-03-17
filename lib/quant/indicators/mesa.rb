@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 module Quant
   class Indicators
-
     # The MESA inidicator
     class MesaPoint < IndicatorPoint
       attribute :mama, default: :input

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec.describe Quant::Indicators::Mesa do
@@ -38,7 +40,7 @@ RSpec.describe Quant::Indicators::Mesa do
     it { expect(subject.values.map{ |m| m.mama.round(1) }.uniq.size).to be_within(10).of(uniq_data_points) }
 
     it "crosses 2x cycles" do
-      grouped_crossings = subject.values.map(&:crossed).group_by(&:itself).transform_values{|v| v.count}
+      grouped_crossings = subject.values.map(&:crossed).group_by(&:itself).transform_values(&:count)
       unchanged_count = period * cycles - cycles * 2
       expect(grouped_crossings).to eq({ down: cycles, unchanged: unchanged_count, up: cycles })
     end

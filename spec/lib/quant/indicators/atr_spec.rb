@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec.describe Quant::Indicators::Atr do
@@ -31,7 +33,7 @@ RSpec.describe Quant::Indicators::Atr do
     it { expect(subject.values.last(5).map{ |v| v.value.round(3) }).to eq([0.179, 0.237, 0.321, 0.419, 0.52]) }
 
     it "crosses 4x cycles" do
-      grouped_crossings = subject.values.map(&:crossed).group_by(&:itself).transform_values{|v| v.count}
+      grouped_crossings = subject.values.map(&:crossed).group_by(&:itself).transform_values(&:count)
       unchanged_count = period * cycles - cycles * 4
       expect(grouped_crossings).to eq({ down: cycles * 2, unchanged: unchanged_count, up: cycles * 2 })
     end

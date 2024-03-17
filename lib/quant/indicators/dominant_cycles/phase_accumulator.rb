@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative "dominant_cycle"
 
 module Quant
@@ -30,10 +32,12 @@ module Quant
 
           p0.accumulator_phase = Math.atan(p0.q1 / p0.i1) unless p0.i1.zero?
 
-          case
-          when p0.i1 < 0 && p0.q1 > 0 then p0.accumulator_phase = 180.0 - p0.accumulator_phase
-          when p0.i1 < 0 && p0.q1 < 0 then p0.accumulator_phase = 180.0 + p0.accumulator_phase
-          when p0.i1 > 0 && p0.q1 < 0 then p0.accumulator_phase = 360.0 - p0.accumulator_phase
+          if p0.i1 < 0 && p0.q1 > 0
+            p0.accumulator_phase = 180.0 - p0.accumulator_phase
+          elsif p0.i1 < 0 && p0.q1 < 0
+            p0.accumulator_phase = 180.0 + p0.accumulator_phase
+          elsif p0.i1 > 0 && p0.q1 < 0
+            p0.accumulator_phase = 360.0 - p0.accumulator_phase
           end
 
           p0.delta_phase = p1.accumulator_phase - p0.accumulator_phase

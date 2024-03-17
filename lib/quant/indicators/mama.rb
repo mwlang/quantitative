@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Quant
   class Indicators
     class MamaPoint < IndicatorPoint
