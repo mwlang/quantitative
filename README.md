@@ -23,7 +23,8 @@ The information provided by this library should not be construed as an endorseme
 Past performance is not necessarily indicative of future results. By using this library, you agree that the developers and contributors will not be liable for any losses or damages arising from your use of the library. Use at your own risk.
 
 ## Possibilties
-While charting and automated trading systems are not part of this library, Quantitative goes a long ways towards giving you powerful tools to build such a system.  It is extracted from an automated trading system build in Ruby on Rails and has been used to generate considerable profits over the years.
+While charting and automated trading systems are not part of this library, Quantitative goes a long ways towards giving you powerful tools to build such a system.  It is extracted from an automated trading system built in Ruby on Rails and has been used to generate considerable net profits over the years.
+
 ![Possibilities](https://github.com/mwlang/quantitative/blob/main/possibilities.png)
 
 ## Installation
