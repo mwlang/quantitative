@@ -60,18 +60,20 @@ module Quant
       @ticks = []
     end
 
-    def limit_iterations(start_iteration, stop_iteration)
-      selected_ticks = ticks[start_iteration..stop_iteration]
+    def build_limited_series(selected_ticks)
       return self if selected_ticks.size == ticks.size
 
       self.class.from_ticks(symbol:, interval:, ticks: selected_ticks)
     end
 
+    def limit_iterations(start_iteration, stop_iteration)
+      selected_ticks = ticks[start_iteration..stop_iteration]
+      build_limited_series selected_ticks
+    end
+
     def limit(period)
       selected_ticks = ticks.select{ |tick| period.cover?(tick.close_timestamp) }
-      return self if selected_ticks.size == ticks.size
-
-      self.class.from_ticks(symbol:, interval:, ticks: selected_ticks)
+      build_limited_series selected_ticks
     end
 
     def_delegator :@ticks, :[]
@@ -80,6 +82,7 @@ module Quant
     def_delegator :@ticks, :select!
     def_delegator :@ticks, :reject!
     def_delegator :@ticks, :last
+    def_delegator :@ticks, :take
 
     def highest
       ticks.max_by(&:high_price)
