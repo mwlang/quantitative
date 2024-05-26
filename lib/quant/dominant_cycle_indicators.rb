@@ -1,5 +1,5 @@
 
-require_relative 'indicators_proxy'
+require_relative 'indicators_source'
 
 module Quant
   # Dominant Cycles measure the primary cycle within a given range.  By default, the library
@@ -16,7 +16,7 @@ module Quant
   # The purpose of these indicators is to compute the dominant cycle and underpin the various
   # indicators that would otherwise be setting an arbitrary lookback period.  This makes the
   # indicators adaptive and auto-tuning to the market dynamics.  Or so the theory goes!
-  class DominantCycleIndicators < IndicatorsProxy
+  class DominantCycleIndicators < IndicatorsSource
     # Auto-Correlation Reversals is a method of computing the dominant cycle
     # by correlating the data stream with itself delayed by a lag.
     def acr; indicator(Indicators::DominantCycles::Acr) end
