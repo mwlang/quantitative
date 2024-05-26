@@ -4,6 +4,8 @@ module Quant
   class Indicators
     class FramaPoint < IndicatorPoint
       attribute :frama, default: :input
+      attribute :dimension, default: 0.0
+      attribute :alpha, default: 0.0
     end
 
     # FRAMA (FRactal Adaptive Moving Average). A nonlinear moving average
@@ -23,11 +25,6 @@ module Quant
         end
       end
 
-      # def max_period
-      #   mp = dc_period
-      #   mp.even? ? mp : mp + 1
-      # end
-
       def half_period
         max_period / 2
       end
@@ -44,9 +41,9 @@ module Quant
         ppn1 = pp.last(half_period)
         n1 = (ppn1.maximum - ppn1.minimum) / half_period
 
-        dimension = (Math.log(n1 + n2) - Math.log(n3)) / Math.log(2)
-        alpha = Math.exp(-4.6 * (dimension - 1.0)).clamp(0.01, 1.0)
-        p0.frama = (alpha * p0.input) + ((1 - alpha) * p1.frama)
+        p0.dimension = (Math.log(n1 + n2) - Math.log(n3)) / Math.log(2)
+        p0.alpha = Math.exp(-4.6 * (p0.dimension - 1.0)).clamp(0.01, 1.0)
+        p0.frama = (p0.alpha * p0.input) + ((1 - p0.alpha) * p1.frama)
       end
     end
   end

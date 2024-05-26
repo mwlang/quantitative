@@ -96,7 +96,8 @@ module Quant
     def adx; indicator(Indicators::Adx) end
     def atr; indicator(Indicators::Atr) end
     def mesa; indicator(Indicators::Mesa) end
-    def mama; indicator(Indicators::MAMA) end
+    def mama; indicator(Indicators::Mama) end
+    def frama; indicator(Indicators::Frama) end
 
     # Attaches a given Indicator class and defines the method for
     # accessing it using the given name.  Indicators take care of
@@ -123,13 +124,7 @@ module Quant
     attr_reader :indicators, :ordered_indicators
 
     def dominant_cycle_indicator_class
-      return @dominant_cycle_indicator_class if @dominant_cycle_indicator_class
-
-      kind = Quant.config.indicators.dominant_cycle_kind.to_s
-      base_class_name = kind.split("_").map(&:capitalize).join
-      class_name = "Quant::Indicators::DominantCycles::#{base_class_name}"
-
-      @dominant_cycle_indicator_class = Object.const_get(class_name)
+      Quant.config.indicators.dominant_cycle_indicator_class
     end
 
     # Instantiates the indicator class and stores it in the indicators hash.  Once

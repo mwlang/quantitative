@@ -59,6 +59,7 @@ module Quant
         @half_period = settings[:half_period] || compute_half_period
         @micro_period = settings[:micro_period] || Settings::MICRO_PERIOD
 
+        @dominant_cycle_indicator_class = nil
         @dominant_cycle_kind = settings[:dominant_cycle_kind] || Settings::DOMINANT_CYCLE_KINDS.first
         @pivot_kind = settings[:pivot_kind] || Settings::PIVOT_KINDS.first
       end
@@ -68,6 +69,7 @@ module Quant
         @min_period = settings.fetch(:min_period, @min_period)
         compute_half_period
         @micro_period = settings.fetch(:micro_period, @micro_period)
+        @dominant_cycle_indicator_class = nil
         @dominant_cycle_kind = settings.fetch(:dominant_cycle_kind, @dominant_cycle_kind)
         @pivot_kind = settings.fetch(:pivot_kind, @pivot_kind)
       end
@@ -82,6 +84,15 @@ module Quant
 
       def compute_half_period
         @half_period = (max_period + min_period) / 2
+      end
+
+      def dominant_cycle_indicator_class
+        return @dominant_cycle_indicator_class if @dominant_cycle_indicator_class
+
+        base_class_name = dominant_cycle_kind.to_s.split("_").map(&:capitalize).join
+        class_name = "Quant::Indicators::DominantCycles::#{base_class_name}"
+
+        @dominant_cycle_indicator_class = Object.const_get(class_name)
       end
     end
   end

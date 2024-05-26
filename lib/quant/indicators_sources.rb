@@ -35,6 +35,16 @@ module Quant
       end
     end
 
+    def respond_to_missing?(method, *)
+      oc2.respond_to?(method)
+    end
+
+    def method_missing(method_name, *args, &block)
+      return super unless respond_to_missing?(method_name)
+
+      oc2.send(method_name, *args, &block)
+    end
+
     private
 
     def invalid_source_error(source:)

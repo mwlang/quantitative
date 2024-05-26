@@ -25,13 +25,7 @@ module Quant
       end
 
       def dominant_cycle_indicator_class
-        return @dominant_cycle_indicator_class if @dominant_cycle_indicator_class
-
-        kind = Quant.config.indicators.dominant_cycle_kind.to_s
-        base_class_name = kind.split("_").map(&:capitalize).join
-        class_name = "Quant::Indicators::DominantCycles::#{base_class_name}"
-
-        @dominant_cycle_indicator_class = Object.const_get(class_name)
+        Quant.config.indicators.dominant_cycle_indicator_class
       end
 
       # The priority drives the order of computations when iterating over each tick
