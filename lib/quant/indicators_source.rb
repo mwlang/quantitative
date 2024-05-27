@@ -1,64 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "dominant_cycles_source"
 module Quant
-  # Dominant Cycles measure the primary cycle within a given range.  By default, the library
-  # is wired to look for cycles between 10 and 48 bars.  These values can be adjusted by setting
-  # the `min_period` and `max_period` configuration values in {Quant::Config}.
-  #
-  #    Quant.configure_indicators(min_period: 8, max_period: 32)
-  #
-  # The default dominant cycle kind is the `half_period` filter.  This can be adjusted by setting
-  # the `dominant_cycle_kind` configuration value in {Quant::Config}.
-  #
-  #    Quant.configure_indicators(dominant_cycle_kind: :band_pass)
-  #
-  # The purpose of these indicators is to compute the dominant cycle and underpin the various
-  # indicators that would otherwise be setting an arbitrary lookback period.  This makes the
-  # indicators adaptive and auto-tuning to the market dynamics.  Or so the theory goes!
-  class DominantCycles
-    def initialize(indicator_source:)
-      @indicator_source = indicator_source
-    end
-
-    # Auto-Correlation Reversals is a method of computing the dominant cycle
-    # by correlating the data stream with itself delayed by a lag.
-    def acr; indicator(Indicators::DominantCycles::Acr) end
-
-    # The band-pass dominant cycle passes signals within a certain frequency
-    # range, and attenuates signals outside that range.
-    # The trend component of the signal is removed, leaving only the cyclical
-    # component.  Then we count number of iterations between zero crossings
-    # and this is the `period` of the dominant cycle.
-    def band_pass; indicator(Indicators::DominantCycles::BandPass) end
-
-    # Homodyne means the signal is multiplied by itself. More precisely,
-    # we want to multiply the signal of the current bar with the complex
-    # value of the signal one bar ago
-    def homodyne; indicator(Indicators::DominantCycles::Homodyne) end
-
-    # The Dual Differentiator algorithm computes the phase angle from the
-    # analytic signal as the arctangent of the ratio of the imaginary
-    # component to the real component. Further, the angular frequency
-    # is defined as the rate change of phase. We can use these facts to
-    # derive the cycle period.
-    def differential; indicator(Indicators::DominantCycles::Differential) end
-
-    # The phase accumulation method of computing the dominant cycle measures
-    # the phase at each sample by taking the arctangent of the ratio of the
-    # quadrature component to the in-phase component.  The phase is then
-    # accumulated and the period is derived from the phase.
-    def phase_accumulator; indicator(Indicators::DominantCycles::PhaseAccumulator) end
-
-    # Static, arbitrarily set period.
-    def half_period; indicator(Indicators::DominantCycles::HalfPeriod) end
-
-    private
-
-    def indicator(indicator_class)
-      @indicator_source[indicator_class]
-    end
-  end
-
   # {Quant::IndicatorSource} holds a collection of {Quant::Indicators::Indicator} for a given input source.
   # This class ensures dominant cycle computations come before other indicators that depend on them.
   #
@@ -81,7 +24,7 @@ module Quant
       @source = source
       @indicators = {}
       @ordered_indicators = []
-      @dominant_cycles = DominantCycles.new(indicator_source: self)
+      @dominant_cycles = DominantCyclesSource.new(indicator_source: self)
     end
 
     def [](indicator_class)
@@ -92,12 +35,14 @@ module Quant
       @ordered_indicators.each { |indicator| indicator << tick }
     end
 
-    def ping; indicator(Indicators::Ping) end
     def adx; indicator(Indicators::Adx) end
     def atr; indicator(Indicators::Atr) end
-    def mesa; indicator(Indicators::Mesa) end
-    def mama; indicator(Indicators::Mama) end
+    def cci; indicator(Indicators::Cci) end
+    def decycler; indicator(Indicators::Decycler) end
     def frama; indicator(Indicators::Frama) end
+    def mama; indicator(Indicators::Mama) end
+    def mesa; indicator(Indicators::Mesa) end
+    def ping; indicator(Indicators::Ping) end
 
     # Attaches a given Indicator class and defines the method for
     # accessing it using the given name.  Indicators take care of
@@ -134,6 +79,20 @@ module Quant
       indicators[indicator_class] ||= new_indicator(indicator_class)
     end
 
+    # Instantiates a new indicator and adds it to the collection of indicators.
+    # This method is responsible for adding dependent indicators and the dominant cycle
+    # indicator.
+    def new_indicator(indicator_class)
+      indicator_class.new(series:, source:).tap do |indicator|
+        add_dominant_cycle_indicator(indicator.dominant_cycle_indicator_class, indicator)
+        add_dependent_indicators(indicator_class.dependent_indicator_classes, indicator)
+        add_indicator(indicator_class, indicator)
+      end
+    end
+
+    # Adds a new indicator to the collection of indicators.  Once added, every
+    # tick added to the series triggers the indicator's compute to fire.
+    # The ordered indicators list is adjusted after adding the new indicator.
     def add_indicator(indicator_class, new_indicator)
       return if indicators[indicator_class]
 
@@ -142,6 +101,28 @@ module Quant
       new_indicator
     end
 
+    # Adds dependent indicators to the indicator collection.  This method is reentrant and
+    # will also add depencies of the dependent indicators.
+    # Dependent indicators automatically adjust priority based on the dependency.
+    def add_dependent_indicators(indicator_classes, indicator)
+      return if indicator_classes.empty?
+
+      # Dependent indicators should come after dominant cycle indicators, but before the
+      # indicators that depend on them.
+      dependency_priority = (Quant::Indicators::Indicator::DEPENDENCY_PRIORITY + indicator.priority) / 2
+
+      indicator_classes.each_with_index do |indicator_class, index|
+        next if indicators[indicator_class]
+
+        new_indicator = indicator_class.new(series:, source:)
+        new_indicator.define_singleton_method(:priority) { dependency_priority + index }
+        add_dependent_indicators(indicator_class.dependent_indicator_classes, new_indicator)
+        add_indicator(indicator_class, new_indicator)
+      end
+    end
+
+    # Adds the dominant cycle indicator to the collection of indicators.  Indicators added
+    # by this method must be a subclass of {Quant::Indicators::DominantCycles::DominantCycle}.
     def add_dominant_cycle_indicator(dominant_cycle_class, indicator)
       return if indicator.is_a?(Indicators::DominantCycles::DominantCycle)
       return unless dominant_cycle_class
@@ -149,13 +130,6 @@ module Quant
 
       dominant_cycle = dominant_cycle_class.new(series:, source:)
       add_indicator(dominant_cycle_class, dominant_cycle)
-    end
-
-    def new_indicator(indicator_class)
-      indicator_class.new(series:, source:).tap do |indicator|
-        add_dominant_cycle_indicator(indicator.dominant_cycle_indicator_class, indicator)
-        add_indicator(indicator_class, indicator)
-      end
     end
 
     def invalid_source_error(source:)

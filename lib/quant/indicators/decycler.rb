@@ -14,25 +14,13 @@ module Quant
     #    output of another high-pass filter having a longer cutoff period.
     # 5. A decycler oscillator shows transitions between uptrends and down-trends at the zero crossings.
     class DecyclerPoint < IndicatorPoint
-      attr_accessor :decycle, :hp1, :hp2, :osc, :peak, :agc, :ift
-
-      def to_h
-        {
-          "dc" => decycle,
-          "hp1" => hp1,
-          "hp2" => hp2,
-          "osc" => osc,
-        }
-      end
-
-      def initialize_data_points(indicator:)
-        @decycle = oc2
-        @hp1 = 0.0
-        @hp2 = 0.0
-        @osc = 0.0
-        @peak = 0.0
-        @agc = 0.0
-      end
+      attribute :decycle, default: :input
+      attribute :hp1, default: 0.0
+      attribute :hp2, default: 0.0
+      attribute :osc, default: 0.0
+      attribute :peak, default: 0.0
+      attribute :agc, default: 0.0
+      attribute :ift, default: 0.0
     end
 
     class Decycler < Indicator
@@ -40,13 +28,9 @@ module Quant
         dc_period
       end
 
-      def min_period
-        settings.min_period
-      end
-
       def compute_decycler
         alpha = period_to_alpha(max_period)
-        p0.decycle = (alpha / 2) * (p0.oc2 + p1.oc2) + (1.0 - alpha) * p1.decycle
+        p0.decycle = (alpha / 2) * (p0.input + p1.input) + (1.0 - alpha) * p1.decycle
       end
 
       # alpha1 = (Cosine(.707*360 / HPPeriod1) + Sine (.707*360 / HPPeriod1) - 1) / Cosine(.707*360 / HPPeriod1);
@@ -56,7 +40,7 @@ module Quant
         c = Math.cos(0.707 * radians / period)
         s = Math.sin(0.707 * radians / period)
         alpha = (c + s - 1) / c
-        (1 - alpha / 2)**2 * (p0.oc2 - 2 * p1.oc2 + p2.oc2) + 2 * (1 - alpha) * p1.send(hp) - (1 - alpha) * (1 - alpha) * p2.send(hp)
+        (1 - alpha / 2)**2 * (p0.input - 2 * p1.input + p2.input) + 2 * (1 - alpha) * p1.send(hp) - (1 - alpha) * (1 - alpha) * p2.send(hp)
       end
 
       def compute_oscillator
@@ -65,20 +49,22 @@ module Quant
         p0.osc = p0.hp2 - p0.hp1
       end
 
-      def compute_agc
+      # AGC is constrained to -1.0 to 1.0
+      # The peak decays at a rate of 0.991 per bar
+      def compute_automatic_gain_control
         p0.peak = [p0.osc.abs, 0.991 * p1.peak].max
         p0.agc = p0.peak.zero? ? p0.osc : p0.osc / p0.peak
       end
 
-      def compute_ift
-        p0.ift = ift(p0.agc, 5.0)
+      def compute_inverse_fisher_transform
+        p0.ift = inverse_fisher_transform(p0.agc, scale_factor: 5.0)
       end
 
       def compute
         compute_decycler
         compute_oscillator
-        compute_agc
-        compute_ift
+        compute_automatic_gain_control
+        compute_inverse_fisher_transform
       end
     end
   end

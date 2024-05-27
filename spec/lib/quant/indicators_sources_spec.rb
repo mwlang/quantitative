@@ -17,4 +17,10 @@ RSpec.describe Quant::IndicatorsSources do
   it "raises an error for a stringified valid source" do
     expect { subject["oc2"] }.to raise_error Quant::Errors::InvalidIndicatorSource
   end
+
+  context 'oc2 as default source' do
+    it { expect(subject[:oc2].ping.map(&:pong)).to eq [3.0, 6.0, 12.0, 24.0] }
+    it { expect(subject.ping.map(&:pong)).to eq [3.0, 6.0, 12.0, 24.0] }
+    it { expect(subject.ping.source).to eq :oc2 }
+  end
 end

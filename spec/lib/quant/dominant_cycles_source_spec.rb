@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-RSpec.describe Quant::DominantCycleIndicators do
+RSpec.describe Quant::DominantCyclesSource do
   let(:series) do
     # 40 bar sine wave
     Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
@@ -15,8 +15,9 @@ RSpec.describe Quant::DominantCycleIndicators do
     end
   end
   let(:source) { :oc2 }
+  let(:indicator_source) { Quant::IndicatorsSource.new(series:, source:) }
 
-  subject { described_class.new(series:, source:) }
+  subject { described_class.new(indicator_source:) }
 
   it { expect(subject.acr.values[-1].period).to eq(40) }
   it { expect(subject.band_pass.values[-1].period).to eq(40) }
