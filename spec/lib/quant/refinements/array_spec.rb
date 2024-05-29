@@ -115,6 +115,40 @@ RSpec.describe Array do
       it { expect(subject.mean).to eq 3.0 }
     end
 
+    describe "#peak" do
+      subject { q }
+
+      context "when positive values only" do
+        let(:q) { [0, 1, 2, 3, 4] }
+
+        it { expect(subject.peak).to eq 4.0 }
+      end
+
+      context "when empty" do
+        let(:q) { [] }
+
+        it { expect(subject.peak).to be_zero }
+      end
+
+      context "when negative values only" do
+        let(:q) { [0, -1, -2, -3, -4] }
+
+        it { expect(subject.peak).to eq 4.0 }
+      end
+
+      context "when mixed values" do
+        let(:q) { [0, -1, 2, -3, 4] }
+
+        it { expect(subject.peak).to eq 4.0 }
+      end
+
+      context "subset" do
+        let(:q) { [99, 1, 2, 3] }
+
+        it { expect(subject.peak(n: 3)).to eq 3.0 }
+      end
+    end
+
     describe "#ema(n:)" do
       [[0, []],
        [1, [5.0]],

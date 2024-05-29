@@ -17,7 +17,7 @@ module Quant
   # By design, the {Quant::Indicators::Indicator} class holds the {Quant::Ticks::Tick} instance
   # alongside the indicator's computed values for that tick.
   class IndicatorsSource
-    attr_reader :series, :source, :dominant_cycles
+    attr_reader :series, :source, :dominant_cycles, :pivots
 
     def initialize(series:, source:)
       @series = series
@@ -25,6 +25,7 @@ module Quant
       @indicators = {}
       @ordered_indicators = []
       @dominant_cycles = DominantCyclesSource.new(indicator_source: self)
+      @pivots = PivotsSource.new(indicator_source: self)
     end
 
     def [](indicator_class)

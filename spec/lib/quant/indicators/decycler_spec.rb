@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Indicators::Decycler do
   using Quant
 
@@ -27,7 +25,7 @@ RSpec.describe Quant::Indicators::Decycler do
     let(:uniq_data_points) { cycles * period / cycles } # sine is cyclical, so we expect a few unique data points
     let(:series) do
       # period bar sine wave
-      Quant::Series.new(symbol: "DECYCLER", interval: "1d").tap do |series|
+      Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
         cycles.times do
           (0...period).each do |degree|
             radians = degree * 2 * Math::PI / period

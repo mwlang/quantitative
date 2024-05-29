@@ -103,6 +103,7 @@ module Quant
 
       # Computes the mean of the array.  When +n+ is specified, the mean is computed over
       # the last +n+ elements, otherwise it is computed over the entire array.
+      # If the array is empty, 0.0 is returned.
       #
       # @param n [Integer] the number of elements to compute the mean over
       # @return [Float]
@@ -111,6 +112,19 @@ module Quant
         return 0.0 if subset.empty?
 
         subset.sum / subset.size.to_f
+      end
+
+      # Returns the largest absolute value in the array.  When +n+ is specified, the peak is computed over
+      # the last +n+ elements, otherwise it is computed over the entire array.
+      # If the array is empty, 0.0 is returned.
+      #
+      # @param n [Integer] the number of elements to compute the peak over
+      # @return [Float]
+      def peak(n: size)
+        subset = last(n)
+        return 0.0 if subset.empty?
+
+        [subset.max.abs, subset.min.abs].max
       end
 
       # Computes the Exponential Moving Average (EMA) of the array.  When +n+ is specified,

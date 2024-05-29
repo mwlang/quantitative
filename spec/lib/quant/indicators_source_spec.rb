@@ -20,6 +20,21 @@ RSpec.describe Quant::IndicatorsSource do
     expect(subject[indicator_class]).to eq(indicator)
   end
 
+  describe "Pivot Indicators" do
+    it { expect(subject.pivots.atr.band?(6)).to be_truthy }
+    it { expect(subject.pivots.bollinger.band?(8)).to be_truthy }
+    it { expect(subject.pivots.camarilla.band?(6)).to be_truthy }
+    it { expect(subject.pivots.classic.band?(3)).to be_truthy }
+    it { expect(subject.pivots.demark.band?(1)).to be_truthy }
+    it { expect(subject.pivots.donchian.band?(3)).to be_truthy }
+    it { expect(subject.pivots.fibbonacci.band?(7)).to be_truthy }
+    it { expect(subject.pivots.guppy.band?(7)).to be_truthy }
+    it { expect(subject.pivots.keltner.band?(6)).to be_truthy }
+    it { expect(subject.pivots.murrey.band?(6)).to be_truthy }
+    it { expect(subject.pivots.traditional.band?(3)).to be_truthy }
+    it { expect(subject.pivots.woodie.band?(4)).to be_truthy }
+  end
+
   describe "Dominant Cycle Indicators" do
     let(:series) do
     # 40 bar sine wave
