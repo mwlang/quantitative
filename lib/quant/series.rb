@@ -104,20 +104,6 @@ module Quant
       "#<#{self.class.name} symbol=#{symbol} interval=#{interval} ticks=#{ticks.size}>"
     end
 
-    # When the first indicator is instantiated, it will also lead to instantiating
-    # the dominant cycle indicator.  The `new_indicator_lock` prevents reentrant calls
-    # to the `new_indicator` method with infinite recursion.
-    def new_indicator(indicator)
-      return if @new_indicator_lock
-
-      begin
-        @new_indicator_lock = true
-        indicators.new_indicator(indicator)
-      ensure
-        @new_indicator_lock = false
-      end
-    end
-
     def <<(tick)
       tick = Ticks::Spot.new(price: tick) if tick.is_a?(Numeric)
       indicators << tick unless tick.series?

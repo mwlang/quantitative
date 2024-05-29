@@ -2,6 +2,8 @@
 
 module Quant
   class Indicators
+    # The {Quant::Indicators::Indicator} class is the abstract ancestor for all Indicators.
+    #
     class Indicator
       include Enumerable
       include Mixins::Functions
@@ -13,14 +15,55 @@ module Quant
       include Mixins::FisherTransform
       # include Mixins::Direction
 
+      # Provides a registry of dependent indicators for each indicator class.
+      # NOTE: Internal use only.
+      def self.dependent_indicator_classes
+        @dependent_indicator_classes ||= Set.new
+      end
+
+      # Use the {depends_on} method to declare dependencies for an indicator.
+      # @param indicator_classes [Array<Class>] The classes of the indicators to depend on.
+      # @example
+      #   class BarIndicator < Indicator
+      #     depends_on FooIndicator
+      #   end
+      def self.depends_on(*indicator_classes)
+        Array(indicator_classes).each{ |dependency| dependent_indicator_classes << dependency }
+      end
+
       attr_reader :source, :series
 
       def initialize(series:, source:)
         @series = series
         @source = source
         @points = {}
-        series.new_indicator(self)
         series.each { |tick| self << tick }
+      end
+
+      def dominant_cycle_indicator_class
+        Quant.config.indicators.dominant_cycle_indicator_class
+      end
+
+      # The priority drives the order of computations when iterating over each tick
+      # in a series.  Generally speaking, indicators that feed values to another indicator
+      # must have a lower priority value than the indicator that consumes the values.
+      #   * Most indicators will have a default priority of 1000.
+      #   * Dominant Cycle indicators will have a priority of 100.
+      #   * Some indicators will have a "high priority" of 500.
+      # Priority values are arbitrary and purposefully gapping so that new indicators
+      # introduced outside the core library can be slotted in between.
+      #
+      # NOTE: Priority is well-managed by the library and should not require overriding
+      # for a custom indicator developed outside the library.  If you find yourself
+      # needing to override this method, please open an issue on the library's GitHub page.
+      PRIORITIES = [
+        DOMINANT_CYCLES_PRIORITY = 100,
+        DEPENDENCY_PRIORITY = 500,
+        DEFAULT_PRIORITY = 1000
+      ].freeze
+
+      def priority
+        DEFAULT_PRIORITY
       end
 
       def min_period
@@ -48,7 +91,7 @@ module Quant
       end
 
       def dominant_cycle
-        series.indicators[source].dominant_cycle
+        series.indicators[source][dominant_cycle_indicator_class]
       end
 
       def dc_period

@@ -44,6 +44,15 @@ module Quant
       end
 
       class DominantCycle < Indicators::Indicator
+        def priority
+          DOMINANT_CYCLES_PRIORITY
+        end
+
+        # Dominant Cycle Indicators should not themselves have a dominant cycle indicator
+        def dominant_cycle_indicator_class
+          nil
+        end
+
         def points_class
           Object.const_get "Quant::Indicators::DominantCycles::#{indicator_name}Point"
         rescue NameError

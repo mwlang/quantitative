@@ -2,6 +2,7 @@
 
 require_relative "indicator_point"
 require_relative "indicator"
+require_relative "atr"
 
 module Quant
   class Indicators
@@ -24,6 +25,8 @@ module Quant
     end
 
     class Adx < Indicator
+      depends_on Indicators::Atr
+
       def alpha
         bars_to_alpha(dc_period)
       end

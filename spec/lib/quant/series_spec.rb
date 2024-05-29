@@ -386,7 +386,7 @@ RSpec.describe Quant::Series do
     subject { series.indicators }
 
     it { is_expected.to be_a(Quant::IndicatorsSources) }
-    it { expect(subject.oc2).to be_a(Quant::IndicatorsProxy) }
+    it { expect(subject.oc2).to be_a(Quant::IndicatorsSource) }
     it { expect(subject.oc2.ping).to be_a(Quant::Indicators::Ping) }
     it { expect(subject.oc2.ping.first).to be_a(Quant::Indicators::PingPoint) }
   end

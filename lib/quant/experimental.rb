@@ -1,14 +1,21 @@
 # frozen_string_literal: true
 
 module Quant
+  # {Quant::Experimental} is an alert emitter for experimental code paths.
+  # It will typically be used for new indicators or computations that are not yet
+  # fully vetted or tested.
   module Experimental
     def self.tracker
       @tracker ||= {}
     end
+
+    def self.rspec_defined?
+      defined?("RSpec")
+    end
   end
 
   def self.experimental(message)
-    return if defined?(RSpec)
+    return if Experimental.rspec_defined?
     return if Experimental.tracker[caller.first]
 
     Experimental.tracker[caller.first] = message
