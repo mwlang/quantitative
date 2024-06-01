@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
+  module Indicators
     class CciPoint < IndicatorPoint
       attribute :hp, default: 0.0
       attribute :real, default: 0.0

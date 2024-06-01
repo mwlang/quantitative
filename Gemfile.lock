@@ -1,8 +1,9 @@
 PATH
   remote: .
   specs:
-    quantitative (0.3.0)
+    quantitative (0.3.1)
       oj (~> 3.10)
+      zeitwerk (~> 2.6)
 
 GEM
   remote: https://rubygems.org/
@@ -126,6 +127,7 @@ GEM
     unicode-display_width (2.5.0)
     vernier (0.5.1)
     yard (0.9.34)
+    zeitwerk (2.6.15)
 
 PLATFORMS
   arm64-darwin-22

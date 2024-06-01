@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "dominant_cycles_source"
 module Quant
   # {Quant::IndicatorSource} holds a collection of {Quant::Indicators::Indicator} for a given input source.
   # This class ensures dominant cycle computations come before other indicators that depend on them.

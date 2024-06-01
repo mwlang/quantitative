@@ -1,12 +1,9 @@
 # frozen_string_literal: true
 
-require_relative "../indicator_point"
-require_relative "dominant_cycle"
-
 module Quant
-  class Indicators
-    class DominantCycles
-      class AcrPoint < DominantCyclePoint
+  module Indicators
+    module DominantCycles
+      class AcrPoint < Quant::Indicators::IndicatorPoint
         attribute :hp, default: 0.0
         attribute :filter, default: 0.0
         attribute :interim_period, default: 0.0

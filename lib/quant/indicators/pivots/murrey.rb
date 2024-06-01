@@ -1,8 +1,7 @@
-require_relative '../pivot'
 
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       class Murrey < Pivot
         def multiplier
           0.125

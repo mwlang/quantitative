@@ -1,6 +1,6 @@
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       class Traditional < Pivot
         def multiplier
           2.0

@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "dominant_cycle"
-
 module Quant
-  class Indicators
-    class DominantCycles
+  module Indicators
+    module DominantCycles
       class BandPassPoint < Quant::Indicators::IndicatorPoint
         attribute :hp, default: 0.0
         attribute :bp, default: 0.0

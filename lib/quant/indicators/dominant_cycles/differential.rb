@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
-    class DominantCycles
+  module Indicators
+    module DominantCycles
       # The Dual Differentiator algorithm computes the phase angle from the
       # analytic signal as the arctangent of the ratio of the imaginary
       # component to the real component. Further, the angular frequency

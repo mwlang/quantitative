@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "dominant_cycle"
-
 module Quant
-  class Indicators
-    class DominantCycles
+  module Indicators
+    module DominantCycles
       # This dominant cycle indicator is based on the half period
       # that is the midpoint of the `min_period` and `max_period`
       # configured in the `Quant.config.indicators` object.

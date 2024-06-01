@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "indicator_point"
-require_relative "indicator"
-require_relative "atr"
-
 module Quant
-  class Indicators
+  module Indicators
     class AdxPoint < IndicatorPoint
       attribute :dmu, default: 0.0
       attribute :dmd, default: 0.0

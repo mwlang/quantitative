@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "../indicator_point"
-require_relative "dominant_cycle"
-
 module Quant
-  class Indicators
-    class DominantCycles
+  module Indicators
+    module DominantCycles
       # Homodyne means the signal is multiplied by itself. More precisely,
       # we want to multiply the signal of the current bar with the complex
       # value of the signal one bar ago

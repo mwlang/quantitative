@@ -1,5 +1,5 @@
 module Quant
-  class Indicators
+  module Indicators
     class PivotPoint < IndicatorPoint
       attribute :high_price
       attribute :avg_high, default: :high_price

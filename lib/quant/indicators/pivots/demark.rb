@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       # The value of X in the formula below depends on where the Close of the market is.
       # If Close = Open then X = (H + L + (C * 2))
 

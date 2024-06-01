@@ -14,7 +14,9 @@ module Quant
     end
   end
 
-  def self.experimental(message)
+  module_function
+
+  def experimental(message)
     return if Experimental.rspec_defined?
     return if Experimental.tracker[caller.first]
 

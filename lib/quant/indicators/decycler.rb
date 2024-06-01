@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
+  module Indicators
     # The decycler oscillator can be useful for determining the transition be- tween uptrends and downtrends by the crossing of the zero
     # line. Alternatively, the changes of slope of the decycler oscillator are easier to identify than the changes in slope of the
     # original decycler. Optimum cutoff periods can easily be found by experimentation.

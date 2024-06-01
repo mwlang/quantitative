@@ -1,6 +1,6 @@
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       class Guppy < Pivot
         def guppy_ema(period, band)
           return p0.input unless p1[band]
