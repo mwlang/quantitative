@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec::Matchers.define :match_hash do |expected|
   match do |actual|
     @mismatch = match_hash_recursive(expected, actual)

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Asset do
   context "from Alpaca Asset" do
     let(:asset) do

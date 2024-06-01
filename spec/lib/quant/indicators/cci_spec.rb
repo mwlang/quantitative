@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Indicators::Cci do
   subject { described_class.new(series:, source:) }
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Ticks::Spot do
   let(:current_time) { Quant.current_time }
   let(:one_second) { 1 }

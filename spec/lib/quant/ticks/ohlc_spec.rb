@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Ticks::OHLC do
   describe ".from" do
     let(:one_second) { 1 }

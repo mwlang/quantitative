@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Indicators::Atr do
   let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
   let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }

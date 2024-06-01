@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Interval do
   let(:current_time) { Quant.current_time }
   let(:one_minute_in_seconds) { 60 }

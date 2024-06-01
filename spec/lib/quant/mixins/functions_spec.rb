@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Mixins::Functions do
   let(:klass) do
     Class.new do

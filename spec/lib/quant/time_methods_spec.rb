@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::TimeMethods do
   let(:time_test_class) do
     Class.new do

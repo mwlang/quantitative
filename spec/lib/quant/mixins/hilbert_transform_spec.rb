@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module HilbertMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :ht, default: 0.0

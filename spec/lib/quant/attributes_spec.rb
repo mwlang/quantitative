@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Attributes do
   def deregister_class(klass)
     Quant::Attributes.deregister(klass)

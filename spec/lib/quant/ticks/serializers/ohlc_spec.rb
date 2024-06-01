@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Ticks::Serializers::OHLC do
   let(:current_time) { Quant.current_time.round }
   let(:one_minute) { 60 }

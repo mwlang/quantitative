@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Indicators::Mama do
   let(:apple_fixture_filename) { fixture_filename("AAPL-19990104_19990107.txt", :series) }
   let(:series) { Quant::Series.from_file(filename: apple_fixture_filename, symbol: "AAPL", interval: :daily) }

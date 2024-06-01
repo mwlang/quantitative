@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module SmaMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :sma, default: 0.0

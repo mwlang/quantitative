@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module Quant
   RSpec.describe Settings::Indicators do
     context "all defaults" do
