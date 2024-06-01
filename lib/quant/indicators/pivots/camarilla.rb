@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       # Camarilla pivot point calculations are rather straightforward. We need to
       # input the previous day’s open, high, low and close. The formulas for each
       # resistance and support level are:

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module IndicatorSpec
   class NoOpPoint < Quant::Indicators::IndicatorPoint
     attr_reader :input

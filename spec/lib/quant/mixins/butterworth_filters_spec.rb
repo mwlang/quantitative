@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module ButterworthMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :bw2p, default: 0.0

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "tick"
-
 module Quant
   module Ticks
     # A +Spot+ is a single price point in time.  It is the most basic form of a {Quant::Ticks::Tick} and is usually used to represent

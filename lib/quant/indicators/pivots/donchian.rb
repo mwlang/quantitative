@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       class Donchian < Pivot
         using Quant
 

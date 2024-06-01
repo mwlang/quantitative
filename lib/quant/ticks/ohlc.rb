@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "tick"
-
 module Quant
   module Ticks
     # A {Quant::Ticks::OHLC} is a bar or candle for a point in time that

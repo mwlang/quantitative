@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
+  module Indicators
     class FramaPoint < IndicatorPoint
       attribute :frama, default: :input
       attribute :dimension, default: 0.0

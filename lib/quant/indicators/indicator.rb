@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
+  module Indicators
     # The {Quant::Indicators::Indicator} class is the abstract ancestor for all Indicators.
     #
     class Indicator

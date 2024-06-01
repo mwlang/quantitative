@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module HighPassFilterMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :hp, default: :oc2

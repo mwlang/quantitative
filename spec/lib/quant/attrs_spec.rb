@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module Experiment
   def self.registry
     @registry ||= {}

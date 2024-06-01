@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
+  module Indicators
     class IndicatorPoint
       include Quant::Attributes
       extend Forwardable

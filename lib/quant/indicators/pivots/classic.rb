@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       class Classic < Pivot
         def compute_midpoint
           p0.midpoint = super_smoother :input, previous: :midpoint, period: averaging_period

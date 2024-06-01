@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-require_relative "dominant_cycle"
-
 module Quant
-  class Indicators
-    class DominantCycles
+  module Indicators
+    module DominantCycles
       # The phase accumulation method of computing the dominant cycle is perhaps
       # the easiest to comprehend. In this technique, we measure the phase
       # at each sample by taking the arctangent of the ratio of the quadrature

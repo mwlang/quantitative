@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative "asset_class"
-
 module Quant
   # A {Quant::Asset} is a representation of a financial instrument such as a stock, option, future, or currency.
   # It is used to represent the instrument that is being traded, analyzed, or managed.

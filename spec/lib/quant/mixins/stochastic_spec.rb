@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module StochasticMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :st, default: 0.0

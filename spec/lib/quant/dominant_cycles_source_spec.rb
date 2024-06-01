@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::DominantCyclesSource do
   let(:series) do
     # 40 bar sine wave

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module WmaMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :wma, default: 0.0

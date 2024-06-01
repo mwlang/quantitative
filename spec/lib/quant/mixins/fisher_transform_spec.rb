@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module FishertMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :ft, default: 0.0

@@ -1,6 +1,6 @@
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       class Atr < Pivot
         depends_on Indicators::Atr
 

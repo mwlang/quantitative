@@ -1,8 +1,8 @@
-require_relative '../pivot'
+# frozen_string_literal: true
 
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       # One of the key differences in calculating Woodie's Pivot Point to other pivot
       # points is that the current session's open price is used in the PP formula with
       # the previous session's high and low. At the time-of-day that we calculate the

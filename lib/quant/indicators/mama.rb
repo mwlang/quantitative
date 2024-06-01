@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Quant
-  class Indicators
+  module Indicators
     class MamaPoint < IndicatorPoint
       attribute :smooth, default: 0.0
       attribute :detrend, default: 0.0

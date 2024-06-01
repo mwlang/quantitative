@@ -1,6 +1,6 @@
 module Quant
-  class Indicators
-    class Pivots
+  module Indicators
+    module Pivots
       class Fibbonacci < Pivot
         def averaging_period
           half_period

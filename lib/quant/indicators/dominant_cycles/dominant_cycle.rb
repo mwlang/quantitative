@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "../indicator"
-
 module Quant
-  class Indicators
+  module Indicators
     # Dominant Cycles measure the primary cycle within a given range.  By default, the library
     # is wired to look for cycles between 10 and 48 bars.  These values can be adjusted by setting
     # the `min_period` and `max_period` configuration values in {Quant::Config}.
@@ -18,7 +16,7 @@ module Quant
     # The purpose of these indicators is to compute the dominant cycle and underpin the various
     # indicators that would otherwise be setting an arbitrary lookback period.  This makes the
     # indicators adaptive and auto-tuning to the market dynamics.  Or so the theory goes!
-    class DominantCycles
+    module DominantCycles
       class DominantCyclePoint < Quant::Indicators::IndicatorPoint
         attribute :smooth, default: 0.0
         attribute :detrend, default: 0.0

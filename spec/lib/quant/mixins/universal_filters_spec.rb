@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module UniversalMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :ema, default: :oc2

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 module SuperSmootherMixinTest
   class TestPoint < Quant::Indicators::IndicatorPoint
     attribute :ss3p, default: :oc2

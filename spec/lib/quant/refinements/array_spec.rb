@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Array do
   let(:quant_array) { [1, 2, 3, 4, 5] }
 

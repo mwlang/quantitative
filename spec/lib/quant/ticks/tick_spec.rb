@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::Ticks::Tick do
   Quant::Ticks::Serializers::Tick.class_eval do
     def self.to_h(_tick)

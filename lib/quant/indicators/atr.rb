@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require_relative "indicator_point"
-require_relative "indicator"
-
 module Quant
-  class Indicators
+  module Indicators
     class AtrPoint < IndicatorPoint
       attribute :tr, default: 0.0
       attribute :period, default: :min_period

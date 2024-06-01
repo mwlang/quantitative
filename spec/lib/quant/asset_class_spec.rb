@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::AssetClass do
   subject { described_class.new(name) }
 

@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "spec_helper"
-
 RSpec.describe Quant::TimePeriod do
   let(:current_time) { Quant.current_time }
   let(:current_time_beginning_of_day) { Time.utc(current_time.year, current_time.month, current_time.day, 0, 0, 0, 0) }
