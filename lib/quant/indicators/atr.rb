@@ -25,6 +25,8 @@ module Quant
     end
 
     class Atr < Indicator
+      register name: :atr
+
       attr_reader :points
 
       def period

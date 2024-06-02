@@ -22,6 +22,8 @@ module Quant
       #   S3 = L - 2 * (H - PP) (same as: S1 - RANGE)
       #   S4 = S3 - RANGE
       class Woodie < Pivot
+        register name: :woodie
+
         def compute_value
           p0.input = (t1.high_price + t1.low_price + 2.0 * t0.open_price) / 4.0
         end

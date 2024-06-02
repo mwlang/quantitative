@@ -7,6 +7,8 @@ module Quant
       # we want to multiply the signal of the current bar with the complex
       # value of the signal one bar ago
       class Homodyne < DominantCycle
+        register name: :homodyne
+
         def compute_period
           p0.re = (p0.i2 * p1.i2) + (p0.q2 * p1.q2)
           p0.im = (p0.i2 * p1.q2) - (p0.q2 * p1.i2)

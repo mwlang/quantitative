@@ -15,6 +15,10 @@ module Quant
       include Mixins::FisherTransform
       # include Mixins::Direction
 
+      def self.register(name:)
+        Quant::IndicatorsSource.register(name:, indicator_class: self)
+      end
+
       # Provides a registry of dependent indicators for each indicator class.
       # NOTE: Internal use only.
       def self.dependent_indicator_classes

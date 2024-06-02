@@ -46,6 +46,8 @@ module Quant
     # dominant cycle indicator other than the homodyne for the rest
     # of your indicators.
     class Mama < Indicator
+      register name: :mama
+
       # constrain between 6 and 50 bars
       def constrain_period_bars
         p0.period = p0.period.clamp(min_period, max_period)

@@ -15,6 +15,7 @@ module Quant
     #
     # SOURCE: http://www.mesasoftware.com/papers/FRAMA.pdf
     class Frama < Indicator
+      register name: :frama
       using Quant
 
       # The max_period is divided into two smaller, equal periods, so must be even

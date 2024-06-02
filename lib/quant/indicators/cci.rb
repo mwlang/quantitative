@@ -18,6 +18,8 @@ module Quant
     #
     # SOURCE: https://www.mesasoftware.com/papers/CORRELATION%20AS%20A%20CYCLE%20INDICATOR.pdf
     class Cci < Indicator
+      register name: :cci
+
       def max_period
         [min_period, dc_period].max
       end

@@ -14,6 +14,8 @@ module Quant
       # PP = X / 4 (this is not an official DeMark number but merely a reference point based on the calculation of X)
       # S1 = X / 2 - H
       class Demark < Pivot
+        register name: :demark
+
         def averaging_period
           min_period / 2
         end

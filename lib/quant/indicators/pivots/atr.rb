@@ -2,6 +2,7 @@ module Quant
   module Indicators
     module Pivots
       class Atr < Pivot
+        register name: :atr
         depends_on Indicators::Atr
 
         def atr_point

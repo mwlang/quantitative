@@ -16,13 +16,18 @@ module Quant
   # By design, the {Quant::Indicators::Indicator} class holds the {Quant::Ticks::Tick} instance
   # alongside the indicator's computed values for that tick.
   class IndicatorsSource
+    include IndicatorsRegistry
+
     attr_reader :series, :source, :dominant_cycles, :pivots
 
     def initialize(series:, source:)
       @series = series
       @source = source
+
       @indicators = {}
       @ordered_indicators = []
+      define_indicator_accessors(indicator_source: self)
+
       @dominant_cycles = DominantCyclesSource.new(indicator_source: self)
       @pivots = PivotsSource.new(indicator_source: self)
     end
@@ -35,19 +40,18 @@ module Quant
       @ordered_indicators.each { |indicator| indicator << tick }
     end
 
-    def adx; indicator(Indicators::Adx) end
-    def atr; indicator(Indicators::Atr) end
-    def cci; indicator(Indicators::Cci) end
-    def decycler; indicator(Indicators::Decycler) end
-    def frama; indicator(Indicators::Frama) end
-    def mama; indicator(Indicators::Mama) end
-    def mesa; indicator(Indicators::Mesa) end
-    def ping; indicator(Indicators::Ping) end
-
     # Attaches a given Indicator class and defines the method for
     # accessing it using the given name.  Indicators take care of
     # computing their values when first attached to a populated
     # series.
+    #
+    # NOTE: You can also use the `register` method on the indicator class to
+    # accomplish the same thing.  `attach` lets you inject a custom indicator
+    # at run-time when you have an instance of {Quant::IndicatorsSource} while
+    # the `register` method is used to define the indicator at load-time.
+    #
+    # NOTE Calling `attach` also registers the indicator with the framework, so
+    # you only have to `attach` once.
     #
     # The indicators shipped with the library are all wired into the framework, thus
     # this method should be used for custom indicators not shipped with the library.
@@ -57,6 +61,7 @@ module Quant
     # @example
     #   series.indicators.oc2.attach(name: :foo, indicator_class: Indicators::Foo)
     def attach(name:, indicator_class:)
+      self.class.register(name:, indicator_class:)
       define_singleton_method(name) { indicator(indicator_class) }
     end
 

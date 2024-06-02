@@ -9,6 +9,8 @@ module Quant
       # is defined as the rate change of phase. We can use these facts to
       # derive the cycle period.
       class Differential < DominantCycle
+        register name: :differential
+
         def compute_period
           p0.ddd = (p0.q2 * (p0.i2 - p1.i2)) - (p0.i2 * (p0.q2 - p1.q2))
           p0.inst_period = p0.ddd > 0.01 ? 6.2832 * (p0.i2**2 + p0.q2**2) / p0.ddd : 0.0

@@ -24,6 +24,8 @@ module Quant
       # Therefore, shorter cycle periods necessarily have a higher output
       # signal-to-noise ratio.
       class PhaseAccumulator < DominantCycle
+        register name: :phase_accumulator
+
         def compute_period
           p0.i1 = 0.15 * p0.i1 + 0.85 * p1.i1
           p0.q1 = 0.15 * p0.q1 + 0.85 * p1.q1

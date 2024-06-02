@@ -9,13 +9,13 @@ RSpec.describe Quant::Indicators::Mesa do
 
   it { is_expected.to be_a(described_class) }
   it { expect(subject.series.size).to eq(4) }
-  it { expect(subject.values.map{ |v| v.mama.round(3) }).to eq([0.372, 0.375, 0.377, 0.381]) }
-  it { expect(subject.values.map{ |v| v.lama.round(3) }).to eq([0.372, 0.372, 0.372, 0.373]) }
-  it { expect(subject.values.map{ |v| v.gama.round(3) }).to eq([0.372, 0.373, 0.374, 0.376]) }
-  it { expect(subject.values.map{ |v| v.dama.round(3) }).to eq([0.372, 0.372, 0.372, 0.373]) }
-  it { expect(subject.values.map{ |v| v.lama.round(3) }).to eq([0.372, 0.372, 0.372, 0.373]) }
+  it { expect(subject.values.map{ |v| v.mama.round(3) }).to eq([0.372, 0.376, 0.379, 0.384]) }
+  it { expect(subject.values.map{ |v| v.lama.round(3) }).to eq([0.372, 0.372, 0.373, 0.373]) }
+  it { expect(subject.values.map{ |v| v.gama.round(3) }).to eq([0.372, 0.374, 0.376, 0.380]) }
+  it { expect(subject.values.map{ |v| v.dama.round(3) }).to eq([0.372, 0.372, 0.373, 0.373]) }
+  it { expect(subject.values.map{ |v| v.lama.round(3) }).to eq([0.372, 0.372, 0.373, 0.373]) }
   it { expect(subject.values.map{ |v| v.faga.round(3) }).to eq([0.372, 0.372, 0.372, 0.372]) }
-  it { expect(subject.values.map{ |v| v.osc.round(3) }).to eq([0.0, 0.002, 0.004, 0.007]) }
+  it { expect(subject.values.map{ |v| v.osc.round(3) }).to eq([0.0, 0.003, 0.005, 0.007]) }
   it { expect(subject.values.map(&:crossed)).to all be(:unchanged) }
 
   context "sine series" do

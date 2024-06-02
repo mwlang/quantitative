@@ -2,6 +2,8 @@ module Quant
   module Indicators
     module Pivots
       class Traditional < Pivot
+        register name: :traditional
+
         def multiplier
           2.0
         end

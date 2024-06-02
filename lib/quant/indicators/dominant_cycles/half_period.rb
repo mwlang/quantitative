@@ -12,6 +12,8 @@ module Quant
       end
 
       class HalfPeriod < DominantCycle
+        register name: :half_period
+
         def compute
           # No-Op
         end

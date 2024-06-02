@@ -4,6 +4,7 @@ module Quant
   module Indicators
     module Pivots
       class Donchian < Pivot
+        register name: :donchian
         using Quant
 
         def st_period; min_period end

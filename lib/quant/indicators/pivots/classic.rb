@@ -4,6 +4,8 @@ module Quant
   module Indicators
     module Pivots
       class Classic < Pivot
+        register name: :classic
+
         def compute_midpoint
           p0.midpoint = super_smoother :input, previous: :midpoint, period: averaging_period
         end
