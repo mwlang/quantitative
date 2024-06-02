@@ -16,7 +16,7 @@ RSpec.describe Quant::Indicators::Pivots::Guppy do
     it { expect(subject.values.map{ |v| v.h7.round(3) }).to eq([3.0, 3.231, 3.905, 5.451]) }
     it { expect(subject.values.map{ |v| v.h6.round(3) }).to eq([3.0, 3.286, 4.116, 6.009]) }
     it { expect(subject.values.map{ |v| v.h1.round(3) }).to eq([3.0, 4.0, 6.667, 12.444]) }
-    it { expect(subject.values.map{ |v| v.midpoint.round(3) }).to eq([3.0, 6.0, 12.0, 24.0]) }
+    it { expect(subject.values.map{ |v| v.midpoint.round(3) }).to eq([3.0, 4.5, 8.25, 16.125]) }
     it { expect(subject.values.map{ |v| v.h0.round(3) }).to eq(subject.values.map{ |v| v.midpoint.round(3) }) }
     it { expect(subject.values.map{ |v| v.l1.round(3) }).to eq([3.0, 3.194, 3.762, 5.067]) }
     it { expect(subject.values.map{ |v| v.l6.round(3) }).to eq([3.0, 3.098, 3.39, 4.066]) }

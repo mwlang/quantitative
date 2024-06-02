@@ -17,14 +17,6 @@ module Quant
       register name: :snr
       depends_on DominantCycles::Homodyne
 
-      def fast_limit
-        @fast_limit ||= bars_to_alpha(micro_period)
-      end
-
-      def slow_limit
-        @slow_limit ||= bars_to_alpha(max_period)
-      end
-
       def homodyne_dominant_cycle
         series.indicators[source].dominant_cycles.homodyne
       end
@@ -33,26 +25,15 @@ module Quant
         homodyne_dominant_cycle.points[t0]
       end
 
-      def delta_phase
-        current_dominant_cycle.delta_phase
-      end
-
       def threshold
         @threshold ||= 10 * Math.log(0.5)**2
       end
 
-      def i1
-        current_dominant_cycle.i1
-      end
-
-      def q1
-        current_dominant_cycle.q1
-      end
-
       def compute_values
-        dc = current_dominant_cycle
-        p0.i1 = dc.i1
-        p0.q1 = dc.q1
+        current_dominant_cycle.tap do |dc|
+          p0.i1 = dc.i1
+          p0.q1 = dc.q1
+        end
       end
 
       def compute_noise

@@ -29,10 +29,6 @@ module Quant
       class Camarilla < Pivot
         register name: :camarilla
 
-        def multiplier
-          1.1
-        end
-
         def compute_midpoint
           p0.midpoint = t0.close_price
         end

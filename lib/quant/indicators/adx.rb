@@ -24,10 +24,6 @@ module Quant
       register name: :adx
       depends_on Indicators::Atr
 
-      def alpha
-        bars_to_alpha(dc_period)
-      end
-
       def scale
         1.0
       end
@@ -72,7 +68,7 @@ module Quant
         p0.di_ema = three_pole_super_smooth(:di, period:, previous: :di_ema).clamp(-10.0, 10.0)
 
         p0.value = p0.di_ema
-        p0.inst_stoch = stochastic :di, period: dc_period
+        p0.inst_stoch = stochastic(:di, period:)
         p0.stoch = three_pole_super_smooth :inst_stoch, period:, previous: :stoch
       end
     end
