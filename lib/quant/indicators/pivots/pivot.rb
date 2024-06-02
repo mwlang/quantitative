@@ -2,11 +2,9 @@ module Quant
   module Indicators
     module Pivots
       class PivotPoint < IndicatorPoint
-        attribute :high_price
         attribute :avg_high, default: :high_price
         attribute :highest, default: :input
 
-        attribute :low_price
         attribute :avg_low, default: :low_price
         attribute :lowest, default: :input
 
@@ -93,8 +91,6 @@ module Quant
 
         def compute_extents
           period_midpoints.tap do |midpoints|
-            p0.high_price = t0.high_price
-            p0.low_price = t0.low_price
             p0.highest = midpoints.max
             p0.lowest = midpoints.min
             p0.range = p0.high_price - p0.low_price
