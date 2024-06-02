@@ -4,6 +4,8 @@ module Quant
   module Indicators
     module Pivots
       class Bollinger < Pivot
+        register name: :bollinger
+
         using Quant
 
         def compute_midpoint

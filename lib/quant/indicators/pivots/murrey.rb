@@ -3,6 +3,8 @@ module Quant
   module Indicators
     module Pivots
       class Murrey < Pivot
+        register name: :murrey
+
         def multiplier
           0.125
         end

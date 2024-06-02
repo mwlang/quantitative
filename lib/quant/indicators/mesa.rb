@@ -33,12 +33,11 @@ module Quant
     # indicators for the dominant cycle, then this version is useful
     # as it avoids extra computational steps.
     class Mesa < Indicator
-      def period
-        dc_period
-      end
+      register name: :mesa
+      depends_on DominantCycles::Homodyne
 
       def fast_limit
-        @fast_limit ||= bars_to_alpha(min_period / 2)
+        @fast_limit ||= bars_to_alpha(micro_period)
       end
 
       def slow_limit

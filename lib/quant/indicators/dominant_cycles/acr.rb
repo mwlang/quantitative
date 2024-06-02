@@ -28,6 +28,8 @@ module Quant
       # The cyclic information is extracted using a discrete Fourier transform
       # (DFT) of the autocorrelation results.
       class Acr < DominantCycle
+        register name: :acr
+
         BANDWIDTH_DEGREES = 370
         BANDWIDTH_RADIANS = BANDWIDTH_DEGREES * Math::PI / 180.0
 

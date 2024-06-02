@@ -2,6 +2,8 @@ module Quant
   module Indicators
     module Pivots
       class Guppy < Pivot
+        register name: :guppy
+
         def guppy_ema(period, band)
           return p0.input unless p1[band]
 

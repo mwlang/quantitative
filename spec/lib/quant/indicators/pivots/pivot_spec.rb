@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Quant::Indicators::Pivot do
+RSpec.describe Quant::Indicators::Pivots::Pivot do
   let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
   let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
   let(:source) { :oc2 }

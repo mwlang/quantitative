@@ -27,6 +27,8 @@ module Quant
       # S5 = S4 – 1.168 * (S3 – S4)
       # S6 = Close – (R6 – Close)
       class Camarilla < Pivot
+        register name: :camarilla
+
         def multiplier
           1.1
         end

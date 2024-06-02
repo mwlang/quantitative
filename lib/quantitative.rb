@@ -29,6 +29,12 @@ loader.inflector.inflect "version" => "VERSION"
 loader.setup
 
 # Refinements aren't autoloaded by Zeitwerk, so we need to require them manually.
-%w(refinements).each do |sub_folder|
-  Dir.glob(File.join(quant_folder, sub_folder, "**/*.rb")).each { |fn| require fn }
-end
+# %w(refinements).each do |sub_folder|
+#   Dir.glob(File.join(quant_folder, sub_folder, "**/*.rb")).each { |fn| require fn }
+# end
+
+refinements_folder = File.join(quant_folder, "refinements")
+indicators_folder = File.join(quant_folder, "indicators")
+
+loader.eager_load_dir(refinements_folder)
+loader.eager_load_dir(indicators_folder)

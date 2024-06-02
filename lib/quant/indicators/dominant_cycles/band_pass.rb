@@ -20,6 +20,8 @@ module Quant
       # component.  Then we count number of iterations between zero crossings
       # and this is the `period` of the dominant cycle.
       class BandPass < DominantCycle
+        register name: :band_pass
+
         def bandwidth
           0.75
         end

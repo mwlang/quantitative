@@ -24,6 +24,8 @@ module Quant
     end
 
     class Decycler < Indicator
+      register name: :decycler
+
       def max_period
         dc_period
       end

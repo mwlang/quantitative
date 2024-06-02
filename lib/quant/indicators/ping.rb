@@ -13,6 +13,8 @@ module Quant
 
     # A simple idicator used primarily to test the indicator system
     class Ping < Indicator
+      register name: :ping
+
       def compute
         p0.pong = input
         p0.compute_count += 1

@@ -21,6 +21,7 @@ module Quant
     end
 
     class Adx < Indicator
+      register name: :adx
       depends_on Indicators::Atr
 
       def alpha

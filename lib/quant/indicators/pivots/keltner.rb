@@ -2,6 +2,7 @@ module Quant
   module Indicators
     module Pivots
       class Keltner < Pivot
+        register name: :keltner
         depends_on Indicators::Atr
 
         def atr_point

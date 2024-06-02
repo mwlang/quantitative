@@ -2,6 +2,8 @@ module Quant
   module Indicators
     module Pivots
       class Fibbonacci < Pivot
+        register name: :fibbonacci
+
         def averaging_period
           half_period
         end
