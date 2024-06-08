@@ -11,15 +11,15 @@ RSpec.describe Quant::Indicators::Pivots::Bollinger do
   it { expect(subject.series.size).to eq(4) }
   it { expect(subject.ticks).to be_a(Array) }
   it { expect(subject.values.map(&:input)).to eq([3.0, 6.0, 12.0, 24.0]) }
-  it { expect(subject.values.map{ |v| v.std_dev.round(3) }).to eq([0.0, 2.052, 5.22, 10.905]) }
+  it { expect(subject.values.map{ |v| v.std_dev.round(3) }).to eq([0.0, 1.985, 4.985, 10.365]) }
 
   context "bands" do
-    it { expect(subject.values.map{ |v| v.h6.round(3) }).to eq([3.0, 8.23, 16.41, 31.148]) }
-    it { expect(subject.values.map{ |v| v.h1.round(3) }).to eq([3.0, 5.152, 8.58, 14.791]) }
-    it { expect(subject.values.map{ |v| v.midpoint.round(3) }).to eq([3.0, 3.1, 3.36, 3.886]) }
+    it { expect(subject.values.map{ |v| v.h6.round(3) }).to eq([3.0, 8.162, 16.168, 30.624]) }
+    it { expect(subject.values.map{ |v| v.h1.round(3) }).to eq([3.0, 5.185, 8.691, 15.077]) }
+    it { expect(subject.values.map{ |v| v.midpoint.round(3) }).to eq([3.0, 3.2, 3.707, 4.712]) }
     it { expect(subject.values.map{ |v| v.h0.round(3) }).to eq(subject.values.map{ |v| v.midpoint.round(3) }) }
-    it { expect(subject.values.map{ |v| v.l1.round(3) }).to eq([3.0, 1.048, -1.86, -7.019]) }
-    it { expect(subject.values.map{ |v| v.l6.round(3) }).to eq([3.0, -2.03, -9.69, -23.376]) }
+    it { expect(subject.values.map{ |v| v.l1.round(3) }).to eq([3.0, 1.215, -1.278, -5.652]) }
+    it { expect(subject.values.map{ |v| v.l6.round(3) }).to eq([3.0, -1.762, -8.755, -21.199]) }
   end
 
   context "bands do not intersect each other" do

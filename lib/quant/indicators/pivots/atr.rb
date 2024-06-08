@@ -10,31 +10,25 @@ module Quant
         end
 
         def scale
-          5.0
+          3.0
         end
 
         def atr_value
-          atr_point.slow * scale
+          atr_point.value * scale
         end
 
         def compute_midpoint
-          p0.midpoint = two_pole_super_smooth :input, previous: :midpoint, period: averaging_period
+          p0.midpoint = smoothed_average_midpoint
         end
 
-        def compute_bands
-          p0.h6 = p0.midpoint + 1.000 * atr_value
-          p0.h5 = p0.midpoint + 0.786 * atr_value
-          p0.h4 = p0.midpoint + 0.618 * atr_value
-          p0.h3 = p0.midpoint + 0.500 * atr_value
-          p0.h2 = p0.midpoint + 0.382 * atr_value
-          p0.h1 = p0.midpoint + 0.236 * atr_value
+        ATR_SERIES = [0.236, 0.382, 0.500, 0.618, 0.786, 1.0].freeze
 
-          p0.l1 = p0.midpoint - 0.236 * atr_value
-          p0.l2 = p0.midpoint - 0.382 * atr_value
-          p0.l3 = p0.midpoint - 0.500 * atr_value
-          p0.l4 = p0.midpoint - 0.618 * atr_value
-          p0.l5 = p0.midpoint - 0.786 * atr_value
-          p0.l6 = p0.midpoint - 1.000 * atr_value
+        def compute_bands
+          ATR_SERIES.each_with_index do |ratio, index|
+            offset = ratio * atr_value
+            p0[index + 1] = p0.midpoint + offset
+            p0[-index - 1] = p0.midpoint - offset
+          end
         end
       end
     end

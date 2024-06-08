@@ -14,20 +14,13 @@ module Quant
           p0.midpoint = p0.lowest + (p0.input * 4.0)
         end
 
-        def compute_bands
-          p0.h6 = p0.midpoint + p0.input * 6.0
-          p0.h5 = p0.midpoint + p0.input * 5.0
-          p0.h4 = p0.midpoint + p0.input * 4.0
-          p0.h3 = p0.midpoint + p0.input * 3.0
-          p0.h2 = p0.midpoint + p0.input * 2.0
-          p0.h1 = p0.midpoint + p0.input * 1.0
+        MURREY_SERIES = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0].freeze
 
-          p0.l1 = p0.midpoint - p0.input * 1.0
-          p0.l2 = p0.midpoint - p0.input * 2.0
-          p0.l3 = p0.midpoint - p0.input * 3.0
-          p0.l4 = p0.midpoint - p0.input * 4.0
-          p0.l5 = p0.midpoint - p0.input * 5.0
-          p0.l6 = p0.midpoint - p0.input * 6.0
+        def compute_bands
+          MURREY_SERIES.each_with_index do |ratio, index|
+            p0[index + 1] = p0.midpoint + p0.input * ratio
+            p0[-index - 1] = p0.midpoint - p0.input * ratio
+          end
         end
       end
     end

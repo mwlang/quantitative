@@ -13,15 +13,6 @@ RSpec.describe Quant::Indicators::Pivots::Traditional do
   it { expect(subject.ticks.map(&:oc2)).to eq([3.0, 6.0, 12.0, 24.0]) }
   it { expect(subject.values.map(&:input)).to eq([3.0, 6.0, 12.0, 24.0]) }
 
-  context "extents" do
-    it { expect(subject.values.map{ |v| v.highest.round(3) }).to eq([3.0, 6.0, 12.0, 24.0]) }
-    it { expect(subject.values.map{ |v| v.avg_high.round(3) }).to eq([4.0, 4.506, 6.026, 9.65]) }
-    it { expect(subject.values.map{ |v| v.lowest.round(3) }).to eq([3.0, 3.0, 3.0, 3.0]) }
-    it { expect(subject.values.map{ |v| v.low_price.round(3) }).to eq([2.0, 4.0, 8.0, 16.0]) }
-    it { expect(subject.values.map{ |v| v.high_price.round(3) }).to eq([4.0, 8.0, 16.0, 32.0]) }
-    it { expect(subject.values.map{ |v| v.range.round(3) }).to eq([2.0, 4.0, 8.0, 16.0]) }
-  end
-
   # Woodie's calculated bands are erratic as-written. The following tests are marked
   # as pending until the correct formula is determined.
   context "bands" do

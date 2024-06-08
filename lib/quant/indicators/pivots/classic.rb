@@ -7,7 +7,7 @@ module Quant
         register name: :classic
 
         def compute_midpoint
-          p0.midpoint = super_smoother :input, previous: :midpoint, period: averaging_period
+          p0.midpoint = smoothed_average_midpoint
         end
 
         def compute_bands

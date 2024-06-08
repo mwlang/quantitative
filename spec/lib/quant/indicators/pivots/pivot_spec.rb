@@ -7,6 +7,15 @@ RSpec.describe Quant::Indicators::Pivots::Pivot do
 
   subject { described_class.new(series:, source:) }
 
+  context "extents" do
+    it { expect(subject.values.map{ |v| v.highest.round(3) }).to eq([3.0, 6.0, 12.0, 24.0]) }
+    it { expect(subject.values.map{ |v| v.avg_high.round(3) }).to eq([4.0, 4.529, 6.532, 11.585]) }
+    it { expect(subject.values.map{ |v| v.lowest.round(3) }).to eq([3.0, 3.0, 3.0, 3.0]) }
+    it { expect(subject.values.map{ |v| v.low_price.round(3) }).to eq([2.0, 4.0, 8.0, 16.0]) }
+    it { expect(subject.values.map{ |v| v.high_price.round(3) }).to eq([4.0, 8.0, 16.0, 32.0]) }
+    it { expect(subject.values.map{ |v| v.range.round(3) }).to eq([2.0, 4.0, 8.0, 16.0]) }
+  end
+
   it { is_expected.to be_a(described_class) }
   it { expect(subject.series.size).to eq(4) }
   it { expect(subject.ticks).to be_a(Array) }
@@ -20,7 +29,7 @@ RSpec.describe Quant::Indicators::Pivots::Pivot do
   it { expect(subject.values.map(&:low_price)).to eq([2.0, 4.0, 8.0, 16.0]) }
   it { expect(subject.values.map(&:range)).to eq([2.0, 4.0, 8.0, 16.0]) }
 
-  it { expect(subject.values.map{ |v| v.avg_high.round(3) }).to eq([4.0, 4.506, 6.026, 9.65]) }
-  it { expect(subject.values.map{ |v| v.avg_low.round(3) }).to eq([2.0, 2.253, 3.013, 4.825]) }
-  it { expect(subject.values.map{ |v| v.avg_range.round(3) }).to eq([0.506, 1.138, 1.897, 4.148]) }
+  it { expect(subject.values.map{ |v| v.avg_high.round(3) }).to eq([4.0, 4.529, 6.532, 11.585]) }
+  it { expect(subject.values.map{ |v| v.avg_low.round(3) }).to eq([2.0, 2.265, 3.266, 5.793]) }
+  it { expect(subject.values.map{ |v| v.avg_range.round(3) }).to eq([0.265, 0.759, 2.17, 5.151]) }
 end

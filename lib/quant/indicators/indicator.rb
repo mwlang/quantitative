@@ -98,9 +98,18 @@ module Quant
         series.indicators[source][dominant_cycle_indicator_class]
       end
 
-      def dc_period
+      # The adaptive period is the full dominant cycle period
+      def adaptive_period
         dominant_cycle.points[t0].period
       end
+      alias dc_period adaptive_period
+      alias dominant_cycle_period adaptive_period
+
+      def adaptive_half_period
+        adaptive_period / 2
+      end
+      alias dc_half_period adaptive_half_period
+      alias dominant_half_cycle_period adaptive_half_period
 
       def ticks
         @points.keys
@@ -193,66 +202,13 @@ module Quant
         t0.send(source)
       end
 
-      # def warmed_up?
-      #   true
-      # end
-
-      # attr_reader :dc_period
-
-      # def points_for(series:)
-      #   @points_for_cache[series] ||= self.class.new(series:, settings:, cloning: true).tap do |indicator|
-      #     series.ticks.each { |tick| indicator.points.push(tick.indicators[self]) }
-      #   end
-      # end
-
-      # # Ticks belong to the first series they're associated with always
-      # # NOTE: No provisions for series merging their ticks to one series!
-      # def parent_series
-      #   series.ticks.empty? ? series : series.ticks.first.series
-      # end
-
-      # # Returns the last point of the current indicator rather than the entire series
-      # # This is used for indicators that depend on dominant cycle or other indicators
-      # # to compute their data points.
-      # def current_point
-      #   points.size - 1
-      # end
-
-      # def dominant_cycles
-      #   parent_series.indicators.dominant_cycles
-      # end
-
-      # # Override this method to change source of dominant cycle computation for an indicator
-      # def dominant_cycle_indicator
-      #   @dominant_cycle_indicator ||= dominant_cycles.band_pass
-      # end
-
-      # def ensure_not_dominant_cycler_indicator
-      #   return unless is_a? Quant::Indicators::DominantCycles::DominantCycle
-
-      #   raise 'Dominant Cycle Indicators cannot use the thing they compute!'
-      # end
-
-      # # Returns the dominant cycle point for the current indicator's point
-      # def current_dominant_cycle
-      #   dominant_cycle_indicator[current_point]
-      # end
+      def warmed_up?
+        ticks.size > min_period
+      end
 
       # # Returns the atr point for the current indicator's point
       # def atr_point
       #   parent_series.indicators.atr[current_point]
-      # end
-
-      # # def dc_period
-      # #   dominant_cycle.period.round(0).to_i
-      # # end
-
-      # def <<(ohlc)
-      #   points.append(ohlc)
-      # end
-
-      # def append(ohlc)
-      #   points.append(ohlc)
       # end
     end
   end

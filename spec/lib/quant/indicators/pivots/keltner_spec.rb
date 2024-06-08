@@ -13,12 +13,12 @@ RSpec.describe Quant::Indicators::Pivots::Keltner do
   it { expect(subject.values.map(&:input)).to eq([3.0, 6.0, 12.0, 24.0]) }
 
   context "bands" do
-    it { expect(subject.values.map{ |v| v.h6.round(3) }).to eq([3.0, 3.779, 6.231, 12.041]) }
-    it { expect(subject.values.map{ |v| v.h1.round(3) }).to eq([3.0, 3.601, 5.354, 9.353]) }
+    it { expect(subject.values.map{ |v| v.h6.round(3) }).to eq([3.0, 4.238, 7.934, 16.233]) }
+    it { expect(subject.values.map{ |v| v.h1.round(3) }).to eq([3.0, 3.709, 5.756, 10.342]) }
     it { expect(subject.values.map{ |v| v.midpoint.round(3) }).to eq([3.0, 3.545, 5.083, 8.522]) }
     it { expect(subject.values.map{ |v| v.h0.round(3) }).to eq(subject.values.map{ |v| v.midpoint.round(3) }) }
-    it { expect(subject.values.map{ |v| v.l1.round(3) }).to eq([3.0, 3.49, 4.812, 7.692]) }
-    it { expect(subject.values.map{ |v| v.l6.round(3) }).to eq([3.0, 3.312, 3.934, 5.003]) }
+    it { expect(subject.values.map{ |v| v.l1.round(3) }).to eq([3.0, 3.382, 4.41, 6.702]) }
+    it { expect(subject.values.map{ |v| v.l6.round(3) }).to eq([3.0, 2.853, 2.231, 0.811]) }
   end
 
   context "bands do not intersect each other" do

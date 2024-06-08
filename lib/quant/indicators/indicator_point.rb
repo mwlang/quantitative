@@ -32,6 +32,7 @@ module Quant
       def_delegator :tick, :close_price
       def_delegator :tick, :open_price
       def_delegator :tick, :volume
+      def_delegator :tick, :trades
 
       def oc2
         tick.respond_to?(:oc2) ? tick.oc2 : tick.close_price
