@@ -5,35 +5,31 @@ module Quant
     module Pivots
       class Donchian < Pivot
         register name: :donchian
-        using Quant
 
-        def st_period; min_period end
-        def mt_period; half_period end
-        def lt_period; max_period end
-
-        def st_highs; @st_highs ||= [].max_size!(st_period) end
-        def st_lows; @st_lows ||= [].max_size!(st_period) end
-        def mt_highs; @mt_highs ||= [].max_size!(mt_period) end
-        def mt_lows; @mt_lows ||= [].max_size!(mt_period) end
-        def lt_highs; @lt_highs ||= [].max_size!(lt_period) end
-        def lt_lows; @lt_lows ||= [].max_size!(lt_period) end
+        def compute_midpoint
+          p0.midpoint = (p0.high_price + p0.low_price) * 0.5
+        end
 
         def compute_bands
-          st_highs << p0.high_price
-          st_lows << p0.low_price
-          mt_highs << p0.high_price
-          mt_lows << p0.low_price
-          lt_highs << p0.high_price
-          lt_lows << p0.low_price
+          period_points(micro_period).tap do |period_points|
+            p0.l1 = period_points.map(&:low_price).min
+            p0.h1 = period_points.map(&:high_price).max
+          end
 
-          p0.h1 = @st_highs.maximum
-          p0.l1 = @st_lows.minimum
+          period_points(min_period).tap do |period_points|
+            p0.l2 = period_points.map(&:low_price).min
+            p0.h2 = period_points.map(&:high_price).max
+          end
 
-          p0.h2 = @mt_highs.maximum
-          p0.l2 = @mt_lows.minimum
+          period_points(half_period).tap do |period_points|
+            p0.l3 = period_points.map(&:low_price).min
+            p0.h3 = period_points.map(&:high_price).max
+          end
 
-          p0.h3 = @lt_highs.maximum
-          p0.l3 = @lt_lows.minimum
+          period_points(max_period).tap do |period_points|
+            p0.l4 = period_points.map(&:low_price).min
+            p0.h4 = period_points.map(&:high_price).max
+          end
         end
       end
     end

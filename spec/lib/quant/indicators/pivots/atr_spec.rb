@@ -13,12 +13,12 @@ RSpec.describe Quant::Indicators::Pivots::Atr do
   it { expect(subject.values.map(&:input)).to eq([3.0, 6.0, 12.0, 24.0]) }
 
   context "bands" do
-    it { expect(subject.values.map{ |v| v.h6.round(3) }).to eq([3.0, 3.614, 5.668, 10.757]) }
-    it { expect(subject.values.map{ |v| v.h1.round(3) }).to eq([3.0, 3.435, 4.79, 8.068]) }
-    it { expect(subject.values.map{ |v| v.midpoint.round(3) }).to eq([3.0, 3.38, 4.519, 7.238]) }
+    it { expect(subject.values.map{ |v| v.h6.round(3) }).to eq([3.0, 4.09, 7.75, 16.4]) }
+    it { expect(subject.values.map{ |v| v.h1.round(3) }).to eq([3.0, 3.56, 5.572, 10.509]) }
+    it { expect(subject.values.map{ |v| v.midpoint.round(3) }).to eq([3.0, 3.397, 4.899, 8.689]) }
     it { expect(subject.values.map{ |v| v.h0.round(3) }).to eq(subject.values.map{ |v| v.midpoint.round(3) }) }
-    it { expect(subject.values.map{ |v| v.l1.round(3) }).to eq([3.0, 3.325, 4.248, 6.407]) }
-    it { expect(subject.values.map{ |v| v.l6.round(3) }).to eq([3.0, 3.146, 3.37, 3.719]) }
+    it { expect(subject.values.map{ |v| v.l1.round(3) }).to eq([3.0, 3.234, 4.226, 6.869]) }
+    it { expect(subject.values.map{ |v| v.l6.round(3) }).to eq([3.0, 2.704, 2.048, 0.978]) }
   end
 
   context "bands do not intersect each other" do

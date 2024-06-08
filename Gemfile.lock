@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    quantitative (0.3.2)
+    quantitative (0.3.3)
       oj (~> 3.10)
       zeitwerk (~> 2.6)
 

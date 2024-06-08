@@ -36,15 +36,15 @@ module Quant
 
         def compute_midpoint
           p0.midpoint = p0.input / 4.0
-          p0.midpoint = super_smoother :midpoint, previous: :midpoint, period: averaging_period
+          p0.midpoint = three_pole_super_smooth :midpoint, previous: :midpoint, period: averaging_period
         end
 
         def compute_bands
           p0.h1 = (p0.input / 2.0) - p0.avg_high
-          p0.h1 = super_smoother :h1, previous: :h1, period: averaging_period
+          p0.h1 = three_pole_super_smooth :h1, previous: :h1, period: averaging_period
 
           p0.l1 = (p0.input / 2.0) - p0.avg_low
-          p0.l1 = super_smoother :l1, previous: :l1, period: averaging_period
+          p0.l1 = three_pole_super_smooth :l1, previous: :l1, period: averaging_period
         end
       end
     end

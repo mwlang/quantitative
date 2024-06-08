@@ -18,6 +18,7 @@ module Quant
   include Config
   include Experimental
 end
+Quantitative = Quant
 
 # Configure Zeitwerk to autoload the Quant module.
 loader = Zeitwerk::Loader.for_gem

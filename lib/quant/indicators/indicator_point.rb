@@ -27,6 +27,17 @@ module Quant
       def_delegator :indicator, :dominant_cycle_kind
       def_delegator :indicator, :pivot_kind
 
+      def_delegator :tick, :high_price
+      def_delegator :tick, :low_price
+      def_delegator :tick, :close_price
+      def_delegator :tick, :open_price
+      def_delegator :tick, :volume
+      def_delegator :tick, :trades
+
+      def oc2
+        tick.respond_to?(:oc2) ? tick.oc2 : tick.close_price
+      end
+
       def initialize_data_points
         # No-Op - Override in subclass if needed.
       end
