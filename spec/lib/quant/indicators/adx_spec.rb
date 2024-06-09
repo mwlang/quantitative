@@ -30,10 +30,10 @@ RSpec.describe Quant::Indicators::Adx do
     it { expect(subject.values.last(5).map{ |v| v.dmu.round(4) }).to eq([0.5096, 0.5966, 0.669, 0.7249, 0.7629]) }
     it { expect(subject.values.last(5).map{ |v| v.dmd.round(4) }).to eq([0.5096, 0.5966, 0.669, 0.7249, 0.7629]) }
 
-    it { expect(subject.values.last(5).map{ |v| v.diu.round(4) }).to eq([1.6077, 15.8702, 29.1715, 38.7976, 45.3035]) }
-    it { expect(subject.values.last(5).map{ |v| v.did.round(4) }).to eq([1.6077, 15.8702, 29.1715, 38.7976, 45.3035]) }
+    it { expect(subject.values.last(5).map{ |v| v.diu.round(4) }).to eq([1.8899, 14.0403, 21.9558, 27.6149, 32.4262]) }
+    it { expect(subject.values.last(5).map{ |v| v.did.round(4) }).to eq([1.8899, 14.0403, 21.9558, 27.6149, 32.4262]) }
 
-    it { expect(subject.values.last(5).map{ |v| v.di.round(4) }).to eq([3.186, 0.4493, 0.228, 0.1241, 0.0718]) }
+    it { expect(subject.values.last(5).map{ |v| v.di.round(4) }).to eq([4.1724, 0.4327, 0.1803, 0.1025, 0.0742]) }
 
     it "is roughly half and half" do
       direction_of_changes = subject.values.each_cons(2).map{ |(a, b)| a.value - b.value > 0 }

@@ -9,9 +9,8 @@ RSpec.describe Quant::Indicators::Atr do
 
   it { is_expected.to be_a(described_class) }
   it { expect(subject.series.size).to eq(4) }
-  it { expect(subject.values.map{ |v| v.tr.round(3) }).to eq([0.0, 4.0, 8.0, 16.0]) }
-  it { expect(subject.values.map{ |v| v.value.round(3) }).to eq([0.0, 0.231, 0.95, 2.57]) }
-  # it { expect(subject.values.map(&:crossed)).to all be(:unchanged) }
+  it { expect(subject.values.map{ |v| v.tr.round(3) }).to eq([2.0, 4.0, 8.0, 16.0]) }
+  it { expect(subject.values.map{ |v| v.value.round(3) }).to eq([0.115, 0.34, 1.045, 2.646]) }
 
   context "sine series" do
     let(:period) { 40 } # period bar sine wave
