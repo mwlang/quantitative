@@ -19,7 +19,7 @@ module Quant
     end
 
     def self.config
-      @config ||= Config.new
+      @config ||= default!
     end
   end
 

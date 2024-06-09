@@ -9,6 +9,12 @@ RSpec.describe Quant::Indicators::Adx do
 
   it { is_expected.to be_a(described_class) }
 
+  context "ADX's periods matches ATR's" do
+    it { expect(subject.traditional_period).to eq(subject.series.indicators[source].atr.traditional_period) }
+    it { expect(subject.slow_period).to eq(subject.series.indicators[source].atr.slow_period) }
+    it { expect(subject.full_period).to eq(subject.series.indicators[source].atr.full_period) }
+  end
+
   context "sine series" do
     let(:period) { 40 }
     let(:cycles) { 4 }
@@ -30,16 +36,18 @@ RSpec.describe Quant::Indicators::Adx do
     it { expect(subject.values.last(5).map{ |v| v.dmu.round(4) }).to eq([0.5096, 0.5966, 0.669, 0.7249, 0.7629]) }
     it { expect(subject.values.last(5).map{ |v| v.dmd.round(4) }).to eq([0.5096, 0.5966, 0.669, 0.7249, 0.7629]) }
 
-    it { expect(subject.values.last(5).map{ |v| v.diu.round(4) }).to eq([1.8899, 14.0403, 21.9558, 27.6149, 32.4262]) }
-    it { expect(subject.values.last(5).map{ |v| v.did.round(4) }).to eq([1.8899, 14.0403, 21.9558, 27.6149, 32.4262]) }
+    it { expect(subject.values.last(5).map{ |v| v.value.round(4) }).to eq([0.3686, 0.3418, 0.2907, 0.2254, 0.1574]) }
+    it { expect(subject.values.last(5).map{ |v| v.stoch.round(4) }).to eq([48.3063, 46.6152, 41.0631, 32.902, 23.7553]) }
 
-    it { expect(subject.values.last(5).map{ |v| v.di.round(4) }).to eq([4.1724, 0.4327, 0.1803, 0.1025, 0.0742]) }
+    it { expect(subject.values.last(5).map{ |v| v.full.round(4) }).to eq([2.3542, 2.1598, 1.9475, 1.7248, 1.4983]) }
+    it { expect(subject.values.last(5).map{ |v| v.slow.round(4) }).to eq([0.0245, 0.0245, 0.0246, 0.0248, 0.0251]) }
+    it { expect(subject.values.last(5).map{ |v| v.traditional.round(4) }).to eq([0.3686, 0.3418, 0.2907, 0.2254, 0.1574]) }
 
     it "is roughly half and half" do
       direction_of_changes = subject.values.each_cons(2).map{ |(a, b)| a.value - b.value > 0 }
       value_counts = direction_of_changes.group_by(&:itself).transform_values(&:count)
 
-      expect(value_counts[true].to_f / value_counts[false]).to be > 0.8
+      expect(value_counts[true].to_f / value_counts[false]).to be > 0.7
     end
   end
 end

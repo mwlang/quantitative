@@ -35,7 +35,7 @@ module Quant
         Array(indicator_classes).each{ |dependency| dependent_indicator_classes << dependency }
       end
 
-      attr_reader :source, :series
+      attr_reader :source, :series, :points
 
       def initialize(series:, source:)
         @series = series
