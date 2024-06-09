@@ -40,7 +40,7 @@ RSpec.describe Quant::Indicators::Adx do
     it { expect(subject.values.last(5).map{ |v| v.stoch.round(4) }).to eq([48.3063, 46.6152, 41.0631, 32.902, 23.7553]) }
 
     it { expect(subject.values.last(5).map{ |v| v.full.round(4) }).to eq([2.3542, 2.1598, 1.9475, 1.7248, 1.4983]) }
-    it { expect(subject.values.last(5).map{ |v| v.slow.round(4) }).to eq([0.0245, 0.0245, 0.0246, 0.0248, 0.0251]) }
+    it { expect(subject.values.last(5).map{ |v| v.slow.round(4) }).to eq([0.0242, 0.0243, 0.0244, 0.0246, 0.0249]) }
     it { expect(subject.values.last(5).map{ |v| v.traditional.round(4) }).to eq([0.3686, 0.3418, 0.2907, 0.2254, 0.1574]) }
 
     it "is roughly half and half" do

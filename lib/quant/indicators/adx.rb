@@ -12,6 +12,8 @@ module Quant
       attribute :adaptive_did, default: 0.0
       attribute :adaptive_di, default: 0.0
       attribute :value, default: 0.0
+      attribute :inst_stoch, default: 0.0
+      attribute :stoch, default: 0.0
 
       attribute :full_dmu, default: 0.0
       attribute :full_dmd, default: 0.0
@@ -19,6 +21,8 @@ module Quant
       attribute :full_did, default: 0.0
       attribute :full_di, default: 0.0
       attribute :full, default: 0.0
+      attribute :inst_full_stoch, default: 0.0
+      attribute :full_stoch, default: 0.0
 
       attribute :slow_dmu, default: 0.0
       attribute :slow_dmd, default: 0.0
@@ -26,6 +30,8 @@ module Quant
       attribute :slow_did, default: 0.0
       attribute :slow_di, default: 0.0
       attribute :slow, default: 0.0
+      attribute :inst_slow_stoch, default: 0.0
+      attribute :slow_stoch, default: 0.0
 
       attribute :traditional_dmu, default: 0.0
       attribute :traditional_dmd, default: 0.0
@@ -33,11 +39,8 @@ module Quant
       attribute :traditional_did, default: 0.0
       attribute :traditional_di, default: 0.0
       attribute :traditional, default: 0.0
-
-      attribute :inst_stoch, default: 0.0
-      attribute :stoch, default: 0.0
-      attribute :stoch_up, default: false
-      attribute :stoch_turned, default: false
+      attribute :inst_traditional_stoch, default: 0.0
+      attribute :traditional_stoch, default: 0.0
     end
 
     # The Average Directional Index (ADX) is a technical indicator that measures
@@ -99,13 +102,15 @@ module Quant
         p0.adaptive_dmd = three_pole_super_smooth(:dmd, previous: :adaptive_dmd, period: adaptive_half_period)
 
         atr_value = atr_point.value
-        return if atr_value == 0.0 || points.size < adaptive_half_period
+        return if atr_value == 0.0 || points.size < min_period
 
         p0.adaptive_diu = (100.0 * p0.adaptive_dmu) / atr_value
         p0.adaptive_did = (100.0 * p0.adaptive_dmd) / atr_value
 
         p0.adaptive_di = (p0.adaptive_diu - p1.adaptive_did).abs / (p0.adaptive_diu + p0.adaptive_did)
         p0.value = three_pole_super_smooth(:adaptive_di, previous: :value, period: adaptive_half_period).clamp(-10.0, 10.0)
+        p0.inst_stoch = stochastic(:adaptive_di, period: adaptive_half_period)
+        p0.stoch = three_pole_super_smooth(:inst_stoch, previous: :stoch, period: adaptive_half_period)
       end
 
       def compute_full_period
@@ -113,13 +118,15 @@ module Quant
         p0.full_dmd = three_pole_super_smooth(:dmd, previous: :full_dmd, period: full_period)
 
         atr_value = atr_point.full
-        return if atr_value == 0.0 || points.size < full_period
+        return if atr_value == 0.0 || points.size < min_period
 
         p0.full_diu = (100.0 * p0.full_dmu) / atr_value
         p0.full_did = (100.0 * p0.full_dmd) / atr_value
 
         p0.full_di = (p0.full_diu - p1.full_did).abs / (p0.full_diu + p0.full_did)
         p0.full = three_pole_super_smooth(:full_di, previous: :full, period: full_period).clamp(-10.0, 10.0)
+        p0.inst_full_stoch = stochastic(:full_di, period: adaptive_half_period)
+        p0.full_stoch = three_pole_super_smooth(:inst_full_stoch, previous: :full_stoch, period: adaptive_half_period)
       end
 
       def compute_slow_period
@@ -127,13 +134,15 @@ module Quant
         p0.slow_dmd = three_pole_super_smooth(:dmd, previous: :slow_dmd, period: slow_period)
 
         atr_value = atr_point.slow
-        return if atr_value == 0.0 || points.size < slow_period
+        return if atr_value == 0.0 || points.size < min_period
 
         p0.slow_diu = (100.0 * p0.slow_dmu) / atr_value
         p0.slow_did = (100.0 * p0.slow_dmd) / atr_value
 
         p0.slow_di = (p0.slow_diu - p1.slow_did).abs / (p0.slow_diu + p0.slow_did)
         p0.slow = three_pole_super_smooth(:slow_di, previous: :slow, period: slow_period).clamp(-10.0, 10.0)
+        p0.inst_slow_stoch = stochastic(:slow_di, period: adaptive_half_period)
+        p0.slow_stoch = three_pole_super_smooth(:inst_slow_stoch, previous: :slow_stoch, period: adaptive_half_period)
       end
 
       def compute_traditional_period
@@ -141,18 +150,15 @@ module Quant
         p0.traditional_dmd = three_pole_super_smooth(:dmd, previous: :traditional_dmd, period: traditional_period)
 
         atr_value = atr_point.traditional
-        return if atr_value == 0.0 || points.size < traditional_period
+        return if atr_value == 0.0 || points.size < min_period
 
         p0.traditional_diu = (100.0 * p0.traditional_dmu) / atr_value
         p0.traditional_did = (100.0 * p0.traditional_dmd) / atr_value
 
         p0.traditional_di = (p0.traditional_diu - p1.traditional_did).abs / (p0.traditional_diu + p0.traditional_did)
         p0.traditional = three_pole_super_smooth(:traditional_di, previous: :traditional, period: traditional_period).clamp(-10.0, 10.0)
-      end
-
-      def compute_stochastic
-        p0.inst_stoch = stochastic(:adaptive_di, period: adaptive_half_period)
-        p0.stoch = three_pole_super_smooth(:inst_stoch, previous: :stoch, period: adaptive_half_period)
+        p0.inst_traditional_stoch = stochastic(:traditional_di, period: adaptive_half_period)
+        p0.traditional_stoch = three_pole_super_smooth(:inst_traditional_stoch, previous: :traditional_stoch, period: adaptive_half_period)
       end
 
       def compute
@@ -161,7 +167,6 @@ module Quant
         compute_full_period
         compute_slow_period
         compute_traditional_period
-        compute_stochastic
       end
     end
   end
