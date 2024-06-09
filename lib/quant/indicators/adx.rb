@@ -61,19 +61,23 @@ module Quant
       depends_on Indicators::Atr
 
       def traditional_period
-        14
+        atr_indicator.traditional_period
       end
 
       def full_period
-        adaptive_period
+        atr_indicator.full_period
       end
 
       def slow_period
-        adaptive_period * 2
+        atr_indicator.slow_period
+      end
+
+      def atr_indicator
+        @atr_indicator ||= series.indicators[source].atr
       end
 
       def atr_point
-        series.indicators[source].atr.points[t0]
+        atr_indicator.points[t0]
       end
 
       # To calculate the ADX, first determine the + and - directional movement, or DM.
