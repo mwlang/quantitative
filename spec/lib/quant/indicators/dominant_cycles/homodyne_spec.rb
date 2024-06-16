@@ -14,19 +14,11 @@ RSpec.describe Quant::Indicators::DominantCycles::Homodyne do
   it { expect(subject.t0).to eq subject.ticks[-1] }
 
   context "sine series" do
-    let(:series) do
-      # 40 bar sine wave
-      Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
-        2.times do
-          (0..39).each do |degree|
-            radians = degree * 2 * Math::PI / 40
-            series << 5.0 * Math.sin(radians) + 10.0
-          end
-        end
-      end
-    end
+    let(:period) { 40 }
+    let(:cycles) { 2 }
+    let(:series) { sine_series(period:, cycles:) }
 
-    it { expect(subject.series.size).to eq(80) }
+    it { expect(subject.series.size).to eq(period * cycles) }
     it { expect(subject.p0.period).to eq 40 }
   end
 end

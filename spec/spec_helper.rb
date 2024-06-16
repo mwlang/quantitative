@@ -4,7 +4,7 @@ require "debug"
 require "test-prof"
 
 TestProf.configure do |config|
-  # the directory to put artifacts (reports) in ('tmp/test_prof' by default)
+  # the directory to put artifacts (reports) in ("tmp/test_prof" by default)
   config.output_dir = "tmp/test_prof"
 
   # use unique filenames for reports (by simply appending current timestamp)
@@ -18,7 +18,7 @@ TestProf.configure do |config|
 end
 
 require "simplecov"
-require 'simplecov-cobertura'
+require "simplecov-cobertura"
 
 SimpleCov.start do
   add_filter "/spec/"
@@ -44,9 +44,12 @@ RSpec.configure do |config|
 end
 
 def fixture_path(sub_folder)
-  File.join(File.expand_path(File.join(File.dirname(__FILE__), "fixtures")), sub_folder.to_s)
+  File.join(File.expand_path(__dir__), "fixtures", sub_folder.to_s)
 end
 
 def fixture_filename(filename, sub_folder = nil)
   File.join fixture_path(sub_folder), filename
 end
+
+support_folder = File.expand_path(__dir__)
+Dir[File.join(support_folder, "support", "**", "*.rb")].each { |f| require f }

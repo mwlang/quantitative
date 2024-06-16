@@ -26,10 +26,10 @@ module Quant
 
       @indicators = {}
       @ordered_indicators = []
-      define_indicator_accessors(indicator_source: self)
+      define_indicator_accessors(indicators_source: self)
 
-      @dominant_cycles = DominantCyclesSource.new(indicator_source: self)
-      @pivots = PivotsSource.new(indicator_source: self)
+      @dominant_cycles = DominantCyclesSource.new(indicators_source: self)
+      @pivots = PivotsSource.new(indicators_source: self)
     end
 
     def [](indicator_class)
@@ -38,6 +38,10 @@ module Quant
 
     def <<(tick)
       @ordered_indicators.each { |indicator| indicator << tick }
+    end
+
+    def assign(indicators_source:, tick:)
+      indicators_source.ordered_indicators.each { |indicator| self[indicator.class].assign(tick:) }
     end
 
     # Attaches a given Indicator class and defines the method for
@@ -69,9 +73,11 @@ module Quant
       indicator(dominant_cycle_indicator_class)
     end
 
-    private
+    protected
 
     attr_reader :indicators, :ordered_indicators
+
+    private
 
     def dominant_cycle_indicator_class
       Quant.config.indicators.dominant_cycle_indicator_class

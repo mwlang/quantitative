@@ -14,22 +14,7 @@ RSpec.describe Quant::Indicators::Rsi do
 
   context "sine series" do
     let(:source) { :oc2 }
-    let(:period) { 40 }
-    let(:cycles) { 5 }
-    let(:uniq_data_points) { cycles * period / cycles } # sine is cyclical, so we expect a few unique data points
-    let(:series) do
-      # period bar sine wave
-      Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
-        cycles.times do
-          (0...period).each do |degree|
-            radians = degree * 2 * Math::PI / period
-            series << 5.0 * Math.sin(radians) + 10.0
-          end
-        end
-      end
-    end
-
-    it { expect(subject.series.size).to eq(cycles * period) }
+    let(:series) { sine_series(period: 40, cycles: 5) }
 
     context "when price is climbing" do
       it { expect(subject.values[-10, 5].map{ |v| v.input.round(3) }).to eq([5.0, 5.062, 5.245, 5.545, 5.955]) }

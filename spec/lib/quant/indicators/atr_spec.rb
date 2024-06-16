@@ -15,16 +15,7 @@ RSpec.describe Quant::Indicators::Atr do
   context "sine series" do
     let(:period) { 40 } # period bar sine wave
     let(:cycles) { 4 }
-    let(:series) do
-      Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
-        cycles.times do
-          (0...period).each do |degree|
-            radians = degree * 2 * Math::PI / period
-            series << 5.0 * Math.sin(radians) + 10.0
-          end
-        end
-      end
-    end
+    let(:series) { sine_series(period:, cycles:) }
 
     it { expect(subject.series.size).to eq(160) }
 

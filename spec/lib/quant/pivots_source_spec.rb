@@ -5,9 +5,9 @@ RSpec.describe Quant::PivotsSource do
   let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
   let(:series) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
   let(:source) { :oc2 }
-  let(:indicator_source) { Quant::IndicatorsSource.new(series:, source:) }
+  let(:indicators_source) { Quant::IndicatorsSource.new(series:, source:) }
 
-  subject { described_class.new(indicator_source:) }
+  subject { described_class.new(indicators_source:) }
 
   it { expect(subject.atr.band?(6)).to be_truthy }
   it { expect(subject.bollinger.band?(8)).to be_truthy }

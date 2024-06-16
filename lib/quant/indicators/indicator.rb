@@ -41,6 +41,7 @@ module Quant
         @series = series
         @source = source
         @points = {}
+
         series.each { |tick| self << tick }
       end
 
@@ -135,20 +136,43 @@ module Quant
       attr_reader :p0, :p1, :p2, :p3
       attr_reader :t0, :t1, :t2, :t3
 
-      def <<(tick)
-        @t0 = tick
-        @p0 = points_class.new(indicator: self, tick:, source:)
-        @points[tick] = @p0
+      def new_point(tick:)
+        points_class.new(indicator: self, tick:, source:)
+      end
 
+      def from_parent_series?(tick:)
+        tick.series? && tick.series != series
+      end
+
+      def parent_series_point(tick:)
+        return unless from_parent_series?(tick:)
+
+        tick.series.indicators[source][self.class].points[tick]
+      end
+
+      def advance_to_next_point(tick:)
+        @p0 = @points[tick]
         @p1 = values[-2] || @p0
         @p2 = values[-3] || @p1
         @p3 = values[-4] || @p2
 
+        @t0 = tick
         @t1 = ticks[-2] || @t0
         @t2 = ticks[-3] || @t1
         @t3 = ticks[-4] || @t2
+      end
+
+      def <<(tick)
+        @points[tick] = parent_series_point(tick:) || new_point(tick:)
+        advance_to_next_point(tick:)
+        return if from_parent_series?(tick:)
 
         compute
+      end
+
+      def assign(tick:)
+        @points[tick] = parent_series_point(tick:)
+        advance_to_next_point(tick:)
       end
 
       def each(&block)

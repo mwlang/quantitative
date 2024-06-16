@@ -12,7 +12,7 @@ module Quant
       COMPUTED_SOURCES = %i[oc2 hl2 hlc3 ohlc4].freeze
     ].flatten.freeze
 
-    attr_reader :series
+    attr_reader :series, :sources
 
     def initialize(series:)
       @series = series
@@ -25,7 +25,10 @@ module Quant
       @sources[source] ||= IndicatorsSource.new(series:, source:)
     end
 
+    # The indicators always compute off the original series, so we assign instead of appending.
     def <<(tick)
+      return assign(tick) if tick.series?
+
       @sources.each_value { |indicator| indicator << tick }
     end
 
@@ -46,6 +49,12 @@ module Quant
     end
 
     private
+
+    def assign(tick)
+      tick.series.indicators.sources.each do |source, indicators_source|
+        self[source].assign(indicators_source:, tick:)
+      end
+    end
 
     def invalid_source_error(source:)
       raise Errors::InvalidIndicatorSource, "Invalid indicator source: #{source.inspect}"
