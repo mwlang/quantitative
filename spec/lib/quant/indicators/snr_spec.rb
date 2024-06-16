@@ -18,20 +18,7 @@ RSpec.describe Quant::Indicators::Snr do
     let(:source) { :oc2 }
     let(:period) { 40 }
     let(:cycles) { 5 }
-    let(:uniq_data_points) { cycles * period / cycles } # sine is cyclical, so we expect a few unique data points
-    let(:series) do
-      # period bar sine wave
-      Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
-        cycles.times do
-          (0...period).each do |degree|
-            radians = degree * 2 * Math::PI / period
-            series << 5.0 * Math.sin(radians) + 10.0
-          end
-        end
-      end
-    end
-
-    it { expect(subject.series.size).to eq(cycles * period) }
+    let(:series) { sine_series(period:, cycles:) }
 
     context "expect signal to follow sine wave cycles" do
       it { expect(subject.values.last(5).map{ |v| v.signal.round(3) }).to eq([19.914, 19.55, 19.082, 18.569, 18.064]) }

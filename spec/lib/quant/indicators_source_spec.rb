@@ -36,17 +36,7 @@ RSpec.describe Quant::IndicatorsSource do
   end
 
   describe "Dominant Cycle Indicators" do
-    let(:series) do
-    # 40 bar sine wave
-    Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
-      5.times do
-        (0..39).each do |degree|
-          radians = degree * 2 * Math::PI / 40
-          series << 5.0 * Math.sin(radians) + 10.0
-        end
-      end
-    end
-    end
+    let(:series) { sine_series(period: 40, cycles: 5) }
     let(:source) { :oc2 }
 
     it { expect(subject.dominant_cycle.values[-1].period).to eq(29) }
@@ -196,6 +186,26 @@ RSpec.describe Quant::IndicatorsSource do
         expect(subject.instance_variable_get(:@ordered_indicators)).to eq([dc_indicator, bar, foo, baz])
         expect(subject.instance_variable_get(:@ordered_indicators).map(&:priority)).to eq([100, 750, 751, 1000])
       end
+    end
+  end
+
+  context "#assign" do
+    let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
+    let(:series1) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
+
+    let(:period) { (series1.ticks[1].open_timestamp..series1.ticks[2].close_timestamp) }
+    let(:series2) { series1.limit(period) }
+
+    it "subset first still matches superset of ticks" do
+      expect(series1.indicators.oc2.ping.map(&:pong)).to eq [3.0, 6.0, 12.0, 24.0]
+      expect(series2.indicators.oc2.ping.map(&:pong)).to eq [6.0, 12.0]
+
+      expect(series1.indicators.oc2.pivots.bollinger.map(&:h0)).to eq [3.0, 3.2, 3.706666666666667, 4.712444444444445]
+
+      # bollinger doesn't exist because we hadn't accessed it, yet!
+      # so we're creating series2 before that, then when we attempt to access it
+      # we expect NOT to compute limited bollinger numbers off the new series instead of the parent series.
+      expect(series2.indicators.oc2.pivots.bollinger.map(&:h0)).to eq [3.2, 3.706666666666667]
     end
   end
 end

@@ -45,10 +45,11 @@ module Quant
       def push(*objects)
         Array(objects).each do |object|
           super(object)
+
           if @max_size && size > @max_size
             voted_off = shift
-            @minimum = min if voted_off == @minimum
-            @maximum = max if voted_off == @maximum
+            @minimum = min if voted_off == @minimum || object < @minimum
+            @maximum = max if voted_off == @maximum || object > @maximum
           else
             @maximum = object if @maximum.nil? || object > @maximum
             @minimum = object if @minimum.nil? || object < @minimum

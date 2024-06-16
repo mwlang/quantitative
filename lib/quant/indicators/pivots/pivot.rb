@@ -70,6 +70,10 @@ module Quant
           period_points(period).map(&:midpoint)
         end
 
+        def midpoint_at_input
+          p0.input
+        end
+
         def smoothed_average_midpoint
           three_pole_super_smooth :input, previous: :midpoint, period: averaging_period
         end

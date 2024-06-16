@@ -106,7 +106,8 @@ module Quant
 
     def <<(tick)
       tick = Ticks::Spot.new(price: tick) if tick.is_a?(Numeric)
-      indicators << tick unless tick.series?
+      indicators << tick
+
       @ticks << tick.assign_series(self)
       self
     end

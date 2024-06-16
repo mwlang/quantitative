@@ -74,17 +74,7 @@ module IndicatorSpec
     it { expect(subject.periods.uniq).to eq [29] }
 
     describe "dominant_cycle" do
-      let(:series) do
-        # 40 bar sine wave
-        Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
-          3.times do
-            (0..39).each do |degree|
-              radians = degree * 2 * Math::PI / 40
-              series << 5.0 * Math.sin(radians) + 10.0
-            end
-          end
-        end
-      end
+      let(:series) { sine_series(period: 40, cycles: 3) }
 
       before do
         Quant.configure_indicators(dominant_cycle_kind: :band_pass)
@@ -114,6 +104,22 @@ module IndicatorSpec
         let(:source) { :volume }
 
         it { is_expected.to eq([100, 200, 300, 400]) }
+      end
+    end
+
+    context "#assign" do
+      let(:filename) { fixture_filename("DEUCES-sample.txt", :series) }
+      let(:series1) { Quant::Series.from_file(filename:, symbol: "DEUCES", interval: "1d") }
+
+      let(:period) { (series1.ticks[1].open_timestamp..series1.ticks[2].close_timestamp) }
+      let(:series2) { series1.limit(period) }
+
+      it "subset first still matches superset of ticks" do
+        expect(series1.indicators.oc2.ping.map(&:pong)).to eq [3.0, 6.0, 12.0, 24.0]
+        expect(series2.indicators.oc2.ping.map(&:pong)).to eq [6.0, 12.0]
+
+        expect(series1.indicators.oc2.pivots.bollinger.map(&:h0)).to eq [3.0, 3.2, 3.706666666666667, 4.712444444444445]
+        expect(series2.indicators.oc2.pivots.bollinger.map(&:h0)).to eq [3.2, 3.706666666666667]
       end
     end
   end

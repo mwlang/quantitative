@@ -48,13 +48,26 @@ RSpec.describe Array do
       end
     end
 
-    describe "#maximum" do
+    describe "#maximum/#minimum" do
       let(:unbounded) { [] }
       let(:bounded) { [].max_size!(5) }
 
       def preload(array, n)
         n.times{ |v| array << v }
         array
+      end
+
+      it "new max pushed" do
+        q = [].max_size!(3).push(3, 4, 5)
+        q << 6 # becomes the new maximum
+        expect(q.maximum).to eq q.max
+      end
+
+      it "new min pushed" do
+        q = [].max_size!(3).push(6, 5, 4)
+        q << 3 # becomes the new minimum
+        expect(q.maximum).to eq q.max
+        expect(q.minimum).to eq q.min
       end
 
       it "is bounded" do

@@ -1,21 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Quant::DominantCyclesSource do
-  let(:series) do
-    # 40 bar sine wave
-    Quant::Series.new(symbol: "SINE", interval: "1d").tap do |series|
-      5.times do
-        (0..39).each do |degree|
-          radians = degree * 2 * Math::PI / 40
-          series << 5.0 * Math.sin(radians) + 10.0
-        end
-      end
-    end
-  end
   let(:source) { :oc2 }
-  let(:indicator_source) { Quant::IndicatorsSource.new(series:, source:) }
+  let(:indicators_source) { Quant::IndicatorsSource.new(series:, source:) }
+  let(:series) { sine_series(period: 40, cycles: 5) }
 
-  subject { described_class.new(indicator_source:) }
+  subject { described_class.new(indicators_source:) }
 
   it { expect(subject.acr.values[-1].period).to eq(40) }
   it { expect(subject.band_pass.values[-1].period).to eq(40) }

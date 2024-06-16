@@ -18,7 +18,7 @@ module Quant
         end
 
         def compute_midpoint
-          p0.midpoint = smoothed_average_midpoint
+          p0.midpoint = midpoint_at_input
         end
 
         ATR_SERIES = [0.236, 0.382, 0.500, 0.618, 0.786, 1.0].freeze

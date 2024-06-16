@@ -2,15 +2,15 @@
 
 module Quant
   class PivotsSource
-    def initialize(indicator_source:)
-      @indicator_source = indicator_source
-      indicator_source.define_indicator_accessors(indicator_source: self)
+    def initialize(indicators_source:)
+      @indicators_source = indicators_source
+      indicators_source.define_indicator_accessors(indicators_source: self)
     end
 
     private
 
     def indicator(indicator_class)
-      @indicator_source[indicator_class]
+      @indicators_source[indicator_class]
     end
   end
 end

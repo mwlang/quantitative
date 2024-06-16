@@ -231,6 +231,18 @@ RSpec.describe Quant::Series do
         expect(series2.indicators.oc2.ping.map(&:pong)).to eq [6.0, 12.0]
       end
 
+      it "subset first still matches superset of ticks" do
+        expect(series1.indicators.oc2.ping.map(&:pong)).to eq [3.0, 6.0, 12.0, 24.0]
+        expect(series2.indicators.oc2.ping.map(&:pong)).to eq [6.0, 12.0]
+
+        expect(series1.indicators.oc2.atr.map(&:value)).to eq [0.11541829240170143, 0.339594186094642, 1.0450554008859616, 2.6455812034908734]
+        expect(series2.indicators.oc2.atr.map(&:value)).to eq [0.339594186094642, 1.0450554008859616]
+
+        # ensures we're computing in context of the larger series1
+        expect(series2.indicators.oc2.pivots.bollinger.map(&:h0)).to eq [3.2, 3.706666666666667]
+        expect(series1.indicators.oc2.pivots.bollinger.map(&:h0)).to eq [3.0, 3.2, 3.706666666666667, 4.712444444444445]
+      end
+
       it "has shorter date range for series2" do
         expect(series2.ticks.count).to eq 2
         expect(series2.ticks.first.close_timestamp).to eq Time.utc(1999, 1, 5, 21)

@@ -15,15 +15,15 @@ module Quant
   # indicators that would otherwise be setting an arbitrary lookback period.  This makes the
   # indicators adaptive and auto-tuning to the market dynamics.  Or so the theory goes!
   class DominantCyclesSource
-    def initialize(indicator_source:)
-      @indicator_source = indicator_source
-      indicator_source.define_indicator_accessors(indicator_source: self)
+    def initialize(indicators_source:)
+      @indicators_source = indicators_source
+      indicators_source.define_indicator_accessors(indicators_source: self)
     end
 
     private
 
     def indicator(indicator_class)
-      @indicator_source[indicator_class]
+      @indicators_source[indicator_class]
     end
   end
 end

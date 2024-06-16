@@ -6,8 +6,8 @@ module Quant
       base.extend(ClassMethods)
     end
 
-    def define_indicator_accessors(indicator_source:)
-      self.class.define_indicator_accessors(indicator_source:)
+    def define_indicator_accessors(indicators_source:)
+      self.class.define_indicator_accessors(indicators_source:)
     end
 
     module ClassMethods
@@ -43,19 +43,18 @@ module Quant
       def register(name:, indicator_class:)
         entry = RegistryEntry.new(name:, indicator_class:)
         registry[entry.key] = entry
-        # registry[name] = indicator_class
       end
 
-      def registry_entries_for(indicator_source:)
-        return registry.values.select(&:pivot?) if indicator_source.is_a?(PivotsSource)
-        return registry.values.select(&:dominant_cycle?) if indicator_source.is_a?(DominantCyclesSource)
+      def registry_entries_for(indicators_source:)
+        return registry.values.select(&:pivot?) if indicators_source.is_a?(PivotsSource)
+        return registry.values.select(&:dominant_cycle?) if indicators_source.is_a?(DominantCyclesSource)
 
         registry.values.select(&:standard?)
       end
 
-      def define_indicator_accessors(indicator_source:)
-        registry_entries_for(indicator_source:).each do |entry|
-          indicator_source.define_singleton_method(entry.name) { indicator(entry.indicator_class) }
+      def define_indicator_accessors(indicators_source:)
+        registry_entries_for(indicators_source:).each do |entry|
+          indicators_source.define_singleton_method(entry.name) { indicator(entry.indicator_class) }
         end
       end
     end
