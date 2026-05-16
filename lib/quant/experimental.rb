@@ -22,7 +22,7 @@ module Quant
 
     Experimental.tracker[caller.first] = message
 
-    calling_method = caller.first.scan(/`([^']*)/)[0][0]
+    calling_method = caller.first[/in ["`'](.+?)[`']/, 1] || "unknown"
     full_message = "EXPERIMENTAL: #{calling_method.inspect}: #{message}\nsource location: #{caller.first}"
     puts full_message
   end
