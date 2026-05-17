@@ -39,8 +39,12 @@ module Quant
         @close_timestamp = extract_time(timestamp || close_timestamp || Quant.current_time)
         @open_timestamp = @close_timestamp
 
-        @base_volume = (volume || base_volume).to_i
-        @target_volume = (target_volume || @base_volume).to_i
+        # Volumes are floats, not ints — crypto markets and many futures markets express
+        # fractional base/target volumes routinely (e.g., 0.12345 BTC). Existing specs already
+        # asserted Float values (`eq(2.0)`); a prior `.to_i` regression silently truncated.
+        # See OHLC for the same fix.
+        @base_volume = (volume || base_volume).to_f
+        @target_volume = (target_volume || @base_volume).to_f
 
         @trades = trades.to_i
         super()

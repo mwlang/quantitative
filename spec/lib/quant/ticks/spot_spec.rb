@@ -31,6 +31,24 @@ RSpec.describe Quant::Ticks::Spot do
         expect(subject.target_volume).to eq(0.0)
       end
     end
+
+    # Regression guard: volumes must be Float, not Integer-truncated. Crypto markets
+    # (and individual trade prints) express fractional volumes routinely (e.g.,
+    # 0.12345 BTC). A prior `.to_i` coercion in #initialize silently truncated and
+    # passed loose `eq(2.0)` assertions because Ruby's `==` coerces `2 == 2.0`.
+    # This block asserts both the value AND the class so future regressions fail loudly.
+    # See OHLC for the parallel fix.
+    context "with fractional crypto-style volumes" do
+      let(:hash) do
+        { "ct" => close_time.to_i, "cp" => 1.0,
+          "bv" => 0.12345, "tv" => 5_678.901_234 }
+      end
+
+      it { expect(subject.base_volume).to eq(0.12345) }
+      it { expect(subject.target_volume).to eq(5_678.901_234) }
+      it { expect(subject.base_volume).to be_a(Float) }
+      it { expect(subject.target_volume).to be_a(Float) }
+    end
   end
 
   describe ".from_json" do
@@ -60,7 +78,7 @@ RSpec.describe Quant::Ticks::Spot do
       )
     end
 
-    it { expect(tick.inspect).to eq("#<Quant::Ticks::Spot ct=2024-01-15 08:30:05 UTC c=1.25 v=88>") }
+    it { expect(tick.inspect).to eq("#<Quant::Ticks::Spot ct=2024-01-15 08:30:05 UTC c=1.25 v=88.0>") }
   end
 
   describe "#corresponding?" do
