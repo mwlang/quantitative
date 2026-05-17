@@ -25,7 +25,7 @@ RSpec.describe Quant::Ticks::OHLC do
         )
       end
 
-      it { expect(tick.inspect).to eq("#<Quant::Ticks::OHLC ct=2024-01-15T08:30:05Z o=1.0 h=2.0 l=3.0 c=4.0 v=88>") }
+      it { expect(tick.inspect).to eq("#<Quant::Ticks::OHLC ct=2024-01-15T08:30:05Z o=1.0 h=2.0 l=3.0 c=4.0 v=88.0>") }
     end
 
     describe "equality" do

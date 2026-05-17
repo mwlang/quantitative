@@ -78,7 +78,7 @@ RSpec.describe Quant::Ticks::Spot do
       )
     end
 
-    it { expect(tick.inspect).to eq("#<Quant::Ticks::Spot ct=2024-01-15 08:30:05 UTC c=1.25 v=88>") }
+    it { expect(tick.inspect).to eq("#<Quant::Ticks::Spot ct=2024-01-15 08:30:05 UTC c=1.25 v=88.0>") }
   end
 
   describe "#corresponding?" do
