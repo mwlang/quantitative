@@ -45,8 +45,11 @@ module Quant
         @low_price = low_price.to_f
         @close_price = close_price.to_f
 
-        @base_volume = (volume || base_volume).to_i
-        @target_volume = (target_volume || @base_volume).to_i
+        # Volumes are floats, not ints — crypto markets and many futures markets express
+        # fractional base/target volumes routinely (e.g., 0.12345 BTC). Existing specs already
+        # asserted Float values (`eq(2.0)`); a prior `.to_i` regression silently truncated.
+        @base_volume = (volume || base_volume).to_f
+        @target_volume = (target_volume || @base_volume).to_f
         @trades = trades.to_i
 
         @green = green.nil? ? compute_green : green

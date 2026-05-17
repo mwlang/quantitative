@@ -71,6 +71,23 @@ RSpec.describe Quant::Ticks::OHLC do
       end
     end
 
+    # Regression guard: volumes must be Float, not Integer-truncated. Crypto markets
+    # express fractional volumes routinely (e.g., 0.12345 BTC); a prior `.to_i` coercion
+    # in #initialize silently truncated them and passed loose `eq(2.0)` assertions
+    # because Ruby's `==` coerces `2 == 2.0`. This block asserts both the value AND the
+    # class so future regressions fail loudly.
+    context "with fractional crypto-style volumes" do
+      let(:json) do
+        { "ot" => open_time.to_i, "ct" => close_time, "o" => 1.0,
+          "bv" => 0.12345, "tv" => 5_678.901_234 }
+      end
+
+      it { expect(subject.base_volume).to eq(0.12345) }
+      it { expect(subject.target_volume).to eq(5_678.901_234) }
+      it { expect(subject.base_volume).to be_a(Float) }
+      it { expect(subject.target_volume).to be_a(Float) }
+    end
+
     context "without volume" do
       let(:json) { { "ot" => open_time.to_i, "ct" => close_time, "o" => 1.0 } }
 
