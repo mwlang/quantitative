@@ -42,11 +42,15 @@ module Quant
   # profit from changes in exchange rates.
   class AssetClass
     CLASSES = %i(
+      adr
       bond
+      cash
       commodity
       cryptocurrency
       etf
+      etn
       forex
+      forward
       future
       mbs
       mutual_fund
@@ -54,7 +58,9 @@ module Quant
       preferred_stock
       reit
       stock
-      treasury_note
+      swap
+      treasury
+      warrant
     ).freeze
 
     attr_reader :asset_class

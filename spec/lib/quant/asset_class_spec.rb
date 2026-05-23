@@ -57,4 +57,23 @@ RSpec.describe Quant::AssetClass do
       expect { subject }.to raise_error Quant::Errors::AssetClassError, 'Unknown asset class: "bogus"'
     end
   end
+
+  describe "CLASSES catalog" do
+    it "contains 19 entries" do
+      expect(described_class::CLASSES.size).to eq 19
+    end
+
+    %i[adr bond cash commodity cryptocurrency etf etn forex forward future mbs
+       mutual_fund option preferred_stock reit stock swap treasury warrant].each do |name|
+      it "accepts :#{name}" do
+        expect { described_class.new(name) }.not_to raise_error
+        expect(described_class.new(name).asset_class).to eq name
+      end
+    end
+
+    it "rejects the removed :treasury_note" do
+      expect { described_class.new(:treasury_note) }
+        .to raise_error Quant::Errors::AssetClassError, "Unknown asset class: :treasury_note"
+    end
+  end
 end
