@@ -47,6 +47,18 @@ After checking out the repo, run `bin/setup` to install dependencies. Then, run 
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
+### Branch model (prodigy-workspace development)
+
+When developed as part of the parent prodigy workspace, this sub-repo maintains
+two long-lived branches: **`main`** (production-deployable; only authorized
+closes land here via cherry-pick) and **`staging`** (integration view; every
+in-flight feature merges here on the in-progress → implemented transition).
+Feature branches start from `main`, integrate to `staging`, and land on `main`
+via `git cherry-pick -m 1 {staging-merge-SHA}` at close. Gem releases continue
+to flow from `main` per the standard release procedure above. Full procedure +
+rebuild recipe in the parent workspace's [`doc/runbooks/branch-model.md`](../../../doc/runbooks/branch-model.md)
+(only resolvable when this repo is cloned as part of the prodigy workspace).
+
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/mwlang/quantitative. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/mwlang/quantitative/blob/main/CODE_OF_CONDUCT.md).
