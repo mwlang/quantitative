@@ -6,8 +6,9 @@ module Quant
   #
   #    Quant.configure_indicators(min_period: 8, max_period: 32)
   #
-  # The default dominant cycle kind is the `half_period` filter.  This can be adjusted by setting
-  # the `dominant_cycle_kind` configuration value in {Quant::Config}.
+  # The default dominant cycle kind is the `supplied_period` slot (formerly `half_period`; the old name
+  # is deprecated since 0.6.0 and removed in 0.9.0).  This can be adjusted by setting the
+  # `dominant_cycle_kind` configuration value in {Quant::Config}.
   #
   #    Quant.configure_indicators(dominant_cycle_kind: :band_pass)
   #

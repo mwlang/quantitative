@@ -9,7 +9,7 @@ RSpec.describe Quant::IndicatorsSource do
 
   subject { described_class.new(series:, source:) }
 
-  it { expect(subject.dominant_cycle).to be_a(Quant::Indicators::DominantCycles::HalfPeriod) }
+  it { expect(subject.dominant_cycle).to be_a(Quant::Indicators::DominantCycles::SuppliedPeriod) }
 
   it "after adding an indicator" do
     indicator = subject[indicator_class]
@@ -57,11 +57,11 @@ RSpec.describe Quant::IndicatorsSource do
 
     it { expect(subject.dominant_cycles.differential.values[-1].period).to eq(41) }
     it { expect(subject.dominant_cycles.phase_accumulator.values[-1].period).to eq(41) }
-    it { expect(subject.dominant_cycles.half_period.values[-1].period).to eq(29) }
+    it { expect(subject.dominant_cycles.supplied_period.values[-1].period).to eq(29) }
   end
 
   context "priority ordering" do
-    let(:dominant_cycle) { Quant::Indicators::DominantCycles::HalfPeriod }
+    let(:dominant_cycle) { Quant::Indicators::DominantCycles::SuppliedPeriod }
     let(:ping) { Quant::Indicators::Ping }
 
     it "dominant cycle indicator has higher priority" do

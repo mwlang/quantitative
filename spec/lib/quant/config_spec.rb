@@ -30,7 +30,7 @@ RSpec.describe Quant::Config do
         it { expect(subject.half_period).to eq(7) }
         it { expect(subject.micro_period).to eq(2) }
         it { expect(subject.pivot_kind).to eq(:fibbonacci) }
-        it { expect(subject.dominant_cycle_kind).to eq(:half_period) }
+        it { expect(subject.dominant_cycle_kind).to eq(:supplied_period) }
       end
 
       context "by block" do
@@ -47,7 +47,7 @@ RSpec.describe Quant::Config do
         it { expect(subject.min_period).to eq(2) }
         it { expect(subject.half_period).to eq(3) }
         it { expect(subject.micro_period).to eq(4) }
-        it { expect(subject.dominant_cycle_kind).to eq(:half_period) }
+        it { expect(subject.dominant_cycle_kind).to eq(:supplied_period) }
         it { expect(subject.pivot_kind).to eq(:bollinger) }
 
         it "configures twice" do

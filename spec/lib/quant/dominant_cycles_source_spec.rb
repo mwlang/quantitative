@@ -23,5 +23,5 @@ RSpec.describe Quant::DominantCyclesSource do
 
   it { expect(subject.differential.values[-1].period).to eq(41) }
   it { expect(subject.phase_accumulator.values[-1].period).to eq(41) }
-  it { expect(subject.half_period.values[-1].period).to eq(29) }
+  it { expect(subject.supplied_period.values[-1].period).to eq(29) }
 end

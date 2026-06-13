@@ -23,13 +23,22 @@ module Quant
     ).freeze
 
     DOMINANT_CYCLE_KINDS = %i(
-      half_period
+      supplied_period
       band_pass
       auto_correlation_reversal
       homodyne
       differential
       phase_accumulator
+      half_period
     ).freeze
+
+    # Deprecated `dominant_cycle_kind` symbols that resolve to current
+    # symbols via `Settings::Indicators#dominant_cycle_indicator_class`.
+    # Each access emits a one-time-per-instance deprecation warning.
+    # Removed in 0.9.0.
+    DEPRECATED_DOMINANT_CYCLE_KIND_ALIASES = {
+      half_period: :supplied_period
+    }.freeze
 
     # ---- Risk Management Ratio Settings ----
     #   Risk    Reward    Breakeven Win Rate %
