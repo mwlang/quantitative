@@ -14,15 +14,19 @@ module Quant
     # The micro period comes from Ehler's writings on Swami charts and auto-correlation computations, which
     # is a period of 3 bars.  It is useful enough in various indicators to be its own setting.
     #
-    # The dominant cycle kind is the kind of dominant cycle to use in the indicator.  The default is +:settings+
-    # which means the dominant cycle is whatever the +max_period+ is set to.  It is not adaptive when configured
-    # this way.  The other kinds are adaptive and are computed from the series data.  The choices are:
-    # * +:half_period+  - the half_period is the dominant cycle and is not adaptive
+    # The dominant cycle kind is the kind of dominant cycle to use in the indicator.  The default is +:supplied_period+
+    # which means the period is supplied by the caller (defaulting to the half_period config value).  It is not
+    # adaptive when configured this way.  The other kinds are adaptive and are computed from the series data.
+    # The choices are:
+    # * +:supplied_period+ - The period is supplied externally by the caller; not adaptive (see SuppliedPeriod doc
+    #   for the four canonical supply modes: fixed, manual, configured, external). Default.
     # * +:band_pass+ - The zero crossings of the band pass filter are used to compute the dominant cycle
     # * +:auto_correlation_reversal+ - The dominant cycle is computed from the auto-correlation of the series.
     # * +:homodyne+ - The dominant cycle is computed from the homodyne discriminator.
     # * +:differential+ - The dominant cycle is computed from the differential discriminator.
     # * +:phase_accumulator+ - The dominant cycle is computed from the phase accumulator.
+    # * +:half_period+ - **Deprecated** alias for +:supplied_period+; removed in 0.9.0. Resolver emits a
+    #   one-time warning per Settings::Indicators instance when this symbol is used.
     #
     # All of the above are adaptive and are computed from the series data and are described in John Ehlers' books
     # and published papers.
@@ -89,7 +93,17 @@ module Quant
       def dominant_cycle_indicator_class
         return @dominant_cycle_indicator_class if @dominant_cycle_indicator_class
 
-        base_class_name = dominant_cycle_kind.to_s.split("_").map(&:capitalize).join
+        resolved_kind = Settings::DEPRECATED_DOMINANT_CYCLE_KIND_ALIASES[dominant_cycle_kind] || dominant_cycle_kind
+        if resolved_kind != dominant_cycle_kind
+          @dc_kind_deprecation_warned ||= begin
+            warn "[DEPRECATION] dominant_cycle_kind: :#{dominant_cycle_kind} is renamed to " \
+                 ":#{resolved_kind} (scheduled for removal in quantitative 0.9.0). " \
+                 "See Quant::Indicators::DominantCycles::SuppliedPeriod doc §Migration."
+            true
+          end
+        end
+
+        base_class_name = resolved_kind.to_s.split("_").map(&:capitalize).join
         class_name = "Quant::Indicators::DominantCycles::#{base_class_name}"
 
         @dominant_cycle_indicator_class = Object.const_get(class_name)

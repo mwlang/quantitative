@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.6.0] — 2026-06-13
+
+### Added
+
+- **`Quant::Indicators::DominantCycles::SuppliedPeriod`** — generalization of the prior `HalfPeriod` slot. The class doc names four canonical supply modes (fixed / manual / configured / external) that consumers compose freely. The `compute` method stays no-op; whoever sets `point.period` controls the period that downstream indicators reading `adaptive_period` see. The substrate-driven external mode is the load-bearing pattern for tick-derived adaptive lookbacks (e.g., Fishy peak-count cycle period) where another process writes the period to a runtime store and the integration site reads + populates the point.
+- **`:supplied_period`** symbol registered alongside the other DC kinds; it is the new default for `Settings::Indicators#dominant_cycle_kind`.
+
+### Deprecated (removed in 0.9.0)
+
+- **`Quant::Indicators::DominantCycles::HalfPeriod`** → use `SuppliedPeriod`. The old constant remains as an alias and is marked via `Module#deprecate_constant`; each access emits a Ruby deprecation warning. The two are equivalent at runtime; the rename clarifies the underlying capability.
+- **`Quant::Indicators::DominantCycles::HalfPeriodPoint`** → use `SuppliedPeriodPoint`. Same alias + `deprecate_constant` treatment.
+- **`:half_period` dominant_cycle_kind symbol** → use `:supplied_period`. `Settings::Indicators#dominant_cycle_indicator_class` resolves the deprecated symbol to `SuppliedPeriod` and emits a one-time-per-instance warning via `warn`.
+
+The unrelated `Settings::Indicators#half_period` method (returns `(max_period + min_period) / 2`) and the point default symbol `:half_period` (which references that method, not the deprecated class) are NOT deprecated and continue to work unchanged.
+
+See `Quant::Indicators::DominantCycles::SuppliedPeriod` class doc §Migration for the upgrade path. Existing consumers see identical runtime behavior; only the names change.
+
+---
+
 ## [0.5.0] — 2026-05-22
 
 ### Changed (breaking)
